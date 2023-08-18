@@ -1,14 +1,16 @@
-# daylight length
 library(tidyverse)
 library(jsonlite)
 
-#' See for API details
+#' API details
 #' https://sunrise-sunset.org/api
 
 # Get daylight
 df <- data.frame()
 
+# Start date
 date <- "2022-01-01"
+
+# For each day, do the following.
 for(x in 1:365){ # 365
   print(date)
   url <- paste0("https://api.sunrise-sunset.org/json?lat=69.6489&lng=18.95508&date=", date, "&formatted=0")
@@ -28,34 +30,40 @@ for(x in 1:365){ # 365
   # Get sunset
   sunset_time <- strsplit(strsplit(call[["results"]][["sunset"]],
                                    split = "T")[[1]][[2]], "[+]")[[1]][1]
-  # Get length (in second)
-  daylight_length_s <- call[["results"]][["day_length"]]
+  # Get length
+  daylight_length_s <- call[["results"]][["day_length"]] # seconds
   daylight_length_m <- daylight_length_s/60 # minutes
   daylight_length_h <- daylight_length_m/60 # hours
   
-  # Transform seconds to H:M:S
+  # Transform seconds clock format H:M:S
   # Get out daylight length (how many max hours of light there is in a day)
-  daylight_length <- paste0(floor(daylight_length_s/3600),":",floor((daylight_length_s%%3600)/60),":", daylight_length_s%%60)
+  daylight_length <- paste0(floor(daylight_length_s/3600),":",
+                            floor((daylight_length_s%%3600)/60),":",daylight_length_s%%60)
   
   # Check if "daylight saving" is true
   is_dst <- lubridate::dst(date)
   
-  # Tibble
-  data <- tibble(date_f, date_y, date_m, date_d, sunrise_time, sunset_time, daylight_length, 
-                 daylight_length_h, daylight_length_m, daylight_length_s, is_dst)
+  # Create a tibble (data frame)
+  data <- tibble(date_f, date_y, date_m, date_d, sunrise_time, 
+                 sunset_time, daylight_length, daylight_length_h, 
+                 daylight_length_m, daylight_length_s, is_dst)
   
-  # to df
+  # Add to our data frame
   df <- rbind(df, data)
   
-  # Increment day  # Increment with slightly more than one day (86400) b/c DST 
+  # Increment day  
+    # Increment with slightly more than one day (86400) b/c DST 
   date <- as.character(strftime(as.POSIXlt(date_f + 94000), format = "%Y-%m-%d"))
   
-  # slight sleep
+  # Slight delay 
+    # Avoid overloading API
   Sys.sleep(0.05)
-  print("...")
+  print("...") # Console update. 
 }
 
 # Fix summertime to "24 hours"
+  #' The API returns weird numbers for when the sun is up "all the time" (00:00:01) 
+  #' instead of 24:00:00. This code fixes this issue.
 for(x in 1:nrow(df)){
   if(as.character(df$sunrise_time[x])=="00:00:01"){
     df$daylight_length[x] <- "24:00:00"
@@ -65,6 +73,7 @@ for(x in 1:nrow(df)){
   }
 }
 
+# Add month name (short and long)
 df |> mutate(date_m_name = case_when(
   date_m==1~"Jan",
   date_m==2~"Feb",
@@ -94,4 +103,4 @@ df |> mutate(date_m_name = case_when(
 )) |> select(date_f:date_m, date_m_name, date_m_nameL, date_d, everything()) -> df
 
 # SAVE
-saveRDS(df, file = "7 - Flow/data/2022-2023_daylight_length.rds")
+saveRDS(df, file = "Exercise_1-circle_plot/data/src/2022-2023_daylight_length.rds")
