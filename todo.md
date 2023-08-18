@@ -16,10 +16,11 @@
 
 ## Exercise 1
 
--   [ ] Fake data folder (rnorm can take a vector to change the underlying curve)
+-   [ ] Fake data folder
     -   [x] Daylight hour in Tromsø (API call)
     -   [ ] Create fake data
     -   [ ] Random variation based on a trend
+      -   [ ] (rnorm can take a vector to change the underlying curve)
     -   [ ] Integrate daylight hour & fake data
     -   [ ] Structure the data frame (see picture)
         -   [ ] Add picture
@@ -35,3 +36,5 @@
 ## Exercise 4
 
 ## Exercise 5
+
+
