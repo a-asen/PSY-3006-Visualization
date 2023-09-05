@@ -3,60 +3,35 @@
 #' light conditions return to normal
   # Load Data
 source("Exercise_1-circle_plot/data/exercise1_load_data.r")
-
+daylight_df -> sleep_data
 # Parameters
-sup_ns <- 8.5 # Amount of "normal sleep" 
-sup_sd <- .5
+typical_sleep <- 8.5 # Typical sleep
+sleepWakeVariation <- .75 # variation in sleep/wake times 
 
-## Start
-(-log10(daylight_df$daylight_length_h*10))+1 -> d2
-d2[d2 %in% c("Inf", "-Inf")] <- 0
-plot(d2) # quick check
+## Sleep amount       =====
+#' Based on some the seasonal variation
+-log10(1+sleep_data$daylight_length_h*2) -> sleep_trend
+plot(sleep_trend) # quick check
+# Add to data frame
+sleep_data$sleep_amount <- typical_sleep+sleep_trend
 
-d3 <- numeric()
-for(x in d2){ 
-  c(d3, mean(rnorm(1, sup_ns + x, sup_sd))) -> d3
-}
-plot(d3) # quick check
+# sleep variation 
+round(rnorm(365, 0, sleepWakeVariation),2) -> rndVar
+  #' Variation in sleep/wake time 
+  #' Around 0 to make some early/later variation (as compared to absolutes)
 
-#a change
+# Add wake_time & sleep time to data frame
+typical_sleep+d2/2-rndVar/2  -> sleep_data$wake_time
+24+d2/2-rndVar/2 -> sleep_data$sleep_time
+  #' we need sleep_trend as it contains the trend
+  #' We can simply split it over sleep/wake times
 
-#save(d3,file="d.rdata")
-tibble(a = daylight_df$count, b = d3) |>
-  ggplot(aes(x=a,y=b))+
+sleep_data |> 
+  pivot_longer(c(wake_time,sleep_time))|>
+  ggplot(aes(x=count,y=value,color=name))+
   geom_point()+
-  geom_smooth()
-
-# Sleep amount
-daylight_df$sleep_amount <- d3
-ggplot(daylight_df, aes(x=count, y=sleep_amount))+
-  geom_point()+
-  geom_smooth()
-
-# Wakeup time
-d4 <- numeric()
-for(x in d3){
-  c(d4, rnorm(1, x, .1)) -> d4
-}
-
-daylight_df -> test
-
-test$wake_time <- round(d4,2) # add to DF
-
-# Sleep time
-d4-d3+24 -> ab # wake time - sleep_amount+24 (clock)
-ab[ab>24] <- ab[ab>24]-24 # if over 24 subtract 24
-test$sleep_time <- round(ab,2) # round
-
-
-test |> 
-  ggplot(aes(x=count, y=sleep_amount))+
-  geom_ribbon(aes(ymin=wake_time, ymax=sleep_time, xmin=count, xmax=count))
-  geom_point()+
-  geom_
-  geom_hline(yintercept = 6)+
-  geom_hline(yintercept = 9)
-  geom_area()
+  geom_smooth()+
+  geom_hline(yintercept=24)
 
 
 
