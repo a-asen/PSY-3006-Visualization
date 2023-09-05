@@ -60,18 +60,23 @@ for(x in 1:365){ # 365
   Sys.sleep(0.05)
   print("...") # Console update. 
 }
+ # backup save
+save(df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022.rdata")
 
 # Fix summertime to "24 hours"
   #' The API returns weird numbers for when the sun is up "all the time" (00:00:01) 
   #' instead of 24:00:00. This code fixes this issue.
 for(x in 1:nrow(df)){
-  if(as.character(df$sunrise_time[x])=="00:00:01"){
-    df$daylight_length[x] <- "24:00:00"
+  if(as.character(df$sunrise_time[x])=="00:00:01"){ # based on this condition
+    df$daylight_length[x]   <- "24:00:00"
     df$daylight_length_h[x] <- 24
     df$daylight_length_m[x] <- 24*60
     df$daylight_length_s[x] <- 24*60*60
+    df$sunrise_time[x]      <- "24:00:00"
+    df$sunset_time[x]       <- "24:00:00"
   }
 }
+
 
 # Add month name (short and long)
 df |> mutate(date_m_name = case_when(
@@ -103,4 +108,4 @@ df |> mutate(date_m_name = case_when(
 )) |> select(date_f:date_m, date_m_name, date_m_nameL, date_d, everything()) -> df
 
 # SAVE
-saveRDS(df, file = "Exercise_1-circle_plot/data/src/2022-2023_daylight_length.rds")
+save(df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022_finished.rdata")
