@@ -5,7 +5,7 @@ library(jsonlite)
 #' https://sunrise-sunset.org/api
 
 # Get daylight
-df <- data.frame()
+daylight_df <- data.frame()
 
 # Start date
 date <- "2022-01-01"
@@ -49,7 +49,7 @@ for(x in 1:365){ # 365
                  daylight_length_m, daylight_length_s, is_dst)
   
   # Add to our data frame
-  df <- rbind(df, data)
+  daylight_df <- rbind(daylight_df, data)
   
   # Increment day  
     # Increment with slightly more than one day (86400) b/c DST 
@@ -61,25 +61,25 @@ for(x in 1:365){ # 365
   print("...") # Console update. 
 }
  # backup save
-save(df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022.rdata")
+save(daylight_df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022.rdata")
 
 # Fix summertime to "24 hours"
   #' The API returns weird numbers for when the sun is up "all the time" (00:00:01) 
   #' instead of 24:00:00. This code fixes this issue.
-for(x in 1:nrow(df)){
-  if(as.character(df$sunrise_time[x])=="00:00:01"){ # based on this condition
-    df$daylight_length[x]   <- "24:00:00"
-    df$daylight_length_h[x] <- 24
-    df$daylight_length_m[x] <- 24*60
-    df$daylight_length_s[x] <- 24*60*60
-    df$sunrise_time[x]      <- "24:00:00"
-    df$sunset_time[x]       <- "24:00:00"
+for(x in 1:nrow(daylight_df)){
+  if(as.character(daylight_df$sunrise_time[x])=="00:00:01"){ # based on this condition
+    daylight_df$daylight_length[x]   <- "24:00:00"
+    daylight_df$daylight_length_h[x] <- 24
+    daylight_df$daylight_length_m[x] <- 24*60
+    daylight_df$daylight_length_s[x] <- 24*60*60
+    daylight_df$sunrise_time[x]      <- "24:00:00"
+    daylight_df$sunset_time[x]       <- "24:00:00"
   }
 }
 
 
 # Add month name (short and long)
-df |> mutate(date_m_name = case_when(
+daylight_df |> mutate(date_m_name = case_when(
   date_m==1~"Jan",
   date_m==2~"Feb",
   date_m==3~"Mar",
@@ -105,7 +105,7 @@ df |> mutate(date_m_name = case_when(
   date_m==10~"October",
   date_m==11~"November",
   date_m==12~"December",
-)) |> select(date_f:date_m, date_m_name, date_m_nameL, date_d, everything()) -> df
+)) |> select(date_f:date_m, date_m_name, date_m_nameL, date_d, everything()) -> daylight_df
 
 # SAVE
-save(df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022_finished.rdata")
+save(daylight_df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022_finished.rdata")
