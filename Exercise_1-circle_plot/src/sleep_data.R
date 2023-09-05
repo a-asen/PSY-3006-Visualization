@@ -19,6 +19,8 @@ for(x in d2){
 }
 plot(d3) # quick check
 
+#a change
+
 #save(d3,file="d.rdata")
 tibble(a = daylight_df$count, b = d3) |>
   ggplot(aes(x=a,y=b))+
