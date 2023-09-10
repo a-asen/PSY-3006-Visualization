@@ -1,0 +1,42 @@
+---
+title: "circle_plot"
+format: pdf
+editor: 
+  markdown:
+      wrap: 82
+---
+# Circle plot
+
+A circle plot displays information in a circular fashion. 
+One of the main idea with using a circle plot is that it can easily visualize the
+different seasons. Different segments can be highlighted for each of the different
+Time periods can be split in
+
+# 
+* although codes exists like circlize // OTHERS???
+* GGplot is more adaptible, and flexible compared to circlize.
+* it follows Grammer of grahics 
+
+
+## Running Code
+
+```{r preparation}
+library(tidyverse) # libs
+source("../data/exercise1_load_data.r") # load data
+
+```
+
+```{r}
+sleep_data |> 
+  ggplot(aes(x = count, y = wake_time))+
+  geom_area(mapping=aes(x=count, y=daylight_length_h/2.4))+
+  geom_point()+
+  geom_hline(yintercept=8)+
+  geom_vline(xintercept=0)+
+  coord_polar(start=pi, direction=-1)+
+  geom_point(mapping=aes(x=count, y=24-sleep_time))
+
+
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
