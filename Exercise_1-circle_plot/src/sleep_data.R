@@ -2,6 +2,7 @@
   #' sleep length increase as darkness increase and return back to "normal" when 
   #' light conditions return to normal
 # Load Data         ====
+library(tidyverse)
 source("Exercise_1-circle_plot/data/exercise1_load_data.r")
 daylight_df -> sleep_data
 
