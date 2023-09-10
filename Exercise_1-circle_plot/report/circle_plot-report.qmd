@@ -26,6 +26,13 @@ source("../data/exercise1_load_data.r") # load data
 
 ```
 
+#* should i have stage wise plot updating? Some text and some plotting? OR use it more to illustrate visualizing principles (perhaps better than showing "my own learning curve")
+Plot 
+
+
+To.do:
+- Indicate that sleep time is -24 hours. 
+
 ```{r}
 sleep_data |> 
   ggplot(aes(x = count, y = wake_time))+
@@ -39,4 +46,9 @@ sleep_data |>
 
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+
+
+
+
+
+
