@@ -66,6 +66,7 @@ To put our plot in context, we can add the amount of daylight in each day throug
 sleep_data |>
   ggplot(aes(cumulative_days, sleep_amount))+
   geom_area(mapping=aes(y=daylight_length_h), fill="yellow", alpha = .5)+
+  # Area before data points to keep it in the background
   geom_point()+
   geom_smooth()
 ```
@@ -73,6 +74,17 @@ sleep_data |>
 The yellow area display the number of hours of sunlight that day receives. As we can see, the sunlight varies from nothing (at the start and end of the x axis) to all day (the middle of the x axis).
 
 Alternatively, we can display the amount of dark hours throughout the year. 
+```{r}
+sleep_data |>
+  ggplot(aes(cumulative_days, sleep_amount))+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h, ymax=24, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.5)+
+  geom_point()+
+  geom_smooth()
+
+```
+
+Combining both light and darkness throughout the year might aid in discerning the number of daylight hours.
 
 ```{r}
 sleep_data |>
@@ -80,23 +92,32 @@ sleep_data |>
   geom_area(mapping=aes(y=daylight_length_h), fill="yellow", alpha = .5)+
   geom_ribbon(mapping=aes(ymin=daylight_length_h, ymax=24, 
                           xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.5)+
+  # Ribbon before data points to keep it in the background
   geom_point()+
   geom_smooth()
 ```
 
 Now, with this plot, we can more easily discern between darkness and sunlight throughout the year. We will leave some alpha to be able to see the underlying grid. 
 
+To finish up our simple plot, We can add some aesthetic changes to the plot to make it more pleasing. 
 
 ```{r}
 sleep_data |>
   ggplot(aes(cumulative_days, sleep_amount))+
+  geom_area(mapping=aes(y=daylight_length_h), fill="yellow", alpha = .4)+
   geom_ribbon(mapping=aes(ymin=daylight_length_h, ymax=24, 
-                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.5)+
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
+  # Ribbon before data points to keep it in the background
   geom_point()+
-  geom_smooth()
+  geom_smooth()+
+  theme_bw()+
+  coord_cartesian(expand=F)+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,4))
 ```
 
-In this figure we see the amount of darkness each day throughout the year. Combining both may aid in discerning hours light and hours darkness throughout the year. 
+
+
 
 
 
@@ -106,10 +127,12 @@ In this figure we see the amount of darkness each day throughout the year. Combi
   coord_cartesian(xlim=c(0,365))+
   scale_x_continuous(breaks = seq(1,365,29))
 
+## adding weeks, and summarise
 
-```{r}
+```{r adding weeks to the plot}
 sleep_data |>
-  group_by(date_m) |> summarise(m = mean(sleep_amount))
+  group_by(date_m_nameL) |> 
+  summarise(mean_sleep = mean(sleep_amount))
   mutate(month_sum = )
   
 ```
