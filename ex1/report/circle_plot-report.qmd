@@ -251,11 +251,14 @@ In this display, the data points are the main focus of the plot, but also illust
 To further enhance the difference between each data point, we could keep the minimum value above zero. The visualization of the daylight length starts from 0 (the center of the graph) and extends to the max. Instead, we could say that the lowest value is some value above zero, which would enhance the difference between each data point. 
 
 ```{r circle half sized daylight length}
-reduction <- 1/6
+reduction <- 4  # (24+6*4/10)
+additional_start <- 4
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
-  geom_area(mapping=aes(y=daylight_length_h*reduction), fill="yellow", alpha = .4)+
-  geom_ribbon(mapping=aes(ymin=daylight_length_h*reduction, ymax=24*reduction, 
+  geom_ribbon(mapping=aes(ymin=additional_start, ymax=(daylight_length_h/reduction)+additional_start,
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
+                          ymax=24/reduction+additional_start, 
                           xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
   # Ribbon before data points to keep it in the background
   geom_point()+
@@ -263,9 +266,7 @@ sleep_data |>
   coord_polar(direction = -1, start = pi)+
   theme_bw()+
   scale_x_continuous(breaks=seq(0,365,30))+
-  scale_y_continuous(breaks=seq(0,24,2))+
-  geom_vline(xintercept=75, alpha =.6, linetype="dashed")+
-  geom_vline(xintercept=270, alpha =.6, linetype="dashed")
+  scale_y_continuous(breaks=seq(0,24,1))
 ```
 
 
