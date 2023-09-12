@@ -16,18 +16,19 @@
 
 ## Exercise 1
 
--   [ ] Fake data folder
+-   [x] Fake data folder
     -   [x] Daylight hour in Tromsø (API call)
-    -   [ ] Create fake data
-    -   [ ] Random variation based on a trend
-      -   [ ] (rnorm can take a vector to change the underlying curve)
-    -   [ ] Integrate daylight hour & fake data
+    -   [x] Create fake data
+    -   [x] Random variation based on a trend
+      -   [x] (rnorm can take a vector to change the underlying curve)
+    -   [x] Integrate daylight hour & fake data
     -   [ ] Structure the data frame (see picture)
         -   [ ] Add picture
--   [ ] Data visualization folder
+-   [ ] Report: 
+    -   [ ] Visualization
     -   [ ] Standard plot
     -   [ ] circle plot
-    -   [ ] Geom polar (polygeom?)
+    -   [ ] Coord_polar
 
 ## Exercise 2
 
