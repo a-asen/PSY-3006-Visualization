@@ -226,8 +226,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,2))
 ```
 
-Reducing the daylight length by half leads to an extended range of the daylight length. This seems to be a better compromise between data points and displaying daylight hours.  This time, the daylight length is reduce by half, extending beyond the sleep amount. 
-
+Reducing the daylight length by half leads to an extended range of the daylight length. This seems to be a better compromise between data points and displaying daylight hours. Although it is more difficult to see the difference between each data point.  
 
 
 ## adding weeks, and summarise
