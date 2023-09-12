@@ -174,7 +174,14 @@ sleep_data |>
   scale_y_continuous(breaks = seq(4,12,1))
 ```
 
-
+```{r circle}
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_point()+
+  coord_polar(direction = -1, start = pi, )+
+  scale_x_continuous(breaks = seq(0,365,30))+
+  scale_y_continuous(breaks = seq(4,12,1))
+```
 
 
 
