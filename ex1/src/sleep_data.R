@@ -23,8 +23,8 @@ round(rnorm(365, 0, sleepWakeVariation),2) -> rndVar
   #' Around 0 to make some early/later variation (as compared to absolutes)
 
 ## Add wake_time & sleep time to data frame     ====
-typical_sleep+d2/2-rndVar/2  -> sleep_data$wake_time
-24+d2/2-rndVar/2 -> sleep_data$sleep_time
+typical_sleep+sleep_trend/2-rndVar/2  -> sleep_data$wake_time
+24+sleep_trend/2-rndVar/2 -> sleep_data$sleep_time
   #' we need sleep_trend as it contains the trend
   #' We can simply split it over sleep/wake times
 
@@ -36,6 +36,7 @@ sleep_data |>
   geom_smooth()+
   geom_hline(yintercept=24)
 
+save(sleep_data, file="ex1/data/sleep_data.Rdata")
 
 
 

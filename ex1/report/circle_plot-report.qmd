@@ -22,8 +22,7 @@ Time periods can be split in
 
 ```{r preparation}
 library(tidyverse) # libs
-source("../data/exercise1_load_data.r") # load data
-
+load("../data/daylight_length_Tromso_2022_finished.rdata") # load data
 ```
 
 #* should i have stage wise plot updating? Some text and some plotting? OR use it more to illustrate visualizing principles (perhaps better than showing "my own learning curve")
