@@ -1,6 +1,6 @@
 # R visualization
 
-This is a repository for a data visualization course in R. The course has been made as an 'independent study' ([PSY-3006 - Indepdendent study](PSY-3006%20-%20Indepdendent%20study)) for my Masters in Psychology at the UiT - The Arctic University of Norway.
+This is a repository for a data visualization course in R. The course has been made as an 'independent study' ([PSY-3006 - Indepdendent study](https://en.uit.no/education/courses/course?p_document_id=805702&semester=H)) for my Masters in Psychology at the UiT - The Arctic University of Norway.
 
 ## Content:
 
