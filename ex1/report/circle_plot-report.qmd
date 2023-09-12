@@ -163,7 +163,16 @@ sleep_data |>
   coord_polar()
 ```
 
-It seems that the transformation also limits the range of the y-axis for us. A problem This way of interpreting information can be confusing, as th
+It seems that the transformation also limits the range of the y-axis for us. The automatic limitation seems to be somewhat problematic, as our smallest data point is very close to the center. Moreover, some transformations are necessary to start the plot in the correct place. In my case, I would like the year to start at the bottom (January). 
+
+```{r circle}
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_point()+
+  coord_polar(direction = -1, start = pi, )+
+  scale_x_continuous(breaks = seq(0,365,30))+
+  scale_y_continuous(breaks = seq(4,12,1))
+```
 
 
 
@@ -172,8 +181,6 @@ It seems that the transformation also limits the range of the y-axis for us. A p
 
 
 
-geom_hline(yintercept=24)+ geom_hline(yintercept=0)+
-coord_cartesian(xlim=c(0,365))+ scale_x_continuous(breaks = seq(1,365,29))
 
 ## adding weeks, and summarise
 
