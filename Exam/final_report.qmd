@@ -1,0 +1,37 @@
+---
+title: "exam"
+format: pdf
+lang: en-GB
+editor: 
+  markdown:
+      wrap: 82
+---
+
+# Visualizing
+
+Visualizing data is key to comprehend what data provides us in a simple, and effective way. 
+
+## Grammer of graphics
+
+A principle of visualizing that is incredibly flexible. 
+
+
+
+## Ex 1 
+- [ ] Ex1 report
+
+## Ex 2 
+- [ ] Ex2 report
+
+## Ex 3
+- [ ] Ex3 report
+
+## Ex 4 
+- [ ] Ex4 report
+
+## Ex 5 
+- [ ] Ex5 report
+
+## Final reflections 
+
+
