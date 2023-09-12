@@ -18,7 +18,7 @@ This approach may be valuable for data sets related to changes over time,
 particularly over seasons. Take for instance, Tromsø, it is located above [above
 the arctic circle](https://en.wikipedia.org/wiki/Arctic_Circle) and exhibits some
 of the most extreme daylight changes - from no sunlight at winter, to only
-sunlight at summer. A
+sunlight at summer. A remarkable change in season which could neatly be displayed in a circular plot. 
 
 For this purpose, I want explore the utility of visualizing a data in a circular
 way. We recently had a study that investigated participants when they were sleep
@@ -33,24 +33,90 @@ changes throughout the changes along with some additional noise. The goal is to
 visualize the sleep time, wake time, and sun rise changes throughout a year (2023)
 in a circular way.
 
-## Preparing
+## Visualizing
 
 We first load the relevant packages and retrieve the data.
 
 ```{r preparation}
+#| message: false
 library(tidyverse) # libs
 load("../data/sleep_data.rdata") # load data
 ```
 
-To start of, we can visualize the data according to sleep amount over each day. 
+To start of, we can visualize the data according to sleep amount throughout the year. 
 
-```{r sleep over days}
-sleep_data |> 
-  ggplot(aes(x=count, y=sleep_amount))+
+```{r}
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
   geom_point()
 ```
 
-#\* should i have stage wise plot updating? Some text and some plotting? OR use it
+We can see that the data starts off high (in January) and reduce towards middle (summer) and increase towards the end (winter). To investigate the average throughout the year, we can add a geom_smooth. 
+
+```{r}
+sleep_data |>
+  ggplot(aes(cumulative_days, sleep_amount))+
+  geom_point()+
+  geom_smooth()
+```
+
+To put our plot in context, we can add the amount of daylight in each day throughout the year.
+
+```{r}
+sleep_data |>
+  ggplot(aes(cumulative_days, sleep_amount))+
+  geom_area(mapping=aes(y=daylight_length_h), fill="yellow", alpha = .5)+
+  geom_point()+
+  geom_smooth()
+```
+
+The yellow area display the number of hours of sunlight that day receives. As we can see, the sunlight varies from nothing (at the start and end of the x axis) to all day (the middle of the x axis).
+
+Alternatively, we can display the amount of dark hours throughout the year. 
+
+```{r}
+sleep_data |>
+  ggplot(aes(cumulative_days, sleep_amount))+
+  geom_area(mapping=aes(y=daylight_length_h), fill="yellow", alpha = .5)+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h, ymax=24, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.5)+
+  geom_point()+
+  geom_smooth()
+```
+
+Now, with this plot, we can more easily discern between darkness and sunlight throughout the year. We will leave some alpha to be able to see the underlying grid. 
+
+
+```{r}
+sleep_data |>
+  ggplot(aes(cumulative_days, sleep_amount))+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h, ymax=24, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.5)+
+  geom_point()+
+  geom_smooth()
+```
+
+In this figure we see the amount of darkness each day throughout the year. Combining both may aid in discerning hours light and hours darkness throughout the year. 
+
+
+
+
+  geom_hline(yintercept=24)+
+  geom_hline(yintercept=0)+
+  coord_cartesian(xlim=c(0,365))+
+  scale_x_continuous(breaks = seq(1,365,29))
+
+
+```{r}
+sleep_data |>
+  group_by(date_m) |> summarise(m = mean(sleep_amount))
+  mutate(month_sum = )
+  
+```
+
+
+
+\* should i have stage wise plot updating? Some text and some plotting? OR use it
 more to illustrate visualizing principles (perhaps better than showing "my own
 learning curve") Plot
 
