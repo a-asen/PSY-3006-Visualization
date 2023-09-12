@@ -3,7 +3,7 @@
   #' light conditions return to normal
 # Load Data         ====
 library(tidyverse)
-source("Exercise_1-circle_plot/data/exercise1_load_data.r")
+source("ex1/data/exercise1_load_data.r")
 daylight_df -> sleep_data
 
 # Parameters        ====
@@ -14,17 +14,20 @@ sleepWakeVariation <- .75 # variation in sleep/wake times
 #' Based on some the seasonal variation
 -log10(1+sleep_data$daylight_length_h*2) -> sleep_trend
 plot(sleep_trend) # quick check
-# Add to data frame
-sleep_data$sleep_amount <- typical_sleep+sleep_trend
 
-# sleep variation       ====
+# Sleep variation       ====
 round(rnorm(365, 0, sleepWakeVariation),2) -> rndVar
-  #' Variation in sleep/wake time 
-  #' Around 0 to make some early/later variation (as compared to absolutes)
+  #' Add random variation to sleep amount
+
+# Add to data frame
+sleep_data$sleep_amount <- typical_sleep+sleep_trend+rndVar2
+
+# Variation to wake/sleep time
+round(rnorm(365, 0, sleepWakeVariation/4+.5),2) -> rndVar2
 
 ## Add wake_time & sleep time to data frame     ====
-typical_sleep+sleep_trend/2-rndVar/2  -> sleep_data$wake_time
-24+sleep_trend/2-rndVar/2 -> sleep_data$sleep_time
+typical_sleep+sleep_trend/2-rndVar2/2  -> sleep_data$wake_time
+24+sleep_trend/2-rndVar2/2 -> sleep_data$sleep_time
   #' we need sleep_trend as it contains the trend
   #' We can simply split it over sleep/wake times
 
@@ -37,6 +40,4 @@ sleep_data |>
   geom_hline(yintercept=24)
 
 save(sleep_data, file="ex1/data/sleep_data.Rdata")
-
-
 
