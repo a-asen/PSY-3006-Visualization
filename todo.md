@@ -1,18 +1,23 @@
 ## General
 
 -   [ ] README
-    -   [ ] Add information
+    -   [x] Add information
 -   [x] Add to-do file
 
 ## Reading
 
+-   [x] Grammer of Graphics:
+    -   [x] Applied statistics using R: a Guide for the Social Sciences - Chapter 5
+    -   [/] The Grammer of Graphics  [50%]
+-   [x] Visual display of quantitative data
+    -   [ ] Reflection 
 -   [ ] Github markdown (different from normal markdown)
 -   [ ] Quarto (report)
--   [ ] Grammer of Graphics:
-    -   [ ] Applied statistics using R: a Guide for the Social Sciences - Chapter 5
-    -   [ ] The Grammer of Graphics
--   [ ] Visual display of quantitative data
-    -   [ ] Reflection
+
+## Exam 
+- [ ] Visualizing
+  - [ ] Grammer of graphics
+    - [ ] Benefits of this framework 
 
 ## Exercise 1
 
@@ -25,10 +30,12 @@
     -   [ ] Structure the data frame (see picture)
         -   [ ] Add picture
 -   [ ] Report: 
+    - [ ] Motivation?
     -   [ ] Visualization
-    -   [ ] Standard plot
     -   [ ] circle plot
     -   [ ] Coord_polar
+    -   [ ] Standard plot
+- [ ] Discuss some contrast with Circilize ???? 
 
 ## Exercise 2
 
