@@ -165,27 +165,68 @@ sleep_data |>
 
 It seems that the transformation also limits the range of the y-axis for us. The automatic limitation seems to be somewhat problematic, as our smallest data point is very close to the center. Moreover, some transformations are necessary to start the plot in the correct place. In my case, I would like the year to start at the bottom (January). 
 
-```{r circle}
+```{r circle start}
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
   geom_point()+
-  coord_polar(direction = -1, start = pi, )+
-  scale_x_continuous(breaks = seq(0,365,30))+
-  scale_y_continuous(breaks = seq(4,12,1))
+  coord_polar(direction = -1, start = pi)+
+  scale_x_continuous(breaks = seq(0,365,30))
 ```
 
-```{r circle}
+We can then add all the elements from the previous plot to investigate how it will look in a circular plot. 
+
+```{r circle add similar to standard plot}
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_area(mapping=aes(y=daylight_length_h), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h, ymax=24, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
+  # Ribbon before data points to keep it in the background
   geom_point()+
-  coord_polar(direction = -1, start = pi, )+
-  scale_x_continuous(breaks = seq(0,365,30))+
-  scale_y_continuous(breaks = seq(4,12,1))
+  geom_smooth()+
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,4))
 ```
 
+The plot looks more interesting as the sunlight changes throughout the year. However, it is much harder to grasp the values of the sleep amount. As noted earlier, a remedy for this is to transform the daylight_length_h to correspond to the sleep amount. One way to do this can be to reduce it to 1/3. 
 
+```{r circle}
+reduction <- 1/3
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_area(mapping=aes(y=daylight_length_h*reduction), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h*reduction, ymax=24*reduction, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
+  # Ribbon before data points to keep it in the background
+  geom_point()+
+  geom_smooth()+
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,2))
+```
 
+With this transformation, the daylight hours overlap nicely with the data. Although it might be misleading that it suggests that each "day" is less than 8 hours. Nevertheless, this can be ameliorated by indicating in the text that it is a transformation. Nevertheless, we could probably do with increasing the daylight length slightly. This way, the sleep amount is within the "daylight length". 
 
+```{r circle}
+reduction <- 1/2
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_area(mapping=aes(y=daylight_length_h*reduction), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h*reduction, ymax=24*reduction, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
+  # Ribbon before data points to keep it in the background
+  geom_point()+
+  geom_smooth()+
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,2))
+```
+
+Reducing the daylight length by half leads to an extended range of the daylight length. This seems to be a better compromise between data points and displaying daylight hours.  This time, the daylight length is reduce by half, extending beyond the sleep amount. 
 
 
 
