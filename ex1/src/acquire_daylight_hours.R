@@ -63,7 +63,7 @@ for(x in 1:365){ # 365
  # backup save
 save(daylight_df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022.rdata")
 
-daylight_df$count <- seq(1,365,1)
+daylight_df$cumulative_days <- seq(1,365,1)
 # Fix summertime to "24 hours"
   #' The API returns weird numbers for when the sun is up "all the time" (00:00:01) 
   #' instead of 24:00:00. This code fixes this issue.
@@ -109,4 +109,4 @@ daylight_df |> mutate(date_m_name = case_when(
 )) |> select(date_f:date_m, date_m_name, date_m_nameL, date_d, everything()) -> daylight_df
 
 # SAVE
-save(daylight_df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022_finished.rdata")
+save(daylight_df, file = "ex1/data/daylight/daylight_length_Tromso_2022_finished.rdata")
