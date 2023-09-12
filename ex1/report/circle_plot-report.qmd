@@ -1,39 +1,60 @@
 ---
 title: "circle_plot"
 format: pdf
+lang: en-GB
 editor: 
   markdown:
       wrap: 82
 ---
+
 # Circle plot
 
-The motivation for creating a circle plot is to visualize data in relation to seasons. Seasons are a recurring natural phenomenon that can significantly impact various aspects of our lives, from weather patterns to human behaviour. Visualizing data in a circle may offer a novel way to explore seasonal changes. 
+The motivation for creating a circle plot is to visualize data in relation to
+seasons. Seasons are a recurring natural phenomenon that can significantly impact
+various aspects of our lives, from weather patterns to human behaviour.
+Visualizing data in a circle may offer a novel way to explore seasonal changes.
 
-This approach may be valuable for data sets related to changes over time, particularly over seasons. Take for instance, Tromsø, it is located above [above the arctic circle](https://en.wikipedia.org/wiki/Arctic_Circle) and exhibits some of the most extreme daylight changes - from no sunlight at winter, to only sunlight at summer. 
+This approach may be valuable for data sets related to changes over time,
+particularly over seasons. Take for instance, Tromsø, it is located above [above
+the arctic circle](https://en.wikipedia.org/wiki/Arctic_Circle) and exhibits some
+of the most extreme daylight changes - from no sunlight at winter, to only
+sunlight at summer. A
 
-For this purpose, I want explore the utility of visualizing a data in a circular way. We recently had a study that investigated participants when they were sleep deprived and when they were not. To this end, we gathered data regarding participants sleep time and wake time, as well as controlling with an Actigraphy. Although I will not use that data here, the data is well suited to visualize changes during a season. 
+For this purpose, I want explore the utility of visualizing a data in a circular
+way. We recently had a study that investigated participants when they were sleep
+deprived and when they were not. To this end, we gathered data regarding
+participants sleep time and wake time, as well as controlling with an Actigraphy.
+Although I will not use that data here, the data is well suited to visualize
+changes during a season.
 
-With this idea in mind, I have created fake sleep data of X along with the sleep rise and set times located at Tromsø. The sleep data follow the pattern of the sun changes throughout the changes along with some additional noise. The goal is to visualize the sleep time, wake time, and sun rise changes throughout a year (2023) in a circular way.  
+With this idea in mind, I have created fake sleep data of X along with the sleep
+rise and set times located at Tromsø. The sleep data follow the pattern of the sun
+changes throughout the changes along with some additional noise. The goal is to
+visualize the sleep time, wake time, and sun rise changes throughout a year (2023)
+in a circular way.
 
-# 
-* although codes exists like circlize // OTHERS???
-* GGplot is more adaptible, and flexible compared to circlize.
-* it follows Grammer of grahics 
+## Preparing
 
-
-## Running Code
+We first load the relevant packages and retrieve the data.
 
 ```{r preparation}
 library(tidyverse) # libs
-load("../data/daylight_length_Tromso_2022_finished.rdata") # load data
+load("../data/sleep_data.rdata") # load data
 ```
 
-#* should i have stage wise plot updating? Some text and some plotting? OR use it more to illustrate visualizing principles (perhaps better than showing "my own learning curve")
-Plot 
+To start of, we can visualize the data according to sleep amount over each day. 
 
+```{r sleep over days}
+sleep_data |> 
+  ggplot(aes(x=count, y=sleep_amount))+
+  geom_point()
+```
 
-To.do:
-- Indicate that sleep time is -24 hours. 
+#\* should i have stage wise plot updating? Some text and some plotting? OR use it
+more to illustrate visualizing principles (perhaps better than showing "my own
+learning curve") Plot
+
+To.do: - Indicate that sleep time is -24 hours.
 
 ```{r}
 sleep_data |> 
@@ -48,9 +69,6 @@ sleep_data |>
 
 ```
 
+## Comparison to circilize?????
 
-
-
-
-
-
+-   [ ] discuss difference to circilize
