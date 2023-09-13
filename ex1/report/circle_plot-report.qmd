@@ -185,9 +185,9 @@ sleep_data |>
   geom_point()+
   geom_smooth()+
   coord_polar(direction = -1, start = pi)+
+  theme_bw()+
   scale_x_continuous(breaks=seq(0,365,30))+
-  scale_y_continuous(breaks=seq(0,24,4))+
-  theme_bw()
+  scale_y_continuous(breaks=seq(0,24,4))
 ```
 
 The plot looks more interesting as the sunlight changes throughout the year. However, it is much harder to grasp the values of the sleep amount. As noted earlier, a remedy for this is to transform the daylight_length_h to correspond to the sleep amount. We can do this by reducing the maximum value by some value, lets use 3. Then the plot daylight visualization should extend to, and not beyond, 8 (24/3).
@@ -203,9 +203,9 @@ sleep_data |>
   geom_point()+
   geom_smooth()+
   coord_polar(direction = -1, start = pi)+
+  theme_bw()+
   scale_x_continuous(breaks=seq(0,365,30))+
   scale_y_continuous(breaks=seq(0,24,2))+
-  theme_bw()+
   geom_vline(xintercept=75, alpha =.6, linetype="dashed")+
   geom_vline(xintercept=270, alpha =.6, linetype="dashed")
 ```
@@ -227,9 +227,9 @@ sleep_data |>
   geom_point()+
   geom_smooth()+
   coord_polar(direction = -1, start = pi)+
+  theme_bw()+
   scale_x_continuous(breaks=seq(0,365,30))+
-  scale_y_continuous(breaks=seq(0,24,2))+
-  theme_bw()
+  scale_y_continuous(breaks=seq(0,24,2))
 ```
 
 Here the daylight length extends beyond the data points, but still overlaps with each data point. We can try to reduce the daylight length to reach, maximally, below the lowest data point.  
@@ -245,9 +245,9 @@ sleep_data |>
   geom_point()+
   geom_smooth()+
   coord_polar(direction = -1, start = pi)+
+  theme_bw()+
   scale_x_continuous(breaks=seq(0,365,30))+
-  scale_y_continuous(breaks=seq(0,24,2))+
-  theme_bw()
+  scale_y_continuous(breaks=seq(0,24,2))
 ```
 
 In this display, the data points are the main focus of the plot, but the daylight length is nicely illustrated. On the other hand, it appears as though the illustration is more of a symbol or icon than displaying something useful. 
@@ -268,9 +268,9 @@ sleep_data |>
   geom_point()+
   geom_smooth()+
   coord_polar(direction = -1, start = pi)+
+  theme_bw()+
   scale_x_continuous(breaks=seq(0,365,30))+
-  scale_y_continuous(breaks=seq(0,24,1))+
-  theme_bw()
+  scale_y_continuous(breaks=seq(0,24,1))
 ```
 
 In this plot, it is easier to discern the difference between each data point, while also retaining the relative change in daylight throughout the year. It is important to point out that the daylight visualization illustrate the relative change in daylight and not hour based changes. It will be important to point out in the text how the daylight is transformed in text to not lead to misunderstandings.
@@ -304,7 +304,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,2))
 ```
 
-Although we are more able to see difference in the data point, the cluster in the center of the plot is not that neat. One of the ideas of visualizing sleep with sleep time and wake time, is that we can create a range, which indicate the amount of sleep. 
+Although we are better able to see the differences between the data points, the plot is rather similar to the former. It contains a cluster of data points in the center, which is not that neat and rather uninformative. At any rate, one of the ideas of visualizing sleep and wake times is to have a create a band that indicate the sleep. 
 
 ```{r circle sleep-time & wake-time 3}
 reduction <- 2
@@ -320,6 +320,50 @@ sleep_data |>
   scale_x_continuous(breaks=seq(0,365,30))+
   scale_y_continuous(breaks=seq(0,24,2))
 ```
+
+The plot does indicate the band of sleep from sleep time to wake time. However, it seems rather weird to have the cluster of data points in the center. Moreover, the cluster is rather uninformative as it is difficult to gather the relationship between sleep and wake time. To investigate whether this is a problem with circular plots or visualizing data in this way, I will visualize it using a normal plot (by removing *coord_polar*). 
+
+```{r circle sleep-time & wake-time - standard plot}
+reduction <- 2
+additional_start <- 0
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=wake_time))+
+  geom_ribbon(mapping=aes(xmin=cumulative_days, xmax=cumulative_days,
+                          ymin=24-sleep_time, ymax=wake_time), alpha =.4)+
+  geom_point()+
+  geom_point(mapping=aes(y=24-sleep_time))+  # add sleep time 
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,2))
+```
+
+This way of visualizing seems to be fine to me. With a normal plot, we can see changes in *both* sleep times and wake times. This information is essentially lost in the circular plot, but evidence with this plot. Moreover, the band seems to add meaningful relations between each data point - you can see ups and downs of sleep/wake times. 
+
+To visualize with a circle plot, I believe it is best to only use sleep amount. It does not create a cluster of data points that are uninformative or incredibly difficult to interpret. Moreover, the range of sleep can equally be displayed with a range from the data point to the center of the plot. 
+
+I will investigate whether it is useful to display the band of sleep 
+
+```{r circle sleep amount 7}
+reduction <- 4  
+additional_start <- 4
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_ribbon(mapping=aes(ymin=additional_start, ymax=(daylight_length_h/reduction)+additional_start,
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
+                          ymax=24/reduction+additional_start, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
+  # Ribbon before data points to keep it in the background
+  geom_point()+
+  geom_smooth()+
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,1))
+```
+
+
+
 
 
 ```{r circle sleep-time & wake-time}
