@@ -456,9 +456,9 @@ sleep_data |>
 
 Much of the same contrasts are retained in this plot without creating too many colors. Adding too much non-essential ink can be confusing and add to difficulty in interpreting the data. Thus, keeping non-essential ink to a minimum is a great starting option. Moreover, the link between each data point is, perhaps, better illustrated with simple lines than with the ribbon. The main point of the ribbon was to create a link to the center and not between each data point. 
 
-To sum it all together, I will create a final circle plot and a standard plot with the same information and discuss which I would rather use. 
+I will end this part with a final plot of both a circle and a normal plot and discuss some of their feature. 
 
-```{r circle FINAL plot}
+```{r circle final plot}
 reduction <- 4  
 additional_start <- 4
 sleep_data |>
@@ -481,7 +481,7 @@ sleep_data |>
   labs(x="Cumulative day", y="Hours of sleep")
 ```
 
-```{r normal FINAL plot}
+```{r normal final plot}
 reduction <- 4.8
 additional_start <- 5
 sleep_data |>
@@ -505,9 +505,9 @@ sleep_data |>
 
 From the two plots, I would say they both have some advantages and disadvantages. I would say that the circle plot better illustrates the change in daylight length, which may be a bit more difficult to interpret from the normal plot. On the other hand, the normal plot seem to visualize each data point in relation to time and each other in a much better way. We can more easily see the trend of the data, by both following the mean and the data points. By contrast, both the data points and the mean line is more cryptic in the circle plot, although not impossible to see. 
 
-One way to ameliorate this problem is to reduce the amount of data that is plotted. This can be done by summarizing to weeks or months.  In this way, the circular plotting 
+One way to ameliorate this problem is to reduce the amount of data that is plotted. This can be done by summarizing to weeks or months.  
 
-```{r add weeks to}
+```{r normal sum month}
 sleep_data |>
   mutate(date_m_name = factor(date_m_name, 
                               labels = c("Jan","Feb","Mar",
@@ -520,9 +520,9 @@ sleep_data |>
                color="red", position=position_nudge(x=.05))
 ```
 
+Splitting it by month makes it easier to see all the data points, but it is less meaningful. Each black dot represents one day in each month, but their relationship to the day is removed. This information is useful as it tells us something about the trend of the data. However, with this plot it appears as though there is just random months that deviate from the "norm". Another way of visualizing could be through weeks. This would benefit through summarizing more often, than in each month, and by possibly visualizing the trend of the data. 
 
-
-```{r add weeks to 2}
+```{r normal sum weeks}
 sleep_data -> sleep_data2
 
 # Add weeks
@@ -532,11 +532,9 @@ sleep_data2 |>
   group_by(week) |> 
   ggplot(aes(x=week, y=sleep_amount))+
   geom_point(alpha=.5)+
-  stat_summary(fun.data=mean_cl_normal, geom="pointrange",
-               position=position_nudge(.075), color="red")+
-  stat_summary(fun = mean,geom="line", color="red", size=.5)
-  
-  
+  stat_summary(fun.data=mean_cl_normal, geom="pointrange", color="red")+
+  stat_summary(fun = mean,geom="line", color="red", size=.5)+
+  scale_x_continuous(breaks=seq(0,52,4))
 ```
 
 
