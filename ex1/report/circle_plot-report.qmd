@@ -193,11 +193,11 @@ sleep_data |>
 The plot looks more interesting as the sunlight changes throughout the year. However, it is much harder to grasp the values of the sleep amount. As noted earlier, a remedy for this is to transform the daylight_length_h to correspond to the sleep amount. One way to do this can be to reduce it to 1/3. 
 
 ```{r circle one third daylight length}
-reduction <- 1/3
+reduction <- 3
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
-  geom_area(mapping=aes(y=daylight_length_h*reduction), fill="yellow", alpha = .4)+
-  geom_ribbon(mapping=aes(ymin=daylight_length_h*reduction, ymax=24*reduction, 
+  geom_area(mapping=aes(y=daylight_length_h/reduction), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h/reduction, ymax=24/reduction, 
                           xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
   # Ribbon before data points to keep it in the background
   geom_point()+
@@ -211,11 +211,11 @@ sleep_data |>
 With this transformation, the daylight hours overlap nicely with the data. Although it might be misleading that it suggests that each "day" is less than 8 hours. Nevertheless, this can be ameliorated by indicating in the text that it is a transformation. Nevertheless, we could probably do with increasing the daylight length slightly. This way, the sleep amount is within the "daylight length". 
 
 ```{r circle half sized daylight length}
-reduction <- 1/2
+reduction <- 2
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
-  geom_area(mapping=aes(y=daylight_length_h*reduction), fill="yellow", alpha = .4)+
-  geom_ribbon(mapping=aes(ymin=daylight_length_h*reduction, ymax=24*reduction, 
+  geom_area(mapping=aes(y=daylight_length_h/reduction), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h/reduction, ymax=24/reduction, 
                           xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
   # Ribbon before data points to keep it in the background
   geom_point()+
@@ -228,12 +228,12 @@ sleep_data |>
 
 Reducing the daylight length by half leads to an extended range of the daylight length. This seems to be a better compromise between data points and displaying daylight hours. Although it is more difficult to see the difference between each data point. However, since we are reducing the daylight length, we might as well reducing smaller than the sleep amount. Since it is mostly useful in relating the proportion of sunlight against darkness, it might work equally well being smaller. 
 
-```{r circle half sized daylight length}
-reduction <- 1/6
+```{r circle smaller than }
+reduction <- 6
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
-  geom_area(mapping=aes(y=daylight_length_h*reduction), fill="yellow", alpha = .4)+
-  geom_ribbon(mapping=aes(ymin=daylight_length_h*reduction, ymax=24*reduction, 
+  geom_area(mapping=aes(y=daylight_length_h/reduction), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=daylight_length_h/reduction, ymax=24/reduction, 
                           xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
   # Ribbon before data points to keep it in the background
   geom_point()+
@@ -248,9 +248,9 @@ sleep_data |>
 
 In this display, the data points are the main focus of the plot, but also illustrate the amount of daylight throughout the year. One design feature is to reduce by an even number. Thus each of the lines in the plot can give valuable information regarding the relationship between the daylight hours throughout the year. By using 1/6, the middle line of the daylight length indicate half the day. Such that we can see that by day 75 and 270 (see the dashed lines) half the day contains sunlight and the other half contains no sunlight. We see the same feature in the first plot with daylight length, but which is harder to see in the second plot. On the other hand, it can appear as though the data is a symbol instead of indicating sunlight length. 
 
-To further enhance the difference between each data point, we could keep the minimum value above zero. The visualization of the daylight length starts from 0 (the center of the graph) and extends to the max. Instead, we could say that the lowest value is some value above zero, which would enhance the difference between each data point. 
+To further enhance the difference between the data point, we can further transform the daylight visualization. Due to the coord_polar implementation, it will reduce the plot to the smallest value on the plot. In the first circle plot implementation, the smallest value was close to 6, and so the plot started at 6 (at the very center). By replacing geom_area with geom_ribbon, we can limit our daylight visualization to start at some value above 0, since there is no valuable data presented before the 6th hour. With this, we can also retain the contour of the year-round daylight length, in similar ways as we have done previously. 
 
-```{r circle half sized daylight length}
+```{r circle some middle path}
 reduction <- 4  # (24+6*4/10)
 additional_start <- 4
 sleep_data |>
@@ -269,6 +269,28 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
+In this plot, it is easier to discern the difference between each data point, while also retaining the changes in daylight hours throughout the year. It is, nonetheless, important to point out that it is not accurate to present daylight hours in this way. It is more accurate to say the proportion of daylight throughout the year. However, it is, as before, important to note that the illustration of daylight is based on a 24 hour clock, but transformed to fit within the 6 hour span of the plot.  
+
+Another way of visualizing the sleep amount is to visualize the sleep time and wake time. This, however, might be more difficult as the span ranges from around 5 hours to above 24 hours (indicating going to sleep later than 24, which should be transformed to 0). Nevertheless, it is worth to investigate how the visualization changes. 
+
+```{r circle some middle path}
+reduction <- 4  # (24+6*4/10)
+additional_start <- 4
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=wake_time))+
+  geom_ribbon(mapping=aes(ymin=additional_start, ymax=(daylight_length_h/reduction)+additional_start,
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .4)+
+  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
+                          ymax=24/reduction+additional_start, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
+  # Ribbon before data points to keep it in the background
+  geom_point()+
+  geom_smooth()+
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,1))
+```
 
 
 
