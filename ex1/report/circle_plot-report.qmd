@@ -339,21 +339,21 @@ sleep_data |>
 
 This way of visualizing seems to be fine to me. With a normal plot, we can see changes in *both* sleep times and wake times. This information is essentially lost in the circular plot, but evidence with this plot. Moreover, the band seems to add meaningful relations between each data point - you can see ups and downs of sleep/wake times. 
 
-To visualize with a circle plot, I believe it is best to only use sleep amount. It does not create a cluster of data points that are uninformative or incredibly difficult to interpret. Moreover, the range of sleep can equally be displayed with a range from the data point to the center of the plot. 
+To visualize with a circle plot, I believe it is best to only use sleep amount. It does not create a cluster of data points that are uninformative or incredibly difficult to interpret. Moreover, the range of sleep can be displayed with a range from the data point to the center of the plot. I will revert back to the last plot with sleep amount to investigate whether it can be useful to include a ribbon from the data point to the "null" value.  
 
-I will investigate whether it is useful to display the band of sleep 
-
-```{r circle sleep amount 7}
+```{r circle sleep amount 8}
 reduction <- 4  
 additional_start <- 4
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
   geom_ribbon(mapping=aes(ymin=additional_start, ymax=(daylight_length_h/reduction)+additional_start,
-                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .4)+
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .3)+
   geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
                           ymax=24/reduction+additional_start, 
-                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.4)+
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.3)+
   # Ribbon before data points to keep it in the background
+  geom_ribbon(mapping=aes(xmin=cumulative_days, xmax=cumulative_days,
+                          ymin=4,ymax=sleep_amount), alpha=.4)+
   geom_point()+
   geom_smooth()+
   coord_polar(direction = -1, start = pi)+
@@ -362,7 +362,51 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
+Adding a ribbon from each data point to the center value (in this case 4), we get some more contrast between each data point. This contrast can be helpful in interpreting the data. However, since the ribbon only extends to the center value and not all the way to 0, it can appear as though people start to sleep from the 4th hour of the night. If this plot is used, it should be noted that the data starts from 0, but has been cut out because it does not contain any relevant information. Nevertheless, I wonder how the plot changes by reverting the center value to 0 instead of 4.
 
+```{r circle sleep amount 9}
+reduction <- 4  
+additional_start <- 4
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_ribbon(mapping=aes(ymin=additional_start, ymax=(daylight_length_h/reduction)+additional_start,
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .3)+
+  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
+                          ymax=24/reduction+additional_start, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.3)+
+  # Ribbon before data points to keep it in the background
+  geom_ribbon(mapping=aes(xmin=cumulative_days, xmax=cumulative_days,
+                          ymin=0,ymax=sleep_amount), alpha=.4)+
+  geom_point()+
+  geom_smooth()+
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,1))
+```
+
+Serendipity. Forgetting to change the minimum value of the daylight length seem to have made it better. In this plot, we can clearly see what period of time contains *no sunlight*. The previous plots failed to inform us what period contained no sunlight. Although I would not say that the ribbon has added anything significant by visualizing all the way to zero, it certainly informed us that some distance from the minimum daylight value and the plots minimum value should be discerned. 
+
+```{r circle sleep amount 10}
+reduction <- 4
+additional_start <- 4
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_ribbon(mapping=aes(ymin=additional_start, ymax=(daylight_length_h/reduction)+additional_start,
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .25)+
+  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
+                          ymax=24/reduction+additional_start, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.25)+
+  # Ribbon before data points to keep it in the background
+  geom_ribbon(mapping=aes(xmin=cumulative_days, xmax=cumulative_days,
+                          ymin=3.5,ymax=sleep_amount), alpha=.35)+
+  geom_point()+
+  geom_smooth(alpha = .2)+
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,1))
+```
 
 
 
