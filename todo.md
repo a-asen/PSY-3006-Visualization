@@ -14,12 +14,8 @@
 -   [ ] Github markdown (different from normal markdown)
 -   [ ] Quarto (report)
 
-## Exam 
-- [ ] Visualizing
-  - [ ] Grammer of graphics
-    - [ ] Benefits of this framework 
 
-## Exercise 1
+## Exercise 1 - circle
 
 -   [x] Fake data folder
     -   [x] Daylight hour in Tromsø (API call)
@@ -27,22 +23,31 @@
     -   [x] Random variation based on a trend
       -   [x] (rnorm can take a vector to change the underlying curve)
     -   [x] Integrate daylight hour & fake data
-    -   [ ] Structure the data frame (see picture)
-        -   [ ] Add picture
--   [ ] Report: 
-    - [ ] Motivation?
-    -   [ ] Visualization
-    -   [ ] circle plot
-    -   [ ] Coord_polar
-    -   [ ] Standard plot
-- [ ] Discuss some contrast with Circilize ???? 
+    -   [x] Structure the data frame (see picture)
+        -   [x] Add picture
+-   [x] Report: 
+    - [x] Motivation?
+    -   [x] Visualization
+    - [x] normal plot
+    -   [x] circle plot
+    - [x] aesthetic changes
+    -   [x] other groupings
 
-## Exercise 2
+## Exercise 2 - distributions
 
 ## Exercise 3
 
 ## Exercise 4
 
 ## Exercise 5
+
+## EXAM:
+## Exam 
+- [ ] Visualizing
+  - [ ] Grammer of graphics
+    - [ ] Benefits of this framework 
+- Plot 1 - circle plots
+  - [ ] Discuss some contrast with Circilize ???? 
+  - [ ] Add segments? (e.g., annotate("rect",xmin=1,xmax=13,ymin=6,ymax=10, alpha=.4, fill="#208aaa"))
 
 
