@@ -410,7 +410,7 @@ sleep_data |>
 
 In this plot, the days with no sunlight are restricted, making it more difficult to interpret which days contain no sunlight. To fix this, we can further increase the difference between the daylight minimum and the plot minimum (by increasing the range of the ribbon between each data point and the center). 
 
-```{r circle sleep amount 9}
+```{r circle sleep amount 11}
 reduction <- 4  
 additional_start <- 4
 sleep_data |>
@@ -431,9 +431,9 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
-I would say this plot have a nicer balance between the distance of the center and the daylight length. 
+I would say this plot have a nicer balance between the distance of the center and the daylight length. However, it remains a question whether it is necessary with a ribbon as compared to a simple line. 
 
-```{r circle sleep amount 9}
+```{r circle sleep amount 12}
 reduction <- 4  
 additional_start <- 4
 sleep_data |>
@@ -453,6 +453,63 @@ sleep_data |>
   scale_x_continuous(breaks=seq(0,365,30))+
   scale_y_continuous(breaks=seq(0,24,1))
 ```
+
+Much of the same contrasts are retained in this plot without creating too many colors. Adding too much non-essential ink can be confusing and add to difficulty in interpreting the data. Thus, keeping non-essential ink to a minimum is a great starting option. Moreover, the link between each data point is, perhaps, better illustrated with simple lines than with the ribbon. The main point of the ribbon was to create a link to the center and not between each data point. 
+
+To sum it all together, I will create a final circle plot and a standard plot with the same information and discuss which I would rather use. 
+
+```{r circle sleep amount 13}
+reduction <- 4  
+additional_start <- 4
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_ribbon(mapping=aes(ymin=additional_start, 
+                          ymax=(daylight_length_h/reduction)+additional_start,
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .3)+
+  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
+                          ymax=24/reduction+additional_start, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.3)+
+  # Ribbon before data points to keep it in the background
+  geom_point()+
+  geom_line()+
+  geom_smooth(alpha=0)+
+  geom_point(mapping=aes(x=1,y=2), alpha =0)+ # off center
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(4,24,1))+
+  labs(x="Cumulative day", y="Hours of sleep")
+```
+
+```{r circle sleep amount 13 - normal}
+reduction <- 2
+additional_start <- 0
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_ribbon(mapping=aes(ymin=additional_start, 
+                          ymax=(daylight_length_h/reduction)+additional_start,
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .3)+
+  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
+                          ymax=24/reduction+additional_start, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.3)+
+  # Ribbon before data points to keep it in the background
+  geom_point()+
+  geom_line()+
+  geom_smooth(alpha=0)+
+  geom_point(mapping=aes(x=1,y=2), alpha =0)+ # off center
+  coord_cartesian(expand=F)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(0,24,1))+
+  labs(x="Cumulative day", y="Hours of sleep")
+```
+
+
+
+
+
+
+
 
 ```{r circle sleep-time & wake-time}
 reduction <- 2
