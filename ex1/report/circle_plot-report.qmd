@@ -76,9 +76,9 @@ sleep_data |>
   geom_smooth()
 ```
 
-The yellow area display the number of hours of sunlight that day receives. As we
-can see, the sunlight varies from nothing (at the start and end of the x axis) to
-all day (the middle of the x axis).
+The yellow area represents the number of hours of daylight each day receives. As we
+can see, the sunlight varies from nothing (at the start and end of the x-axis) to
+all day (in the middle of the x-axis).
 
 Alternatively, we can display the amount of dark hours throughout the year.
 
@@ -92,8 +92,8 @@ sleep_data |>
 
 ```
 
-Combining both light and darkness throughout the year might aid in discerning the
-number of daylight hours.
+The dark area represents the amount of darkness that each day receives. However, adding both together might aid in interpreting the plot. 
+
 
 ```{r}
 sleep_data |>
@@ -482,8 +482,8 @@ sleep_data |>
 ```
 
 ```{r circle sleep amount 13 - normal}
-reduction <- 2
-additional_start <- 0
+reduction <- 4.8
+additional_start <- 5
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
   geom_ribbon(mapping=aes(ymin=additional_start, 
@@ -496,14 +496,43 @@ sleep_data |>
   geom_point()+
   geom_line()+
   geom_smooth(alpha=0)+
-  geom_point(mapping=aes(x=1,y=2), alpha =0)+ # off center
   coord_cartesian(expand=F)+
   theme_bw()+
   scale_x_continuous(breaks=seq(0,365,30))+
-  scale_y_continuous(breaks=seq(0,24,1))+
+  scale_y_continuous(breaks=seq(5,24,1))+
   labs(x="Cumulative day", y="Hours of sleep")
 ```
 
+From the two plots, I would say they have both some benefits and drawbacks. I would say that the circle plot better illustrates the change in daylight length, which may be a bit more difficult to interpret from the normal plot. On the other hand, the normal plot seem to visualize each data point in relation to time and each other in a much better way. We can more easily see the trend of the data, by both following the mean and the data points. By contrast, both the data points and the mean line is more cryptic in the circle plot, although not impossible to see. 
+
+
+
+
+```{r circle sleep amount 13}
+reduction <- 4.8
+additional_start <- 5
+sleep_data |>
+  ggplot(aes(x=cumulative_days, y=sleep_amount))+
+  geom_ribbon(mapping=aes(ymin=additional_start, 
+                          ymax=(daylight_length_h/reduction)+additional_start,
+                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .3)+
+  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
+                          ymax=24/reduction+additional_start, 
+                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.3)+
+  # Ribbon before data points to keep it in the background
+  geom_point()+
+  geom_line()+
+  geom_smooth(alpha=0)+
+  geom_point(mapping=aes(x=1,y=4), alpha =0)+ # off center
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks=seq(0,365,30))+
+  scale_y_continuous(breaks=seq(5,24,1))+
+  labs(x="Cumulative day", y="Hours of sleep")
+```
+
+
+In comparison, the circle plot produce a novel and interesting way of plotting data. 
 
 
 
