@@ -581,6 +581,22 @@ sleep_data2 |>
 
 In this plot, I remove each individual data point, remove the line connection, added a smooth function, and added the daylight length. Making these aesthetic changes did improve the ability of the circle plot to convey accurate information. Although some unfortunate choices had to be made. For one, the first week (1) and last week (52) overlap, so I added a single invisible point to discern the summary statistic. Moreover, the visualization of the daylight length changes step wise, instead of smoothly. Nevertheless, with this strategy, the circle plot can be used to convey information in an interesting way. We can more easily see the trend of the line, and we can get a sense of the distribution of the sleep amount within each week. 
 
+Another way we might be able to use circle plots, is to summarize through each month instead. However, we will be left with similar problems as in the normal plot - you do not see the trend of the data because it is so summarized. 
+
+```{r circle month+aesthetic}
+sleep_data |>
+  mutate(date_m_name = factor(date_m_name, 
+                              labels = c("Jan","Feb","Mar",
+                                         "Apr","May","Jun",
+                                         "Jul","Aug","Sep",
+                                         "Oct","Nov","Dec"))) |>
+  ggplot(aes(x=date_m_name, y=sleep_amount))+
+  geom_point(alpha=.2)+
+  stat_summary(fun.data=mean_cl_normal, geom="pointrange", color="red")+
+  geom_smooth()+
+  theme_bw()+
+  coord_polar(direction = -1, start = pi)
+```
 
 
 
