@@ -582,6 +582,9 @@ sleep_data2 |>
 In this plot, I remove each individual data point, remove the line connection, added a smooth function, and added the daylight length. Making these aesthetic changes did improve the ability of the circle plot to convey accurate information. Although some unfortunate choices had to be made. For one, the first week (1) and last week (52) overlap, so I added a single invisible point to discern the summary statistic. Moreover, the visualization of the daylight length changes step wise, instead of smoothly. Nevertheless, with this strategy, the circle plot can be used to convey information in an interesting way. We can more easily see the trend of the line, and we can get a sense of the distribution of the sleep amount within each week. 
 
 
+
+
+
 ```{r circle sum week aesthetic change+season}
 reduction <- 6
 additional_start <- 6
@@ -594,8 +597,11 @@ sleep_data2 |>
   geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
                           ymax=24/reduction+additional_start, 
                           xmin=week, xmax=week), fill="black", alpha=.3)+
-  geom_rect(mapping=aes(xmin=1,xmax=13,ymin=5,ymax=11, alpha=.3, fill="#208aaa"),
-            )
+  #geom_rect(mapping=aes(xmin=1,xmax=13,ymin=6,ymax=10), fill="#208aaa", alpha=.1)+
+  annotate("rect",xmin=1,xmax=13,ymin=6,ymax=10, alpha=.4, fill="#208aaa")+
+  annotate("rect",xmin=13,xmax=26,ymin=6,ymax=10, alpha=.4, fill="#feb612")+
+  annotate("rect",xmin=26,xmax=39,ymin=6,ymax=10, alpha=.4, fill="#973905")+
+  annotate("rect",xmin=39,xmax=52,ymin=6,ymax=10, alpha=.4, fill="#005d72")+
   stat_summary(fun.data=mean_cl_normal, geom="pointrange", color="red")+
   geom_smooth()+
   #stat_summary(fun = mean,geom="line", color="red", size=.5)+
@@ -604,6 +610,7 @@ sleep_data2 |>
   coord_polar(direction = -1, start = pi)+
   geom_point(mapping=aes(x=53,y=5), alpha=0) # to make space between 1 and 52 week
   
+      
 ```
 
 
