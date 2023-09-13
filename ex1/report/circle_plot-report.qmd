@@ -4,7 +4,7 @@ format: pdf
 lang: en-GB
 editor: 
   markdown:
-      wrap: 82
+      wrap: 72
 ---
 
 # Circle plot
@@ -503,9 +503,41 @@ sleep_data |>
   labs(x="Cumulative day", y="Hours of sleep")
 ```
 
-From the two plots, I would say they have both some benefits and drawbacks. I would say that the circle plot better illustrates the change in daylight length, which may be a bit more difficult to interpret from the normal plot. On the other hand, the normal plot seem to visualize each data point in relation to time and each other in a much better way. We can more easily see the trend of the data, by both following the mean and the data points. By contrast, both the data points and the mean line is more cryptic in the circle plot, although not impossible to see. 
+From the two plots, I would say they both have some advantages and disadvantages. I would say that the circle plot better illustrates the change in daylight length, which may be a bit more difficult to interpret from the normal plot. On the other hand, the normal plot seem to visualize each data point in relation to time and each other in a much better way. We can more easily see the trend of the data, by both following the mean and the data points. By contrast, both the data points and the mean line is more cryptic in the circle plot, although not impossible to see. 
+
+One way to ameliorate this problem is to reduce the amount of data that is plotted. This can be done by summarizing to weeks or months.  In this way, the circular plotting 
+
+```{r add weeks to}
+sleep_data |>
+  mutate(date_m_name = factor(date_m_name, 
+                              labels = c("Jan","Feb","Mar",
+                                         "Apr","May","Jun",
+                                         "Jul","Aug","Sep",
+                                         "Oct","Nov","Dec"))) |>
+  ggplot(aes(x=date_m_name, y=sleep_amount))+
+  geom_point(position=position_nudge(x=-.05), alpha=.2)+
+  stat_summary(fun.data=mean_cl_normal, geom="pointrange", 
+               color="red", position=position_nudge(x=.05))
+```
 
 
+
+```{r add weeks to 2}
+sleep_data -> sleep_data2
+
+# Add weeks
+sleep_data2$week <- c(rep(1:52, each=7),52)
+
+sleep_data2 |> 
+  group_by(week) |> 
+  ggplot(aes(x=week, y=sleep_amount))+
+  geom_point(alpha=.5)+
+  stat_summary(fun.data=mean_cl_normal, geom="pointrange",
+               position=position_nudge(.075), color="red")+
+  stat_summary(fun = mean,geom="line", color="red", size=.5)
+  
+  
+```
 
 
 ```{r circle sleep amount 13}
