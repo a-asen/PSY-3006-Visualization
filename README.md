@@ -1,6 +1,10 @@
 # R visualization
 
-This is a repository for a data visualization course in R. The course has been made as an 'independent study' ([PSY-3006 - Indepdendent study](https://en.uit.no/education/courses/course?p_document_id=805702&semester=H)) for my Masters in Psychology at the UiT - The Arctic University of Norway.
+This is a repository for a data visualization course at the UiT - The Arctic University of Norway in R. The course is taken as an 'independent study' course ([PSY-3006 - Indepdendent study](https://en.uit.no/education/courses/course?p_document_id=805702&semester=H)) for my Masters in Psychology. The focus of the course is to learn to use [ggplot2](https://ggplot2.tidyverse.org/) to effectively visualize data. Similarly, data transfomrations related to visualizing data, as well as commenting on coding progress will be done. 
+
+# Content of the repository
+
+The repository will have 5 exercise folders (e.g., 'ex1') containing relevant material for each visualization. Under each folder, I will follow convensional folder structuring schema (e.g., ProjectTemplate). Each exercise will contain 'src' folder for all R scripts related to create data and/or relevant data transformations. Data may be created (i.e., fake data) or downloaded from publicly available sources and will be stored in the 'data' folder. Lastly, a 'report' folder will contain a '.qmd' (Quarto) document that contains the relevant data visualization code as well as comments regarding the plots.
 
 ## Content:
 
@@ -40,15 +44,7 @@ Having attended the course and completed the exam, the students will obtain the 
 Supplementary:
 
 -   R Graph Gallery by Yan Holtz (www.r-graph-gallery.com).
-
 -   R Gallery Book by Kyle W. Brown (www.kyle-w-brown.com/R-Gallery/)
-
 -   From Data to Vis by Yan Holtz (www.data-to-vis.com).
-
 -   Dataviz inspiration by Yan Holtz (<https://www.dataviz-inspiration.com/>)
-
 -   R for Data Science by Hadley Wickham (www.r4ds.had.co.nz).
-
-# Content of the repository
-
-The repository will have 5 exercise folders containing relevant material for each visualization. Under each folder, I follow conventions for structuring folders (e.g., ProjectTemplate). It will contain a 'src' folder for all R scripts used to create fake data and relevant transformations to create the final data. The data will be stored in the 'data' folder as a '.rdata' file. There may be a folder(s) under each 'data' folder containing data at various stages of creation/transformation. Lastly, a 'report' folder will contain a '.qmd' (Quarto) document, which will the relevant code and text describing the code.
