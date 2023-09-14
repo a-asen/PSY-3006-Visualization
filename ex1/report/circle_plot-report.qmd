@@ -19,8 +19,10 @@ additional_start <- 6
 
 # Add weeks
 sleep_data |> 
+  mutate(week = c(rep(1:52, each=7),52)) |> 
   ggplot(aes(x=week, y=sleep_amount))+
-    geom_ribbon(mapping=aes(ymin=additional_start, 
+  stat_summary()
+  geom_ribbon(mapping=aes(ymin=additional_start, 
                           ymax=(daylight_length_h/reduction)+additional_start,
                           xmin=week, xmax=week), fill="yellow", alpha = .3)+
   geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
@@ -561,13 +563,8 @@ sleep_data |>
 Splitting it by month makes it easier to see all the data points, but it is less meaningful. Each black dot represents one day in each month, but their relationship to the day is removed. This information is useful as it tells us something about the trend of the data. However, with this plot it appears as though there is just random months that deviate from the "norm". Another way of visualizing could be through weeks. This would benefit through summarizing more often, than in each month, and by possibly visualizing the trend of the data. 
 
 ```{r normal sum weeks}
-sleep_data -> sleep_data2
-
-# Add weeks
-sleep_data2$week <- c(rep(1:52, each=7),52)
-
-sleep_data2 |> 
-  group_by(week) |> 
+sleep_data |>
+  mutate(week = c(rep(1:52, each=7), 52)) |>
   ggplot(aes(x=week, y=sleep_amount))+
   geom_point(alpha=.5)+
   stat_summary(fun.data=mean_cl_normal, geom="pointrange", color="red")+
@@ -581,25 +578,26 @@ Visualizing over weeks is more able to show the trend of the data, but also redu
 One of the problems with the circle plot was the data cluttered together. This made it difficult to understand the exact relationship between each day, and the day. However, by using a summary statistic, a circle plot might be more effective at visualizing trends of the data and reducing clutter. 
 
 ```{r circle sum weeks}
-sleep_data2 |> 
-  group_by(week) |> 
+sleep_data |>
+  mutate(week = c(rep(1:52, each=7), 52)) |> 
   ggplot(aes(x=week, y=sleep_amount))+
   geom_point(alpha=.5)+
   stat_summary(fun.data=mean_cl_normal, geom="pointrange", color="red")+
   stat_summary(fun = mean,geom="line", color="red", size=.5)+
   scale_x_continuous(breaks=seq(0,52,2))+
   theme_bw()+
-  coord_polar(direction = -1, start = pi)
+  coord_polar(direction = -1, start = pi)+
+  geom_point(mapping=aes(x=53,y=5), alpha=0) # to make space between 1 and 52 week
 ```
 
-Representing summary statistic in a circle plot seems to work better. It is now easier to discern changes in sleep across the seasons. Nevertheless, visualizing each data point seem to still add some clutter to the plot. To investigate further I will do some changes. 
+Plotting in a circular way made week 0 and week 52 overlap. To overcome this problem I added a single, invisible, point in week 53 to create space between 0 and 52. Using summary statistic with a circle plot seems to work better. It is now easier to discern changes in sleep across the seasons. Nevertheless, visualizing each data point seem to still add some clutter to the plot. To investigate further I will do some changes. 
 
 
 ```{r circle sum week aesthetic change}
 reduction <- 6
 additional_start <- 6
-sleep_data2 |> 
-  group_by(week) |> 
+sleep_data |>
+  mutate(week = c(rep(1:52, each=7), 52)) |>
   ggplot(aes(x=week, y=sleep_amount))+
     geom_ribbon(mapping=aes(ymin=additional_start, 
                           ymax=(daylight_length_h/reduction)+additional_start,
@@ -617,7 +615,7 @@ sleep_data2 |>
   labs(x="Week", y="Hours slept")
 ```
 
-In this plot, I remove each individual data point, remove the line connection, added a smooth function, and added the daylight length. Making these aesthetic changes did improve the ability of the circle plot to convey accurate information. Although some unfortunate choices had to be made. For one, the first week (1) and last week (52) overlap, so I added a single invisible point to discern the summary statistic. Moreover, the visualization of the daylight length changes step wise, instead of smoothly. Nevertheless, with this strategy, the circle plot can be used to convey information in an interesting way. We can more easily see the trend of the line, and we can get a sense of the distribution of the sleep amount within each week. 
+In this plot, I remove each individual data point, remove the line connection, added a smooth function, and added the daylight length. Making these aesthetic changes did improve the ability of the circle plot to convey accurate information. Although some unfortunate concessions had to be made. For one, the empty data point made the daylight length plot look awkward. Moreover, the visualization of the daylight length changes in a step wise manner, instead of smoothly. Nevertheless, with this strategy, the circle plot can be used to convey information in an interesting way. We can more easily see the trend of the line, and we can get a sense of the distribution of the sleep amount within each week. 
 
 Another way we might be able to use circle plots, is to summarize through each month instead. However, we will be left with similar problems as in the normal plot - you do not see the trend of the data because it is so summarized. 
 
@@ -636,17 +634,23 @@ sleep_data |>
   coord_polar(direction = -1, start = pi)
 ```
 
-////// ADD?
+Plotting with month lead to its own sets of problem, which seem worse. Since the data is summarized more than in the weeks, we do not see any clear trend over the year. 
+
+Lastly, I will create a circle plot that I would use, combining what I learned so far. 
 
 ```{r circle final version start}
 #| echo: false
 reduction <- 4.8 
 additional_start <- 5
+sleep_data |> group_by(date_m) |> 
+  summarize(v = min(cumulative_days)) |> pull(v) -> month_breaks
+
 sleep_data |>
   mutate(week = c(rep(1:52, each=7), 52)) |>
   group_by(week) |> 
   mutate(week_mean = mean(sleep_amount),
-         week_sd = sd(sleep_amount)) |>
+         week_sd = sd(sleep_amount),
+         week_num_day = median(cumulative_days)) |>
   ungroup() |>
   ggplot(aes(x=cumulative_days, y=sleep_amount))+
   geom_ribbon(mapping=aes(ymin=additional_start, 
@@ -655,22 +659,25 @@ sleep_data |>
   geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
                           ymax=24/reduction+additional_start, 
                           xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.3)+
-  # Ribbon before data points to keep it in the background
-  geom_smooth(alpha=0, method="loess", formula = y~x, size=.8)+
-  geom_line(color="red", size=.9)+
-  #stat_summary(mapping=aes(y=week_mean))+
-  #geom_point()+
-  #geom_line()+
+  stat_smooth(geom="line", alpha=.5, size=.7, color="#208fff")+
+  stat_summary(mapping=aes(x=week_num_day), fun=mean,
+               geom="line", color="red",size=.7, alpha=.7)+
+  stat_summary(mapping=aes(x=week_num_day), fun.data=mean_cl_normal,
+               geom="linerange", color="red", size=2, alpha=.3)+
   geom_point(mapping=aes(x=1,y=4), alpha =0)+ # off center
   coord_polar(direction = -1, start = pi)+
   theme_bw()+
-  scale_x_continuous(breaks=seq(0,365,30),labels = c(0, unique(sleep_data$date_m_name)))+
-  scale_y_continuous(breaks=seq(4,24,1))+
-  labs(x="Cumulative day", y="Hours of sleep")
+  scale_x_continuous(breaks = month_breaks,
+                     labels = c(unique(sleep_data$date_m_nameL)))+
+  scale_y_continuous(breaks=seq(0,24,1))+
+  labs(x="Weeks", y="Hours of sleep")
 ```
 
-//////
+In this plot I have mapped the foundation based on the "cumulative_days" and "sleep_amount". In this way, we get a smooth daylight change throughout the year which looks more pleasing. Moreover, I decided to indicate each month because it is a bit more intuitive and pleasing than weeks. However, according to the summary statistic, I indicate the mean and range withing each *week* and not through each month. This way of visualizing is more confusing, although I do believe that the reader can interpret that the summary is over weeks within each month. 
 
+Instead of relying on a sequence generated interval, I gathered the first day of each month in the cumulative_days column to create breaks at each of these points. It is more more accurate, than the previous plots that I have made - something I did not occur to me before now. Since data points still clutter the figure - in my opinion - I decided to go for an interval based on the confidence interval. Moreover, by increasing the size of the interval, it suggests that it is a week summary, at least I think so. In the background is a regression line indicating mean trend change, and a red line indicating the mean of each week. 
+
+I think this plot is the best way to illustrate sleep variation throughout a year with a circular plot. Since data points can easily clutter and be difficult to interpret in a circle plot. Utilizing summary functions over some days reduce the clutter and leaves intact the spread of the data. These summaries are interpretative by most people and leaves intact the trend throughout the year - as compared to the month plot. In other words, using weeks seems to be the best compromise between data clutter and accurate data representation using a circle plot. 
 
 
 ## Final notes
