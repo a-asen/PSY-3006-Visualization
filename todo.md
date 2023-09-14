@@ -34,6 +34,7 @@
     -   [x] other groupings
 
 ## Exercise 2 - distributions
+- [ ] Find/make data
 
 ## Exercise 3
 
@@ -41,7 +42,6 @@
 
 ## Exercise 5
 
-## EXAM:
 ## Exam 
 - [ ] Visualizing
   - [ ] Grammer of graphics
