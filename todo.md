@@ -12,7 +12,7 @@
 -   [x] Visual display of quantitative data
     -   [ ] Reflection 
 -   [ ] Github markdown (different from normal markdown)
--   [ ] Quarto (report)
+-   [ ] [Quarto (report)](https://quarto.org/docs/guide/)
 
 
 ## Exercise 1 - circle
