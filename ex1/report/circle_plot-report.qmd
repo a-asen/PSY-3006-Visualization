@@ -4,10 +4,16 @@ format: pdf
 lang: en-GB
 editor: 
   markdown:
-      wrap: 72
+      wrap: 62
 ---
+```{r l}
+#| echo: false
+#| include: false
+library(tidyverse) # libs
+load("../data/sleep_data.rdata") # load data
+```
 
-```{r circle final plot}
+```{r circle final version start}
 #| echo: false
 reduction <- 4.8 
 additional_start <- 5
@@ -22,15 +28,15 @@ sleep_data |>
   # Ribbon before data points to keep it in the background
   geom_point()+
   geom_line()+
-  geom_smooth(alpha=0)+
+  geom_smooth(alpha=0, method="loess", formula = y~x)+
   geom_point(mapping=aes(x=1,y=4), alpha =0)+ # off center
   coord_polar(direction = -1, start = pi)+
   theme_bw()+
-  scale_x_continuous(breaks=seq(0,365,30),labels = c(0, unique(sleep_data2$date_m_name)))+
+  scale_x_continuous(breaks=seq(0,365,30),labels = c(0, unique(sleep_data$date_m_name)))+
   scale_y_continuous(breaks=seq(4,24,1))+
   labs(x="Cumulative day", y="Hours of sleep")
 ```
-
+{{< pagebreak >}}
 
 # Circle plot
 
@@ -56,7 +62,7 @@ changes during a season.
 With this idea in mind, I have created fake sleep data of X along with the sleep
 rise and set times located at Tromsø. The sleep data follow the pattern of the sun
 changes throughout the changes along with some additional noise. The goal is to
-visualize the sleep time, wake time, and sun rise changes throughout a year (2023)
+visualize the sleep time, wake time, and sun rise changes throughout a year (2022)
 in a circular way.
 
 ## Standard visualizing
@@ -306,7 +312,7 @@ Another change was to increase the number of ticks on the y-axis to be able to b
 
 Another way of visualizing the sleep amount is to visualize the sleep time and wake time. This, however, might be more difficult as the span ranges from around 5 hours to above 24 hours (indicating going to sleep later than 24, which should be transformed to 0). Nevertheless, it is worth to investigate how the plot change. 
 
-```{r circle sleep&wake time}
+```{r circle sleep+wake time}
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=wake_time))+
   geom_point()+
@@ -319,7 +325,7 @@ sleep_data |>
 
 In this plot, it is much harder to see differences between each data point. This is because the range of each band of data points (sleep time around 24 and wake time around 8) is quite small, but the difference between each band is large (around 16 hours). We end up with a plot with a lot of dead space, conveying no information, between the high band and the small band. To fix this, we can transform either the sleep time or wake time. I will first try to reduce the sleep time by 24. 
 
-```{r circle 24-sleep&wake time}
+```{r circle 24-sleep+wake time}
 reduction <- 24
 sleep_data |>
   ggplot(aes(x=cumulative_days, y=wake_time))+
@@ -333,7 +339,7 @@ sleep_data |>
 
 Although we are better able to see the differences between the data points, the plot is rather similar to the former. It contains a cluster of data points in the center, which is not that neat and rather uninformative. At any rate, one of the ideas of visualizing sleep and wake times is to have a create a band that indicate the sleep. 
 
-```{r circle 24-sleep&wake time + ribbon}
+```{r circle 24-sleep+wake time + ribbon}
 reduction <- 2
 additional_start <- 0
 sleep_data |>
@@ -350,7 +356,7 @@ sleep_data |>
 
 The plot does indicate the band of sleep from sleep time to wake time. However, it seems rather weird to have the cluster of data points in the center. Moreover, the cluster is rather uninformative as it is difficult to gather the relationship between sleep and wake time. To investigate whether this is a problem with circular plots or visualizing data in this way, I will visualize it using a normal plot (by removing *coord_polar*). 
 
-```{r normal 24-sleep&wake time+ribbon}
+```{r normal 24-sleep+wake time+ribbon}
 reduction <- 2
 additional_start <- 0
 sleep_data |>
@@ -505,7 +511,7 @@ sleep_data |>
   geom_point(mapping=aes(x=1,y=4), alpha =0)+ # off center
   coord_polar(direction = -1, start = pi)+
   theme_bw()+
-  scale_x_continuous(breaks=seq(0,365,30),labels = c(0, unique(sleep_data2$date_m_name)))+
+  scale_x_continuous(breaks=seq(0,365,30),labels = c(0, unique(sleep_data$date_m_name)))+
   scale_y_continuous(breaks=seq(4,24,1))+
   labs(x="Cumulative day", y="Hours of sleep")
 ```
