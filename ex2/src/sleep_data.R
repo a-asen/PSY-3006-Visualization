@@ -4,6 +4,12 @@ library(tidyverse)
 # Get actigraphy
 list.files("ex2/data/actigraphy", full.names = T) -> actigraphy_raw
 
+date_fn <- function(x){
+  map_chr(strsplit(x,"/"), \(y){
+    as.character(paste0(y[3],"-",y[1],"-",y[2]))
+  })
+}
+
 map(actigraphy_raw,\(x){
   print(x)
   read_csv(x, locale = readr::locale(encoding = "UTF-16"), # b/c weird?
@@ -15,37 +21,69 @@ map(actigraphy_raw,\(x){
     mutate(subj=subj,
            mutate(across(everything(), as.character)))
 }) -> d
+list_rbind(d) -> dd
 
-d |> select(1:6) |> 
-  filter(`Interval Type` == "SLEEP") |> 
-  mutate(start_date = date_fn(`Start Date`),
+
+dd |> filter(is.na(`Start Time`))
+dd |> select(1:6) |> 
+  filter(`Interval Type` == "SLEEP") |>
+  mutate(start_date = date_fn(`Start Date`))
+        
          start_month = as_hour_time(`Start Time`))
 
-date_fn <- function(x){
-  map_chr(strsplit(x,"/"), \(y){
-    as.character(paste0(y[3],"-",y[1],"-",y[2]))
-  })
+for(x in dd$`Start Time`){
+  if(!is.na(x) & x!="NaN"){
+    strsplit(x,":")[[1]] -> y
+    h<-as.integer(y[1])
+    m<-as.integer(y[2])
+    s<-as.integer(strsplit(y[3], " ")[[1]][1])
+    
+    print(h)
+    if(str_detect(x,"M")){
+      if(str_detect(x, "AM")){
+        if(h==12){
+          h<-h-12
+        }
+      } else{
+        h<-h+12
+      }
+    }
+    print(h+m/60+s/60/60)
+  }
+  else{
+    NA
+  }
 }
+
 as_hour_time <- function(stime){
-  map_dbl(str_split(stime,":"), \(x){
-    h <- as.integer(x[1])
-    if(str_detect(x[3], "PM")){ # all PM times get +12
-      h <- h+12
-    }
-    if(str_detect(x[3], "AM")){ # for AM, only the 12 gets set to 0
-      if(h==12)
-        h=0
-    }
-    h <- ifelse(h<8, h+24, h)
-    m <- as.integer(x[2])
-    if(str_detect(x[3], "M")){
-      s <- as.integer(str_split(x[3], " ")[[1]][1])
+  print(stime)
+  map(strsplit(stime,":"), \(y){
+    if(!is.na(y)){
+      strsplit(stime,":")[[1]] -> x
+      print(x)
+      h <- as.integer(x[1])
+      if(str_detect(x[3], "PM")){ # all PM times get +12
+        h <- h+12
+      }
+      if(str_detect(x[3], "AM")){ # for AM, only the 12 gets set to 0
+        if(h==12)
+          h=0
+      }
+      h <- ifelse(h<8, h+24, h)
+      m <- as.integer(x[2])
+      if(str_detect(x[3], "M")){
+        s <- as.integer(str_split(x[3], " ")[[1]][1])
+      } else {
+        s <- as.integer(x[3])
+      }
+      h + m/60 + s/60/60
     } else {
-      s <- as.integer(x[3])
+      NA
     }
-    h + m/60 + s/60/60
   })
 }
+
+as_hour_time(dd$`Start Time`) -> test
   
 fnames=list.files("ex2/data/Actigraphy", pattern="*.csv", full.names = T) 
 subjs = unique(map_chr(fnames, \(fname) 
