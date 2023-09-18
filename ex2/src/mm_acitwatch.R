@@ -5,6 +5,7 @@ subjs = unique(map_chr(fnames, \(fname)
 
 t2 <- t[1:64,]
 t2$`Start Time`
+
 as_hour_time <- function(stime){
   map_dbl(str_split(stime,":"), \(x){
     h <- as.integer(x[1])
