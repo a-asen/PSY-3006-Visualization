@@ -30,7 +30,6 @@ as_hour_time <- function(stime){
 # wake is different. Real. different
 as_hour_time_wake <- function(stime){ 
   map_dbl(str_split(stime,":"), \(x){
-    # strsplit(t2$`End Time`[27], ":") -> x
     h <- as.integer(x[1])
     if(str_detect(x[3], "PM")){ # all PM times get +12
       h <- h+12
