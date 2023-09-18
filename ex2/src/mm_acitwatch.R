@@ -3,9 +3,6 @@ subjs = unique(map_chr(fnames, \(fname)
                        (str_split(fname, "/")[[1]][4] |> 
                            str_split("_"))[[1]][1]))
 
-t2 <- t[1:64,]
-t2$`Start Time`
-
 as_hour_time <- function(stime){
   map_dbl(str_split(stime,":"), \(x){
     h <- as.integer(x[1])
@@ -92,6 +89,4 @@ map_df(subjs, \(subj){
     select(subj,date,starts_with("sleep", ignore.case=F)) 
 }) -> actigraphy
 
-
-
-
+save(actigraphy, file="ex2/data/actigraphy.rdata")
