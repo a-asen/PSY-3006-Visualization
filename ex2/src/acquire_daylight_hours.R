@@ -57,6 +57,10 @@ for(x in 1:days_in_year){
 daylight_df |> arrange(year_day) -> daylight_df
 
 
+#
+# CONTINUE HERE Fix DF  
+#
+
 daylight_df[daylight_df$sunrise==hms("00:00:01"),] 
 t$sunrise=="00:00:01"
 
