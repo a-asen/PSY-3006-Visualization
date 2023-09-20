@@ -2,11 +2,20 @@
 title: "Circle Plot: sleep deprivation"
 format: pdf
 lang: en-GB
+fontfamily: "Arial" 
 editor: 
   markdown:
       wrap: 62
 ---
 
+
+```{r packages}
+library(tidyverse)
+load("../data/daylight_df.rdata")
+
+```
+
+Here I will further investigate circle plots by focusing on a different aspect. 
 
 ```{r start}
 
