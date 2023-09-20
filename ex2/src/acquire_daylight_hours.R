@@ -30,11 +30,12 @@ for(x in 1:days_in_year){
              date = date,
              is_dst = dst(date),
              week_day = wday(date),
+             month_day = mday(date),
              year_day = yday(date),
              daylight_seconds = day_length,
              daylight_minutes = day_length/60,
              daylight_hours = day_length/60/60) |>
-      select(date, year_day, week_day, 1:2, daylight_seconds, 
+      select(date, year_day, month_day, week_day, 1:2, daylight_seconds, 
              daylight_minutes, daylight_hours, is_dst, 
              everything(), -day_length) |> 
       rbind(daylight_df) -> daylight_df
@@ -51,8 +52,17 @@ for(x in 1:days_in_year){
     break
   }
 }
+
+
+daylight_df |> arrange(year_day) -> daylight_df
+
+
+daylight_df[daylight_df$sunrise==hms("00:00:01"),] 
+t$sunrise=="00:00:01"
+
+
  # backup save
-save(daylight_df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022.rdata")
+save(daylight_df, file = "ex/data/daylight_length_Tromso_2022.rdata")
 
 daylight_df$cumulative_days <- seq(1,365,1)
 # Fix summertime to "24 hours"
