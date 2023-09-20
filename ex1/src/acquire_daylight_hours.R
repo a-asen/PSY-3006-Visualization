@@ -61,7 +61,7 @@ for(x in 1:365){ # 365
   print("...") # Console update. 
 }
  # backup save
-save(daylight_df, file = "Exercise_1-circle_plot/data/daylight_length_Tromso_2022.rdata")
+save(daylight_df, file = "ex1/data/daylight_length_Tromso_2022.rdata")
 
 daylight_df$cumulative_days <- seq(1,365,1)
 # Fix summertime to "24 hours"
