@@ -11,7 +11,10 @@ editor:
 
 ```{r packages}
 library(tidyverse)
-load("../data/daylight_df.rdata")
+# loader script
+source("../data/load.r")
+load("../data") # load all rdata files in path
+
 
 ```
 
@@ -22,3 +25,18 @@ Here I will further investigate circle plots by focusing on a different aspect.
 ```
 
 {{< pagebreak >}}
+
+Firs we combine the data
+
+```{r start}
+
+
+```
+
+```{r start}
+
+```
+
+```{r start}
+
+```
