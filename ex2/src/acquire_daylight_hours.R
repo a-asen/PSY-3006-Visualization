@@ -16,10 +16,9 @@ yday(date + years(1) - days(1)) -> days_in_year
 # For each day, do the following.
 for(x in 1:days_in_year){ 
   print(date)
-    #  RM
-  #   2022.06.07 summer # 1970-01-01T00:00:01+00:00
-  #   2022.12.12 winter # 1970-01-01T00:00:00+00:00
-  date <- "2022-12-07"
+    # fix weird coding: 
+    #   e.g., 2022.06.07 summer # 1970-01-01T00:00:01+00:00
+    #   e.g., 2022.12.12 winter # 1970-01-01T00:00:00+00:00
   url <- paste0("https://api.sunrise-sunset.org/json?lat=69.6489&lng=18.95508&date=", date, "&formatted=0")
   
   # Call API
@@ -64,82 +63,15 @@ for(x in 1:days_in_year){
   }
 }
 
-
 daylight_df |> arrange(year_day) -> daylight_df
-
 
 #
 # CONTINUE HERE Fix DF  
 #
 
+# backup save
+save(daylight_df, file = "ex2/data/daylight_length_Tromso_2022.rdata")
 
-daylight_df |> 
-  filter(sunrise==hms("00:00:01"))
-  mutate
-
-daylight_df[daylight_df$sunrise==hms("00:00:01"),] 
-
-# Change
-ymd_hms(daylight_df$sunrise[daylight_df$sunrise==hms("00:00:01")])
-# acquire date
-  # daylight_df$date[daylight_df$sunrise==hms("00:00:01")]
-ymd_hms(paste0(daylight_df$date[daylight_df$sunrise==hms("00:00:01")], " 23:59:59"))
-
-ymd_hms("2020-05-17 00:00:01")
-
-
-
-
-t$sunrise=="00:00:01"
-
-
- # backup save
-save(daylight_df, file = "ex/data/daylight_length_Tromso_2022.rdata")
-
-daylight_df$cumulative_days <- seq(1,365,1)
-# Fix summertime to "24 hours"
-  #' The API returns weird numbers for when the sun is up "all the time" (00:00:01) 
-  #' instead of 24:00:00. This code fixes this issue.
-for(x in 1:nrow(daylight_df)){
-  if(as.character(daylight_df$sunrise_time[x])=="00:00:01"){ # based on this condition
-    daylight_df$daylight_length[x]   <- "24:00:00"
-    daylight_df$daylight_length_h[x] <- 24
-    daylight_df$daylight_length_m[x] <- 24*60
-    daylight_df$daylight_length_s[x] <- 24*60*60
-    daylight_df$sunrise_time[x]      <- "24:00:00"
-    daylight_df$sunset_time[x]       <- "24:00:00"
-  }
-}
-
-
-# Add month name (short and long)
-daylight_df |> mutate(date_m_name = case_when(
-  date_m==1~"Jan",
-  date_m==2~"Feb",
-  date_m==3~"Mar",
-  date_m==4~"Apr",
-  date_m==5~"May",
-  date_m==6~"Jun",
-  date_m==7~"Jul",
-  date_m==8~"Aug",
-  date_m==9~"Sep",
-  date_m==10~"Oct",
-  date_m==11~"Nov",
-  date_m==12~"Dec",
-), date_m_nameL = case_when(
-  date_m==1~"January",
-  date_m==2~"February",
-  date_m==3~"March",
-  date_m==4~"April",
-  date_m==5~"May",
-  date_m==6~"June",
-  date_m==7~"July",
-  date_m==8~"August",
-  date_m==9~"September",
-  date_m==10~"October",
-  date_m==11~"November",
-  date_m==12~"December",
-)) |> select(date_f:date_m, date_m_name, date_m_nameL, date_d, everything()) -> daylight_df
 
 # SAVE
 save(daylight_df, file = "ex1/data/daylight/daylight_length_Tromso_2022_finished.rdata")
