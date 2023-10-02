@@ -63,15 +63,7 @@ for(x in 1:days_in_year){
   }
 }
 
-daylight_df |> arrange(year_day) -> daylight_df
-
-#
-# CONTINUE HERE Fix DF  
-#
+daylight_df |> arrange(date) -> daylight_df
 
 # backup save
-save(daylight_df, file = "ex2/data/daylight_length_Tromso_2022.rdata")
-
-
-# SAVE
-save(daylight_df, file = "ex1/data/daylight/daylight_length_Tromso_2022_finished.rdata")
+save(daylight_df, file = "ex2/data/daylight_df_Tromso_2022.rdata")
