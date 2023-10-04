@@ -1,1 +1,1 @@
-Data and scropt has been downloaded from OSF - https://osf.io/xq6wr/. 
+Data (and script) has been downloaded from OSF - https://osf.io/xq6wr/. 
