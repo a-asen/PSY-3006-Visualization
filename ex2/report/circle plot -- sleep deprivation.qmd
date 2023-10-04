@@ -8,30 +8,37 @@ editor:
       wrap: 62
 ---
 
-
 ```{r packages}
 library(tidyverse)
 # loader script
-list.files("../data", pattern=".rdata", full.names = T) -> files
+list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
 for(x in files){load(x)}
-
-```
-
-Here I will further investigate circle plots by focusing on a different aspect. 
-
-```{r start}
-data.probe |>
-  ggplot(aes(x=block, y=zlogapen ))+
-  geom_point()
 
 ```
 
 {{< pagebreak >}}
 
-Firs we combine the data
+
+Here I will further investigate the use of circle plot by focusing on a different aspect.<!--- WHICH ASPECT?-->
+
+First, I combine the data probe and the sleep. The data used for this exploration has been downloaded from OSF (https://osf.io/xq6wr/).
 
 ```{r start}
+# Join diary & data
+left_join(sleep_diary |> 
+            mutate(subj=as.numeric(subj), 
+                   sleepdep = ifelse(pre_control==1, "control",
+                              ifelse(pre_sleepdep==1, "SD", NA))),
+              #' Add common var
+          data.probe,
+          by=c("subj", "sleepdep")) -> sleep_and_data
+```
 
+
+```{r start}
+colnames(sleep_and_date)
+sleep_and_date |> 
+  ggplot(aes(x = sleep_time))
 
 ```
 
