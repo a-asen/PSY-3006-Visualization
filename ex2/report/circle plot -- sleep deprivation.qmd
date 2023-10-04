@@ -36,16 +36,30 @@ left_join(sleep_diary |>
 
 
 ```{r start}
-colnames(sleep_and_date)
-sleep_and_date |> 
-  ggplot(aes(x = sleep_time))
+
+sleep_and_data |> 
+  filter(!(is.na(sleepdep))) |>
+  ggplot(aes(x = sleep_time_cum, y=sleep_duration, col=sleepdep))+
+  #ggplot(aes(x = sleep_time_cum))+# y=sleep_duration, col=sleepdep))+
+  coord_polar()+
+  geom_point(aes(x=12, y=1), alpha=0)+
+  stat_summary()+
+  geom_line(stat = "smooth")
+  stat_summary(geom="line")
+  geom_col()
 
 ```
+
 
 ```{r start}
 
 ```
 
+
 ```{r start}
 
 ```
+
+
+
+
