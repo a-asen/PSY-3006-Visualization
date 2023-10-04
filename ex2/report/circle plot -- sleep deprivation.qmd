@@ -12,15 +12,17 @@ editor:
 ```{r packages}
 library(tidyverse)
 # loader script
-source("../data/load.r")
-load("../data") # load all rdata files in path
-
+list.files("../data", pattern=".rdata", full.names = T) -> files
+for(x in files){load(x)}
 
 ```
 
 Here I will further investigate circle plots by focusing on a different aspect. 
 
 ```{r start}
+data.probe |>
+  ggplot(aes(x=block, y=zlogapen ))+
+  geom_point()
 
 ```
 
