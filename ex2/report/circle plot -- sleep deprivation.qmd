@@ -8,11 +8,7 @@ editor:
       wrap: 62
 ---
 
-```{r packages}
-library(tidyverse)
-# loader script
-list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
-for(x in files){load(x)}
+```{r ..}
 
 ```
 
@@ -22,6 +18,14 @@ for(x in files){load(x)}
 Here I will further investigate the use of circle plot by focusing on a different aspect.<!--- WHICH ASPECT?-->
 
 First, I combine the data probe and the sleep. The data used for this exploration has been downloaded from OSF (https://osf.io/xq6wr/).
+
+```{r packages}
+library(tidyverse)
+# loader script
+list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
+for(x in files){load(x)}
+
+```
 
 ```{r start}
 # Join diary & data
@@ -39,10 +43,22 @@ left_join(sleep_diary |>
 
 sleep_and_data |> 
   filter(!(is.na(sleepdep))) |>
-  ggplot(aes(x = sleep_time_cum, y=sleep_duration, col=sleepdep))+
+  group_by(subj) |>
+  summarize(
+    # Mean sleep duration over participant by condition 
+    NS_sleep = mean(sleep_duration[sleepdep=="control"], na.rm=T),
+    PSD_sleep = mean(sleep_duration[sleepdep=="SD"], na.rm=T),
+    # mean sleep time over participant by condition
+    NS_sleep_time = mean(sleep_time_cum[sleepdep=="control"], na.rm=T),
+    PSD_sleep_time = mean(sleep_time_cum[sleepdep=="SD"], na.rm=T),
+    # mean wake time over participant by condition
+    NS_wake_time = mean(last_awaking_fix[sleepdep=="control"], na.rm=T),
+    PSD_wake_time = mean(last_awaking_fix[sleepdep=="SD"], na.rm=T),
+    ) |>
+ggplot(aes(x = sleep_time_cum, y=sleep_duration, col=sleepdep))+
   #ggplot(aes(x = sleep_time_cum))+# y=sleep_duration, col=sleepdep))+
-  coord_polar()+
-  geom_point(aes(x=12, y=1), alpha=0)+
+  #coord_polar()+
+  #geom_point(aes(x=12, y=1), alpha=0)
   stat_summary()+
   geom_line(stat = "smooth")
   stat_summary(geom="line")
