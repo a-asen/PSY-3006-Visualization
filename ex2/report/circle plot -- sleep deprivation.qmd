@@ -48,17 +48,18 @@ sleep_and_data |>
   group_by(subj) |>
   summarize(
     # Mean sleep duration over participant by condition 
-    NS_s_duration = mean(sleep_duration[sleepdep=="control"], na.rm=T),
-    PSD_s_duration = mean(sleep_duration[sleepdep=="SD"], na.rm=T),
+    NS_duration = mean(sleep_duration[sleepdep=="control"], na.rm=T),
+    PSD_duration = mean(sleep_duration[sleepdep=="SD"], na.rm=T),
     # mean sleep time over participant by condition
-    NS_sleep_time = mean(sleep_time_cum[sleepdep=="control"], na.rm=T),
-    PSD_sleep_time = mean(sleep_time_cum[sleepdep=="SD"], na.rm=T),
+    NS_sleep = mean(sleep_time_cum[sleepdep=="control"], na.rm=T),
+    PSD_sleep = mean(sleep_time_cum[sleepdep=="SD"], na.rm=T),
     # mean wake time over participant by condition
-    NS_wake_time = mean(last_awaking_fix[sleepdep=="control"], na.rm=T),
-    PSD_wake_time = mean(last_awaking_fix[sleepdep=="SD"], na.rm=T),
+    NS_wake = mean(last_awaking_fix[sleepdep=="control"], na.rm=T),
+    PSD_wake = mean(last_awaking_fix[sleepdep=="SD"], na.rm=T),
     ) |>
-  pivot_longer(1:7, names_pattern = "(.s_duration)(.sleep_time)(wake_time)",
-               names_to=c("one", "two", "tree"), ) 
+  pivot_longer(c(starts_with("NS"), starts_with("PSD")), 
+               names_pattern = "(.*)_(.*)",
+               names_to=c("sleepdep", ".value")) 
   
 ggplot(aes(x = NS_s_duration, y=NS_sleep_time, col=sleepdep))+
   #ggplot(aes(x = sleep_time_cum))+# y=sleep_duration, col=sleepdep))+
