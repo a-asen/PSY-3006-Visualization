@@ -72,19 +72,38 @@ sleep_and_data |>
 ```
 
 
+This figure plots all the individual data points. This means that each participants has three data points shown on the figure. This, however, is difficult to discern without applying names to each of the data points.  However, I would like a summary of all the
 ```{r start}
 sleep_and_data |>
   filter(!(is.na(sleepdep))) |>
   ggplot(aes(x=sleep_time, y=sleep_duration, col=sleepdep))+
-  stat_summary(geom="col")+
+  stat_summary(geom="col", )+
   stat_summary(geom="pointrange")
   geom_col()
+  
 ```
 
 
 ```{r start}
+sleep_and_data |>
+  filter(!(is.na(sleepdep))) |>
+  ggplot(aes(x=sleep_time, y=sleep_duration, col=sleepdep, group=subj))+
+  geom_point()+
+  stat_summary(geom="col", fun = \(data){
+    print(data)
+    data$x -> x
+    data$y -> y
+    data$col -> col
+  })
+  stat_summary(geom="pointrange")
+  geom_col()
+
 
 ```
+
+
+
+
 
 
 
