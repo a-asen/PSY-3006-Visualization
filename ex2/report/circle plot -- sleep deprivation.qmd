@@ -42,7 +42,6 @@ left_join(sleep_diary |>
 
 
 ```{r start}
-
 sleep_and_data |> 
   filter(!(is.na(sleepdep))) |>
   group_by(subj) |>
@@ -52,32 +51,34 @@ sleep_and_data |>
     PSD_duration = mean(sleep_duration[sleepdep=="SD"], na.rm=T),
     # mean sleep time over participant by condition
     NS_sleep = mean(sleep_time_cum[sleepdep=="control"], na.rm=T),
+    NS_sleep = ifelse(NS_sleep>=24, NS_sleep-24, NS_sleep),
+      #' Fix to standard clock time
+   # NS_sleep_sd = sd(sleep_time_cum[sleepdep=="control"], na.rm=T),
     PSD_sleep = mean(sleep_time_cum[sleepdep=="SD"], na.rm=T),
+    PSD_sleep = ifelse(PSD_sleep>=24, PSD_sleep-24, PSD_sleep),
+   # PSD_sleep_sd = sd(sleep_time_cum[sleepdep=="SD"], na.rm=T),
     # mean wake time over participant by condition
     NS_wake = mean(last_awaking_fix[sleepdep=="control"], na.rm=T),
     PSD_wake = mean(last_awaking_fix[sleepdep=="SD"], na.rm=T),
     ) |>
   pivot_longer(c(starts_with("NS"), starts_with("PSD")), 
                names_pattern = "(.*)_(.*)",
-               names_to=c("sleepdep", ".value")) 
-  
-ggplot(aes(x = NS_s_duration, y=NS_sleep_time, col=sleepdep))+
-  #ggplot(aes(x = sleep_time_cum))+# y=sleep_duration, col=sleepdep))+
-  #coord_polar()+
-  #geom_point(aes(x=12, y=1), alpha=0)
-  geom_col()
-  stat_summary()+
-  geom_line(stat = "smooth")
-  stat_summary(geom="line")
-
-  library(reshape2)
-  reshape2::dcast()
-
+               names_to=c("sleepdep", ".value")) |>
+  mutate(sleepdep = factor(sleepdep, levels=c("PSD","NS"))) |>
+  ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
+  geom_col(width = .015)+
+  geom_point(size=3)
+###
 ```
 
 
 ```{r start}
-
+sleep_and_data |>
+  filter(!(is.na(sleepdep))) |>
+  ggplot(aes(x=sleep_time, y=sleep_duration, col=sleepdep))+
+  stat_summary(geom="col")+
+  stat_summary(geom="pointrange")
+  geom_col()
 ```
 
 
