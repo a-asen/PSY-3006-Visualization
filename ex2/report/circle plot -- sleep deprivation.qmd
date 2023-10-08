@@ -37,8 +37,8 @@ Before we start, some minor changes to the data frame will be done to make the p
 # Join diary & data
 left_join(sleep_diary |> 
             mutate(subj=as.numeric(subj), 
-                   sleepdep = ifelse(pre_control==1, "NS",
-                                     ifelse(pre_sleepdep==1, "PSD", NA))),
+                   sleepdep = ifelse(pre_control==1, "control",
+                                     ifelse(pre_sleepdep==1, "SD", NA))),
               #' Add common var
           data.probe, # behaviour data
           by=c("subj", "sleepdep")) -> sleep_and_data
@@ -106,6 +106,16 @@ slp |>
   geom_point(size=3)
 ###
 ```
+
+
+checking the dimensions of the df (indicate the reduction in data points. )
+
+```{r}
+slp |> #dim()
+  filter(subj, sleepdep) |> dim()
+  group_by(subj, sleepdep) |> dim()
+```
+
 
 
 
