@@ -96,7 +96,7 @@ slp |>
 
 This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance, by using standard error, standard deviation or confidence intervals. For now I will stick with standard error, but this can easily be changed later. 
 
-```{r}
+```{r transformation}
 sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
@@ -109,15 +109,17 @@ sleep |>
     sleep = mean(sleep_time_cum, na.rm=T),
     sleep = ifelse(sleep>=24, sleep-24, sleep),
     sleep_se = sd(sleep_time_cum, na.rm=T) / sqrt(sd_length),
-    
     # mean wake time over participant by condition
     waking = mean(last_awaking_fix, na.rm=T),
     waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),) |> 
   unique() |>
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
-  geom_point(size=2.5)
+  geom_point(size=2.5)+
+  geom_errorbar()# WORK FROM HERE
 
 ```
+
+Here I improved upon the data transformation and included a calculation of the standard error. This .. (will be used to estimate the error of the mean)
 
 
 checking the dimensions of the df (indicate the reduction in data points. )
@@ -131,6 +133,8 @@ slp |> #dim()
 
 
 
+
+<!--- Probably leave this out -->
 ```{r}
 # dont make dis hard for me, thx
 
