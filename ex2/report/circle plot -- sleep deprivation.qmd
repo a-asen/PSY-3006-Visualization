@@ -34,20 +34,10 @@ Before we start, some minor changes to the data frame will be done to make the p
 <!--- CHECK IF IT IS NECESSARY WITH BEHAVIOUR PERFORMANCE! -->
 
 ```{r start}
-# Join diary & data
-left_join(sleep_diary |> 
-            mutate(subj=as.numeric(subj), 
-                   sleepdep = ifelse(pre_control==1, "NS",
-                                     ifelse(pre_sleepdep==1, "PSD", NA))),
-              #' Add common var
-          data.probe, # behaviour data
-          by=c("subj", "sleepdep")) -> sleep_and_data
-
-# data filtering & changes
-sleep_and_data |>
-  filter(!(is.na(sleepdep))) |>
-  mutate(sleepdep=factor(sleepdep, levels=c("PSD","NS"))
-         ) -> slp
+sleep_diary |>
+  mutate(sleepdep = ifelse(pre_control==1, "control",
+                           ifelse(pre_sleepdep==1, "SD", NA))
+         ) -> sleep
 ```
 
 According to the draft idea, I believe it is best to plot the data according to sleep time and sleep duration. More specifically, the x-variable containing the time that participants fell asleep, and the y-variable relating to the amount of sleep participant received. This will be split into their respective conditions and in this way, we should see that participants go to sleep later, and sleep less. 
@@ -88,10 +78,8 @@ slp |>
     NS_sleep = mean(sleep_time_cum[sleepdep=="NS"], na.rm=T),
     NS_sleep = ifelse(NS_sleep>=24, NS_sleep-24, NS_sleep),
       #' Fix to standard clock time
-   # NS_sleep_sd = sd(sleep_time_cum[sleepdep=="NS"], na.rm=T),
     PSD_sleep = mean(sleep_time_cum[sleepdep=="PSD"], na.rm=T),
     PSD_sleep = ifelse(PSD_sleep>=24, PSD_sleep-24, PSD_sleep),
-   # PSD_sleep_sd = sd(sleep_time_cum[sleepdep=="PSD"], na.rm=T),
     # mean wake time over participant by condition
     NS_wake = mean(last_awaking_fix[sleepdep=="NS"], na.rm=T),
     PSD_wake = mean(last_awaking_fix[sleepdep=="PSD"], na.rm=T),
@@ -102,10 +90,50 @@ slp |>
   mutate(sleepdep=factor(sleepdep, levels=c("PSD", "NS"))) |> 
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
   geom_point(size=2.5)
-###
 ```
 
-This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance by using 
+This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance, by using standard error, standard deviation or confidence intervals. For now I will stick with standard error, but this can easily be changed later. 
+
+```{r}
+slp |>
+  group_by(subj) |>
+  summarize(
+    NS_duration = mean(sleep_duration[sleepdep=="NS"], na.rm=T),
+    a = sd(sleep_duration[sleepdep=="NS"], na.rm=T),
+    a2 = unique(date[sleepdep=="NS"]),
+    b = (length(sleep_duration[sleepdep=="NS"])),
+    c = a/b,
+    NS_duration_se = sd(sleep_duration[sleepdep=="NS"], 
+                        na.rm=T) / sqrt(length(sleep_duration[sleepdep=="NS"])),
+    PSD_duration = mean(sleep_duration[sleepdep=="PSD"], na.rm=T),
+    NS_duration_se = sd(sleep_duration[sleepdep=="PSD"], 
+                        na.rm=T)/sqrt(length(sleep_duration[sleepdep=="PSD"])),
+    # mean sleep time over participant by condition
+    NS_sleep = mean(sleep_time_cum[sleepdep=="NS"], na.rm=T),
+    NS_sleep = ifelse(NS_sleep>=24, NS_sleep-24, NS_sleep),
+    NS_duration_se = sd(sleep_time_cum[sleepdep=="NS"], 
+                        na.rm=T)/sqrt(length(sleep_time_cum[sleepdep=="NS"])),
+      #' Fix to standard clock time
+    PSD_sleep = mean(sleep_time_cum[sleepdep=="PSD"], na.rm=T),
+    PSD_sleep = ifelse(PSD_sleep>=24, PSD_sleep-24, PSD_sleep),
+    NS_duration_se = sd(sleep_time_cum[sleepdep=="PSD"], 
+                        na.rm=T)/sqrt(length(sleep_time_cum[sleepdep=="PSD"])),
+    # mean wake time over participant by condition
+    NS_wake = mean(last_awaking_fix[sleepdep=="NS"], na.rm=T),
+    NS_duration_se = sd(last_awaking_fix[sleepdep=="NS"],
+                        na.rm=T)/sqrt(length(last_awaking_fix[sleepdep=="NS"])),
+    PSD_wake = mean(last_awaking_fix[sleepdep=="PSD"], na.rm=T),
+    NS_duration_se = sd(last_awaking_fix[sleepdep=="PSD"], na.rm=T)/sqrt(length(last_awaking_fix[sleepdep=="PSD"])),
+    ) |> View()
+  pivot_longer(c(starts_with("NS"), starts_with("PSD")), 
+               names_pattern = "(.*)_(.*)",
+               names_to=c("sleepdep", ".value")) |>
+  mutate(sleepdep=factor(sleepdep, levels=c("PSD", "NS"))) |> 
+  ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
+  geom_point(size=2.5)
+
+```
+
 
 checking the dimensions of the df (indicate the reduction in data points. )
 
@@ -116,6 +144,26 @@ slp |> #dim()
 ```
 
 
+
+
+```{r}
+# dont make dis hard for me, thx
+
+# Join diary & data
+sleep_diary |>
+  mutate(subj=as.numeric(subj),
+         sleepdep = ifelse(pre_control==1, "control",
+                           ifelse(pre_sleepdep==1, "SD", NA))) |> 
+          #' Add common var
+  left_join(data.probe, # behaviour data
+          by=c("subj", "sleepdep")) |>
+  mutate(sleepdep = factor(
+    fct_recode(sleepdep, NS="control", PSD="SD"), levels = c("PSD","NS"))) -> sleep_and_data
+
+# data filtering & changes
+sleep_and_data |>
+  filter(!(is.na(sleepdep))) -> slp
+```
 
 
 
