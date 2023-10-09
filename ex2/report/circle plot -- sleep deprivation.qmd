@@ -37,8 +37,8 @@ Before we start, some minor changes to the data frame will be done to make the p
 # Join diary & data
 left_join(sleep_diary |> 
             mutate(subj=as.numeric(subj), 
-                   sleepdep = ifelse(pre_control==1, "control",
-                                     ifelse(pre_sleepdep==1, "SD", NA))),
+                   sleepdep = ifelse(pre_control==1, "NS",
+                                     ifelse(pre_sleepdep==1, "PSD", NA))),
               #' Add common var
           data.probe, # behaviour data
           by=c("subj", "sleepdep")) -> sleep_and_data
@@ -70,7 +70,7 @@ To illustrate my point, we can visualize sleep duration over each subject, split
 ```{r summary over subj & sleepdep}
 slp |>
   ggplot(aes(x=subj, y=sleep_duration, col=sleepdep))+
-  geom_point(position=position_dodge(.8))+
+  geom_point(position=position_dodge(.8), size=1, alpha=.6)+
   stat_summary()
 
 ```
@@ -99,14 +99,13 @@ slp |>
   pivot_longer(c(starts_with("NS"), starts_with("PSD")), 
                names_pattern = "(.*)_(.*)",
                names_to=c("sleepdep", ".value")) |>
-  mutate(sleepdep = factor(sleepdep, levels=c("PSD","NS"))) |>
+  mutate(sleepdep=factor(sleepdep, levels=c("PSD", "NS"))) |> 
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
-  #geom_col() # For some reason this produce weird results
-  stat_summary(geom="col")+
-  geom_point(size=3)
+  geom_point(size=2.5)
 ###
 ```
 
+This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance by using 
 
 checking the dimensions of the df (indicate the reduction in data points. )
 
