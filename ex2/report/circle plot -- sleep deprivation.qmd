@@ -118,7 +118,7 @@ sleep |>
   unique() -> s_sleep
 
 s_sleep |>  
-  ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
+  ggplot(aes(x=sleep, y=duration, col=sleepdep))+
   geom_point(size=2)+
   geom_errorbar(aes(ymin=duration-duration_se, ymax=duration+duration_se))+
   geom_point(aes(group=subj))
@@ -128,7 +128,7 @@ Here I improved upon the data transformation and included a calculation of the s
 
 
 ```{r better transformation & circle plot}
-s_sleep |>
+sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
   group_by(subj, sleepdep) |>
@@ -140,6 +140,7 @@ s_sleep |>
     # mean sleep time over participant by condition
     sleep = mean(sleep_time_cum, na.rm=T),
     sleep = ifelse(sleep>=24, sleep-24, sleep),
+        # could add clock time here
     sleep_sd = sd(sleep_time_cum, na.rm=T), 
     sleep_se = sd(sleep_time_cum, na.rm=T) / sqrt(sd_length),
     # mean wake time over participant by condition
@@ -147,14 +148,27 @@ s_sleep |>
     waking_sd = sd(last_awaking_fix, na.rm=T),
     waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),) |> 
   unique() |>
-  ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
+  ggplot(aes(x=sleep, y=duration, col=sleepdep))+
   geom_point(size=2)+
   geom_errorbar(aes(ymin=duration-duration_se, ymax=duration+duration_se))+
-  coord_polar()+
-  geom_point(aes(x=1,y=3), alpha = 0)+
-  scale_x_continuous(breaks=c(0,seq(0,23,1)), labels = c(as.character(seq(-1,23,1) )))
+  coord_polar() -> sobj1
+sobj1
 ```
 
+Now we can start by making the circle plot more neat. Firstly, the data points all seem to cluster in around 2-3 hours, at least for the PSD condition. We can change this by placing an invisible point closer to the center, which will increase the distance a bit. Moreover, we can change the sleep to a 24 hour clock, indicating when participants went to sleep. 
+
+```{r}
+sobj1 +
+  geom_point(aes(x=1,y=3), alpha =0)+ # some distances from the center
+  scale_x_continuous(breaks = seq(0,24,1), limits = c(0,NA))+ # Limits add 0
+  scale_y_continuous(breaks = seq(4,10,1))+
+  theme_minimal()+
+  labs(x="Sleep time", y="                                        Sleep duration", fill="Condition", col="Condition")
+```
+
+
+  geom_point(aes(x=1,y=3), alpha = 0) 
+  scale_x_continuous(breaks=seq(0,23,1), )
 
 
 checking the dimensions of the df (indicate the reduction in data points. )
