@@ -188,8 +188,22 @@ sobj2
 
 In this plot, the x-axis represents the time at which participants fell asleep, while the y-axis represents the amount of sleep participants received. From the plot, we can clearly see that during the NS condition, participants went to sleep earlier and slept for longer as compared to the PSD condition. During the PSD condition, participants went to sleep later, and also slept shorter (indicated with points closer to the center.
 
+With the previous plot we are able to approximate when participants went to sleep, and approximately how long they slept. We could possibly make this more clear by using the cumulative sum of the clock instead of a 24 hour clock.
 
+```{r}
+sleep |>
+  ggplot(aes(x=sleep_time_cum, y=sleep_duration, col=sleepdep))+
+  geom_point()
+```
 
+Firstly, with this plot we can clearly see a downward trend for the sleep duration plotted against the sleep time. Keeping the data in this way may be easier to work with in the future, and we can easily change the appears of the x-axis to the appropriate time (i.e., 0, 1, 2, etc.).
+
+```{r}
+sleep |>
+  ggplot(aes(x=sleep_time_cum, y=sleep_duration, col=sleepdep))+
+  geom_point()+
+  scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1)))
+```
 
 
 
