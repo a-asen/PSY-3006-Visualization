@@ -258,10 +258,16 @@ A benefit with this plot is that all the data points are easier to locate. Howev
 ```{r}
 sobj10 + 
   coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
-  geom_blank(aes(x=30,y=3.5))+ # Latest (empty) point
-  geom_blank(aes(x=18,y=3.5))+ # Earliest (empty) point
-  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)
+  geom_blank(aes(x=30,y=3))+ # Latest (empty) point
+  geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
+  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
+  scale_y_continuous(breaks=seq(0,8,1))+
+  theme_minimal()
 ```
+
+This plots does indeed look much better. Moreover, we are meaningfully visualizing clock time, at least to some degree, within a 12-hour span. From 18 to 6, which should (and in our case do) capture all sleep estimates.
+
+
 
 
 
@@ -324,35 +330,12 @@ test |>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 We can add the wake time and connect these with lines, (but this is probably messy...)
 
 ```{r}
 sobj2 +
   geom_point(aes(x = waking, y=duration, col=sleepdep))
 ```
-
-
-
-
-
-
-
-
-
-
 
 
 
