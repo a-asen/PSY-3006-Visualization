@@ -205,9 +205,53 @@ sleep |>
   scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1)))
 ```
 
+This looks similar to previously (which is good), but it should now be easier to work with.
 
+```{r}
+sleep |>
+  group_by(sleepdep) |>
+  mutate(sd_length = length(sleepdep)) |> ungroup() |>
+  group_by(subj, sleepdep) |>
+  mutate(
+    # Mean sleep duration
+    duration = mean(sleep_duration, na.rm=T),
+    duration_sd = sd(sleep_duration, na.rm=T),
+    duration_se = sd(sleep_duration, na.rm=T) / sqrt(sd_length),
+    # mean sleep time over participant by condition
+    sleep = mean(sleep_time_cum, na.rm=T),
+        # could add clock time here
+    sleep_sd = sd(sleep_time_cum, na.rm=T), 
+    sleep_se = sd(sleep_time_cum, na.rm=T) / sqrt(sd_length),
+    # mean wake time over participant by condition
+    waking = mean(last_awaking_fix, na.rm=T),
+    waking_sd = sd(last_awaking_fix, na.rm=T),
+    waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),
+    ) -> s_sleep2
 
+s_sleep2 |> 
+  ggplot(aes(x=sleep, y=duration, col=sleepdep))+
+  geom_point()+
+  geom_linerange(aes(ymin=duration-duration_se, ymax=duration+duration_se, x=sleep))+
+  # add NS mean line
+  geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep)), 
+                 s_sleep2 |> filter(sleepdep=="NS"))+
+  # Add PSD mean line
+  geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep)), 
+                 s_sleep2 |> filter(sleepdep=="PSD"))+
+  scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1)))
+  
+  coord_polar()
 
+-> sobj10
+sobj10
+```
+
+To this end, it is now a rather easy to add a mean line of sleep duration for each conditions. With this, we can clearly see that participants, in general, slept less during the PSD condition than the NS condition. 
+
+```{r}
+
+  scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1)))
+```
 
 
 
