@@ -238,21 +238,30 @@ s_sleep2 |>
   # Add PSD mean line
   geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep)), 
                  s_sleep2 |> filter(sleepdep=="PSD"))+
-  scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1)))
-  
-  coord_polar()
-
--> sobj10
+  # fix the x-axis
+  scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1))
+                     ) -> sobj10
 sobj10
 ```
 
 To this end, it is now a rather easy to add a mean line of sleep duration for each conditions. With this, we can clearly see that participants, in general, slept less during the PSD condition than the NS condition. 
 
 ```{r}
-
-  scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1)))
+sobj10 +
+  coord_polar() +
+  theme_minimal()+
+  geom_blank(aes(y=3.5))
 ```
 
+A benefit with this plot is that all the data points are easier to locate. However, it is now less obvious what the time is, as compared to the previous plots, in which the x-axis corresponded to clock time. One of the benefits of using a circular plot, is to visualize data in an informative or intuitive way. In the above plot, we need to constantly check up against the x-axis to understand which time we are at. This is couple of times easier to do with the normal plot. However, if we turn the location of the circle plot to correspond to the normal clock time, maybe things will turn more neatly. 
+
+```{r}
+sobj10 + 
+  coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
+  geom_blank(aes(x=30,y=3.5))+ # Latest (empty) point
+  geom_blank(aes(x=18,y=3.5))+ # Earliest (empty) point
+  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)
+```
 
 
 
