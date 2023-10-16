@@ -35,8 +35,8 @@ Before we start, some minor changes to the data frame will be done to make the p
 
 ```{r start}
 sleep_diary |>
-  mutate(sleepdep = ifelse(pre_control==1, "control",
-                           ifelse(pre_sleepdep==1, "SD", NA)), 
+  mutate(sleepdep = factor(if_else(pre_control==1, "NS",
+                           ifelse(pre_sleepdep==1, "PSD", NA)), levels = c("PSD","NS")), 
          subj = as.numeric(subj) 
          ) |>
   filter(!(is.na(sleepdep))) -> sleep
@@ -70,7 +70,7 @@ sleep |>
 This plot produce a summary statistic (mean_se) over each subject for each condition. The result is more of what I am looking for. However, this plot is missing the relation to sleep time, which has to be represented by one of the axis. There is a problem related to this, however, in that each sleep duration point has a related sleep time point. This means that there is an association between all the data points for our plot, and grouping/summarizing within the ggplot is hard (if not impossible). One work around is to transform the data before we plug it into ggplot. 
 
 ```{r start}
-slp |>
+sleep |>
   group_by(subj) |>
   summarize(
     # Mean sleep duration over participant by condition 
@@ -91,35 +91,70 @@ slp |>
                names_to=c("sleepdep", ".value")) |>
   mutate(sleepdep=factor(sleepdep, levels=c("PSD", "NS"))) |> 
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
-  geom_point(size=2.5)
+  geom_point(size=2)
 ```
 
 This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance, by using standard error, standard deviation or confidence intervals. For now I will stick with standard error, but this can easily be changed later. 
 
-```{r transformation}
+```{r transformation & simple vis}
 sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
   group_by(subj, sleepdep) |>
-  summarize(
+  reframe(
     # Mean sleep duration
     duration = mean(sleep_duration, na.rm=T),
+    duration_sd = sd(sleep_duration, na.rm=T),
     duration_se = sd(sleep_duration, na.rm=T) / sqrt(sd_length),
     # mean sleep time over participant by condition
     sleep = mean(sleep_time_cum, na.rm=T),
     sleep = ifelse(sleep>=24, sleep-24, sleep),
+    sleep_sd = sd(sleep_time_cum, na.rm=T), 
     sleep_se = sd(sleep_time_cum, na.rm=T) / sqrt(sd_length),
     # mean wake time over participant by condition
     waking = mean(last_awaking_fix, na.rm=T),
+    waking_sd = sd(last_awaking_fix, na.rm=T),
+    waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),) |> 
+  unique() -> s_sleep
+
+s_sleep |>  
+  ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
+  geom_point(size=2)+
+  geom_errorbar(aes(ymin=duration-duration_se, ymax=duration+duration_se))+
+  geom_point(aes(group=subj))
+```
+
+Here I improved upon the data transformation and included a calculation of the standard error and standard deviation. This will be used to indicate some uncertainty in our estimate or indicate the variation of the data. As noted previously, circle plots are more apt at visualizing summarizations than actual plots. In particular, when the data points cluster on or near each other, as the circle plot transform the layout of the plot in such a way as to make it difficulty to read or interpret. With this, we can proceed to make it circular.
+
+
+```{r better transformation & circle plot}
+s_sleep |>
+  group_by(sleepdep) |>
+  mutate(sd_length = length(sleepdep)) |> ungroup() |>
+  group_by(subj, sleepdep) |>
+  mutate(
+    # Mean sleep duration
+    duration = mean(sleep_duration, na.rm=T),
+    duration_sd = sd(sleep_duration, na.rm=T),
+    duration_se = sd(sleep_duration, na.rm=T) / sqrt(sd_length),
+    # mean sleep time over participant by condition
+    sleep = mean(sleep_time_cum, na.rm=T),
+    sleep = ifelse(sleep>=24, sleep-24, sleep),
+    sleep_sd = sd(sleep_time_cum, na.rm=T), 
+    sleep_se = sd(sleep_time_cum, na.rm=T) / sqrt(sd_length),
+    # mean wake time over participant by condition
+    waking = mean(last_awaking_fix, na.rm=T),
+    waking_sd = sd(last_awaking_fix, na.rm=T),
     waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),) |> 
   unique() |>
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep))+
-  geom_point(size=2.5)+
-  geom_errorbar()# WORK FROM HERE
-
+  geom_point(size=2)+
+  geom_errorbar(aes(ymin=duration-duration_se, ymax=duration+duration_se))+
+  coord_polar()+
+  geom_point(aes(x=1,y=3), alpha = 0)+
+  scale_x_continuous(breaks=c(0,seq(0,23,1)), labels = c(as.character(seq(-1,23,1) )))
 ```
 
-Here I improved upon the data transformation and included a calculation of the standard error. This .. (will be used to estimate the error of the mean)
 
 
 checking the dimensions of the df (indicate the reduction in data points. )
@@ -135,6 +170,8 @@ slp |> #dim()
 
 
 <!--- Probably leave this out -->
+
+<!--- This is with data -->
 ```{r}
 # dont make dis hard for me, thx
 
