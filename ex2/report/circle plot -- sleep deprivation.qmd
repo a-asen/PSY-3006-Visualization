@@ -2,12 +2,11 @@
 title: "Circle Plot: sleep deprivation"
 format: pdf
 lang: en-GB
-fontfamily: "Arial" 
 editor: 
   markdown:
       wrap: 62
 ---
-
+<!--- #fontfamily: "Arial" -->
 ```{r ..}
 
 # Final plot here
@@ -59,17 +58,16 @@ As expected, participants did go to sleep later during the PSD (SD) condition an
 
 To illustrate my point, we can visualize sleep duration over each subject, split by condition. 
 
-```{r summary over subj & sleepdep}
+```{r summary over subj and sleepdep}
 sleep |>
   ggplot(aes(x=subj, y=sleep_duration, col=sleepdep))+
   geom_point(position=position_dodge(.8), size=1, alpha=.6)+
   stat_summary()
-
 ```
 
 This plot produce a summary statistic (mean_se) over each subject for each condition. The result is more of what I am looking for. However, this plot is missing the relation to sleep time, which has to be represented by one of the axis. There is a problem related to this, however, in that each sleep duration point has a related sleep time point. This means that there is an association between all the data points for our plot, and grouping/summarizing within the ggplot is hard (if not impossible). One work around is to transform the data before we plug it into ggplot. 
 
-```{r start}
+```{r start plot}
 sleep |>
   group_by(subj) |>
   summarize(
@@ -96,7 +94,7 @@ sleep |>
 
 This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance, by using standard error, standard deviation or confidence intervals. For now I will stick with standard error, but this can easily be changed later. 
 
-```{r transformation & simple vis}
+```{r transformation and simple vis}
 sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
@@ -119,15 +117,36 @@ sleep |>
 
 s_sleep |>  
   ggplot(aes(x=sleep, y=duration, col=sleepdep))+
-  geom_point(size=2)+
-  geom_errorbar(aes(ymin=duration-duration_se, ymax=duration+duration_se))+
-  geom_point(aes(group=subj))
+  geom_point(size=1.5)+
+  geom_errorbar(aes(ymin=duration-duration_se, ymax=duration+duration_se))
 ```
 
-Here I improved upon the data transformation and included a calculation of the standard error and standard deviation. This will be used to indicate some uncertainty in our estimate or indicate the variation of the data. As noted previously, circle plots are more apt at visualizing summarizations than actual plots. In particular, when the data points cluster on or near each other, as the circle plot transform the layout of the plot in such a way as to make it difficulty to read or interpret. With this, we can proceed to make it circular.
+Here I improved upon the data transformation and included a calculation of the standard error (SE) and standard deviation (SD). This will be used to indicate some uncertainty in our estimate or indicate the variation of the data. As noted previously, circle plots are more apt at visualizing summarized data than the raw data. In particular, when the data points cluster on or near each other, as the circle plot transform the layout of the plot in such a way as to make it difficulty to read or interpret. With this, we can proceed to make it circular.
 
+Before we move on, I would like to quickly investigate whether to stick with SD or SE. To me SD appear to be more informative as it indicate, to some degree, the width of the data. However, exactly why the width of the data is important or interesting may be more difficult to justify. In our case, the SD indicate variation in sleep time. Since we are estimating participants sleep duration, their SD should (hopefully) be rather small, indicating more consistent sleep duration. On the other hand, visualizing SE would indicate the error of the estimate, which also partially indicate that the uncertainty is wider, although it does not really indicate just how wide - in my opinion. To do this, we simply change the calculated "_se" to "_sd" in the "linerange" argument. 
 
-```{r better transformation & circle plot}
+```{r SD test}
+s_sleep |>
+  ggplot(aes(x=sleep, y=duration, col=sleepdep))+
+  geom_point()+
+  geom_linerange(aes(ymin=duration-duration_sd,ymax=duration+duration_sd))
+```
+
+Although I would argue that SD may be more informative, it adds a lot of overlap with our data estimates. Which does not bode well for visualizing the data circularly. Indeed, it is rather difficult to even see all the estimated points in this plot.
+
+```{r circluar SD test}
+s_sleep |>
+  ggplot(aes(x=sleep, y=duration, col=sleepdep))+
+  geom_point()+
+  geom_linerange(aes(ymin=duration-duration_sd,ymax=duration+duration_sd))+
+  coord_polar()+
+  geom_blank(aes(y=3))
+
+```
+
+Indeed, with the SD in the circular plot, it turns it to a mess. It even seems like some points are lost in the soup of the PSD sleep times.  Thus, for further investigation I will stick with SE, which makes the data points more readable, unless otherwise noted. 
+
+```{r better transformation and circle plot}
 sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
@@ -149,7 +168,7 @@ sleep |>
     waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),) |> 
   unique() |>
   ggplot(aes(x=sleep, y=duration, col=sleepdep))+
-  geom_point(size=2)+
+  geom_point(size=1.5)+
   geom_errorbar(aes(ymin=duration-duration_se, ymax=duration+duration_se))+
   coord_polar() -> sobj1
 sobj1
@@ -159,24 +178,123 @@ Now we can start by making the circle plot more neat. Firstly, the data points a
 
 ```{r}
 sobj1 +
-  geom_point(aes(x=1,y=3), alpha =0)+ # some distances from the center
-  scale_x_continuous(breaks = seq(0,24,1), limits = c(0,NA))+ # Limits add 0
+  geom_blank(aes(x=1,y=3))+ # Add an empty element too add some distances from the center
+  scale_x_continuous(breaks = seq(0,24,1), limits = c(0,NA), minor_breaks = F)+ # Limits add 0
   scale_y_continuous(breaks = seq(4,10,1))+
   theme_minimal()+
-  labs(x="Sleep time", y="                                        Sleep duration", fill="Condition", col="Condition")
+  labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition") -> sobj2
+sobj2
+```
+
+In this plot, the x-axis represents the time at which participants fell asleep, while the y-axis represents the amount of sleep participants received. From the plot, we can clearly see that during the NS condition, participants went to sleep earlier and slept for longer as compared to the PSD condition. During the PSD condition, participants went to sleep later, and also slept shorter (indicated with points closer to the center.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+To further improve on the plot we can add mean lines for each of the conditions to be more able to split the differences between the conditions. 
+# This is terribly hard b/c we do not use cum clock. Maybe investigate cum clock instead of standard clock?  indeed just use cum and change the labels. Or rather transform data to TIME objects which might be easier to work with? 
+
+```{r}
+sobj2 +
+  geom_linerange(aes(xmin=sleep, xmax=23.99, y=mean(duration)),
+                 data = s_sleep |> filter(sleepdep=="NS"))
+
+  geom_smooth(data=sleep, mapping=aes(x=sleep_time_cum, y=sleep_duration)) # this ends up weird.
+  geom_ribbon(data=
+                sleep |> group_by(sleepdep) |>
+                summarize(duration_m = mean(sleep_duration, na.rm=T), 
+                          sleep_min = min(sleep_time_cum, na.rm=T),
+                          sleep_max = max(sleep_time_cum, na.rm=T)), #|> pivot_wider(names_from = sleepdep, values_from=everything()),
+              mapping=aes(xmin=sleep_min, xmax=sleep_max, y=duration_m))
+              #mapping=aes(xmin=sleep_min_NS, xmax=sleep_max_NS, y=duration_m_NS))
 ```
 
 
-  geom_point(aes(x=1,y=3), alpha = 0) 
-  scale_x_continuous(breaks=seq(0,23,1), )
+
+
+
+
+# this is useless
+
+```{r}
+s_sleep
+
+a<- function(x){
+  h <- hours(floor(x))
+  m <- (x-floor(x))*60
+  s <- (m-floor(m))*60
+  
+  m<- minutes(floor(m))
+  s<- seconds(round(s))
+  
+  h+m+s -> a
+  hms(a)
+  return(a)
+}
+
+# This will not work
+s_sleep |> 
+  mutate(across(5:length(s_sleep), a)) -> test
+
+
+strftime(Sys.time(), format = "%H:%M:%S")
+strftime("23:50:23", format = "%H:%M:%S")
+
+test |>
+  ggplot(aes(x=sleep,y=duration))+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+We can add the wake time and connect these with lines, (but this is probably messy...)
+
+```{r}
+sobj2 +
+  geom_point(aes(x = waking, y=duration, col=sleepdep))
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 checking the dimensions of the df (indicate the reduction in data points. )
 
 ```{r}
-slp |> #dim()
-  filter(subj, sleepdep) |> dim()
-  group_by(subj, sleepdep) |> dim()
+# slp |> #dim()
+#   filter(subj, sleepdep) |> dim()
+#   group_by(subj, sleepdep) |> dim()
 ```
 
 
@@ -187,22 +305,22 @@ slp |> #dim()
 
 <!--- This is with data -->
 ```{r}
-# dont make dis hard for me, thx
-
-# Join diary & data
-sleep_diary |>
-  mutate(subj=as.numeric(subj),
-         sleepdep = ifelse(pre_control==1, "control",
-                           ifelse(pre_sleepdep==1, "SD", NA))) |> 
-          #' Add common var
-  left_join(data.probe, # behaviour data
-          by=c("subj", "sleepdep")) |>
-  mutate(sleepdep = factor(
-    fct_recode(sleepdep, NS="control", PSD="SD"), levels = c("PSD","NS"))) -> sleep_and_data
-
-# data filtering & changes
-sleep_and_data |>
-  filter(!(is.na(sleepdep))) -> slp
+# # dont make dis hard for me, thx
+# 
+# # Join diary & data
+# sleep_diary |>
+#   mutate(subj=as.numeric(subj),
+#          sleepdep = ifelse(pre_control==1, "control",
+#                            ifelse(pre_sleepdep==1, "SD", NA))) |> 
+#           #' Add common var
+#   left_join(data.probe, # behaviour data
+#           by=c("subj", "sleepdep")) |>
+#   mutate(sleepdep = factor(
+#     fct_recode(sleepdep, NS="control", PSD="SD"), levels = c("PSD","NS"))) -> sleep_and_data
+# 
+# # data filtering & changes
+# sleep_and_data |>
+#   filter(!(is.na(sleepdep))) -> slp
 ```
 
 
