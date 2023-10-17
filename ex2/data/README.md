@@ -1,1 +1,1 @@
-Data (and script) has been downloaded from OSF - https://osf.io/xq6wr/. 
+Data has been downloaded from OSF - https://osf.io/xq6wr/. 
