@@ -16,7 +16,8 @@ list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
 for(x in files){load(x)}
 sleep_diary |>
   mutate(sleepdep = factor(if_else(pre_control==1, "NS",
-                           ifelse(pre_sleepdep==1, "PSD", NA)), levels = c("PSD","NS")), 
+                           ifelse(pre_sleepdep==1, "PSD", NA)), 
+                           levels = c("PSD","NS")), 
          subj = as.numeric(subj) 
          ) |>
   filter(!(is.na(sleepdep))) -> sleep
@@ -47,21 +48,24 @@ sleep |>
 s_sleep2 |>
   mutate(sleepdep=as.character(sleepdep)) |> #unfactor
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, group=sleepdep))+
-  geom_col(position=position_dodge2(), width = 0.05, alpha=.18)+
+  geom_col(position=position_dodge2(), width = 0.075, alpha=.18)+
   scale_fill_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour 
   scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
   coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
   geom_blank(aes(x=30,y=3))+ # Latest (empty) point
   geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
-  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
+  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), 
+                     minor_breaks = F)+
   scale_y_continuous(breaks=seq(3,10,1))+
-  geom_point(aes(col=sleepdep))+
+  geom_point(aes(col=sleepdep), size=.6)+
   theme_minimal()+
   labs(x="Sleep time", y="Sleep duration", col="Condition", fill="Condition", 
        title = "Sleep time and duration between conditions",
-       caption="Sleep duration (y) over sleep time (x). NS = normal sleep, PSD = partial sleep deprivation.
-       Length of the bars represents sleep duration, and x location indicate sleep time. 
-       Sleep time according to clock time displayed from 18 (evening) to 6 (morning).")
+       caption="NS = normal sleep, PSD = partial sleep deprivation.
+       Length of the bars represents sleep duration, 
+       and x location indicate sleep time. 
+       Sleep time is displayed according to clock time 
+       displayed from 18 (evening) to 6 (morning).")
 ```
 
 {{< pagebreak >}}
@@ -86,7 +90,8 @@ Before we start, some minor changes to the data frame will be done to make the p
 ```{r transform data}
 sleep_diary |>
   mutate(sleepdep = factor(if_else(pre_control==1, "NS",
-                           ifelse(pre_sleepdep==1, "PSD", NA)), levels = c("PSD","NS")), 
+                           ifelse(pre_sleepdep==1, "PSD", NA)), 
+                           levels = c("PSD","NS")), 
          subj = as.numeric(subj) 
          ) |>
   filter(!(is.na(sleepdep))) -> sleep
@@ -107,7 +112,7 @@ To illustrate my point, we can visualize sleep duration over each subject, split
 ```{r stat summary over subj}
 sleep |>
   ggplot(aes(x=subj, y=sleep_duration, col=sleepdep))+
-  geom_point(position=position_dodge(.8), size=1, alpha=.6)+
+  geom_point(position=position_dodge(.8), size=.75, alpha=.6)+
   stat_summary()
 ```
 
@@ -228,7 +233,8 @@ sobj1 +
   scale_x_continuous(breaks = seq(0,24,1), limits = c(0,NA), minor_breaks = F)+ # Limits add 0
   scale_y_continuous(breaks = seq(4,10,1))+
   theme_minimal()+
-  labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition") -> sobj2
+  labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition"
+       ) -> sobj2
 sobj2
 ```
 
@@ -277,7 +283,8 @@ sleep |>
 s_sleep2 |> 
   ggplot(aes(x=sleep, y=duration, col=sleepdep))+
   geom_point()+
-  geom_linerange(aes(ymin=duration-duration_se, ymax=duration+duration_se, x=sleep))+
+  geom_linerange(aes(ymin=duration-duration_se, ymax=duration+duration_se, 
+                     x=sleep))+
   # add NS mean line
   geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep)), 
                  s_sleep2 |> filter(sleepdep=="NS"))+
@@ -306,7 +313,8 @@ sobj10 +
   coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
   geom_blank(aes(x=30,y=3))+ # Latest (empty) point
   geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
-  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
+  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), 
+                     minor_breaks = F)+
   scale_y_continuous(breaks=seq(3,8,1))+
   theme_minimal() -> sobj11
 sobj11
@@ -318,7 +326,8 @@ One missing feature is that we do not see the uncertainty in each participants s
 
 ```{r added horizontal se error }
 sobj11 + 
-  geom_linerange(aes(y=duration, xmin=sleep-sleep_se, xmax=sleep+sleep_se), linewidth=.7)
+  geom_linerange(aes(y=duration, xmin=sleep-sleep_se, xmax=sleep+sleep_se), 
+                 linewidth=.7)
 ```
 
 In this plot, we also get some uncertainty on the x-axis, corresponding to the sleep time. However, it does add a bit more clutter, making it hard to see some of the data points. 
@@ -341,10 +350,12 @@ s_sleep2 |>
   geom_col(position=position_dodge(), width = 0.05, alpha=.18)+
   scale_fill_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour 
   # Add PSD mean line
-  geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep), col=sleepdep), 
+  geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep), 
+                     col=sleepdep), 
                  s_sleep2 |> filter(sleepdep=="PSD"))+
   # add NS mean line
-  geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep), col=sleepdep), 
+  geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep), 
+                     col=sleepdep), 
                  s_sleep2 |> filter(sleepdep=="NS"))+
   scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
   coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
@@ -352,7 +363,8 @@ s_sleep2 |>
   geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
     #These change the display of the clock time.
   # fix the x-axis (or clock time)
-  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
+  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), 
+                     minor_breaks = F)+
   scale_y_continuous(breaks=seq(3,10,1)) -> sobj20
 sobj20
 ```
