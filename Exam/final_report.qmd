@@ -16,12 +16,11 @@ Visualizing data is key to comprehend what data provides us in a simple, and eff
 A principle of visualizing that is incredibly flexible. 
 
 
-
 ## Ex 1 
-- [ ] Ex1 report
+- [x] Ex1 report
 
 ## Ex 2 
-- [ ] Ex2 report
+- [x] Ex2 report
 
 ## Ex 3
 - [ ] Ex3 report
