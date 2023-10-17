@@ -427,7 +427,11 @@ sobj31
 
 In this plot we can see the average sleep times (dark blue, darkred) and wake time (blue, red) for the NS and PSD respectively. As we can clearly see, participants did go to sleep later during the PSD condition, but still woke up around the same time. It is perhaps a little less obvious with the lines connecting each data point (see below). Although the lines makes it more difficult to see each data point, it does tell the story of the difference between the conditions. We can see that virtually all the participants in the NS condition is above the lines of the PSD conditions. This is a good sign, as it indicates that participants slept more in the NS condition as compared to the PSD condition. However, it is again important to point out that it is rather difficult to read the exact value of each data point. Indeed, as can be seen (two) below, plotting data in a normal way makes it way more easier to read the sleep duration. It is way more intuitive to read the values from a normal plot than a circle plot. 
 
-It stands to reason, then, that circle plot may convey an essence but missing details, while a normal plot can convey the exact information of each data point, but perhaps not as neatly. Although the last plot is not as neat as the circle plot, I have not put effort into making it more neat (and will not currently). 
+It stands to reason, then, that circle plot may convey an essence but missing details, while a normal plot can convey the exact information of each data point, but perhaps not as neatly. Although the last plot is not as neat as the circle plot, I have not put effort into making it more neat (and will not currently). However, visualizing in this way, seems to be a waste of ink, as the same information is conveyed along the lines from sleep time to the wake time. Indeed, the second plot I created (at the very start) summarize the sleep amount over each participant and displays all the information. However, this plot does not incorporate clock time in any meaningful way. 
+
+Depending on what we aim, we can accomplish different things by visualizing with circular plots and normal plots. Indeed, the second plot clearly visualize the sleep amount for each participant across condition, and display each of the data points. In essence, this plot illustrate the sleep duration of each participant across conditions clearly. However, it does not tell us anything about when participants went to sleep and woke up. The latest circle plots, clearly approximates the sleeping times (and waking times) and puts the _conditions_ at contrast. In may ways, this is what we want. We want to investigate whether participants slept less during the PSD condition AND whether they went to sleep later as compared to the NS condition. 
+
+Thus, circle plots may lose exact information - or at least makes it more difficult to interpret - they can nicely illustrate difference between condition, and they work nicely with clock time. Moreover, circle plots could possible work nicely together with things that tend in circular manners - like the clock and, as previously done, as the seasons. 
 
 ```{r}
 s_sleep |>
@@ -435,12 +439,6 @@ s_sleep |>
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep, group=sleepdep))+
   geom_point()+ # sleep times
   geom_point(aes(x=waking, col=sleepdep))+ # Waking times
-  # geom_linerange(aes(xmin=ifelse(sleep<5,sleep,NA), xmax=waking, y=duration))+ 
-  #   # if after 24 then draw to waking time
-  # geom_linerange(aes(xmin=ifelse(sleep>19,sleep,NA), xmax=24, y=duration))+
-  #   # if later than 19, draw to 24
-  # geom_linerange(aes(xmin=ifelse(sleep>19,0,NA), xmax=waking, y=duration))+
-    # if later than 19 start from 0 and draw to waking
   scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
   geom_blank(aes(x=1,y=3))+ # Add an empty element too add some distances from the center
   coord_polar()+
