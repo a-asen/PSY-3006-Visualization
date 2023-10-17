@@ -36,6 +36,14 @@ A principle of visualizing that is incredibly flexible.
 - [x] Ex2 report
   - [ ] Could display the clock time as actual clock (lubridate or POSXI)?
 
+- The polar transformation is
+useful whenever data lend themselves to circular arrangements. This includes
+directional data (vector wind, compass bearings), rotational data (defects on
+disk drives), astronomical time (daily, monthly, annual), periodic waveforms
+(radio signals), and proportions (the humble pie chart).  GG book (p.215)
+
+
+
 ## Ex 3 - ? 
 - [ ] Ex3 report
 
