@@ -261,14 +261,55 @@ sobj10 +
   geom_blank(aes(x=30,y=3))+ # Latest (empty) point
   geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
   scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
-  scale_y_continuous(breaks=seq(0,8,1))+
-  theme_minimal()
+  scale_y_continuous(breaks=seq(3,8,1))+
+  theme_minimal() -> sobj11
+sobj11
 ```
 
-This plots does indeed look much better. Moreover, we are meaningfully visualizing clock time, at least to some degree, within a 12-hour span. From 18 to 6, which should (and in our case do) capture all sleep estimates.
+This plots does indeed look much better. Moreover, we are meaningfully visualizing clock time, at least to some degree, within a 12-hour span. From 18 to 6, which should (and in our case do) capture all sleep estimates in a visually pleasing way. Moreover, the layout of the circle correspond to a large extent with the plot containing all hours of the day 
 
+One missing feature is that we do not see the uncertainty in each participants sleep time. This can be done by adding a width element to each estimate, which correspond to the uncertainty of the sleep time estimate. However, this may increase clutter of the plot, especially since the data points clutter together more in a circle plot. 
 
+```{r}
+sobj11 + 
+  geom_linerange(aes(y=duration, xmin=sleep-sleep_se, xmax=sleep+sleep_se), linewidth=.7)
+```
 
+In this plot, we also get some uncertainty on the x-axis, corresponding to the sleep time. However, it does add a bit more clutter, making it hard to see some of the data points. 
+
+I do not believe visualizing with SD will be more pleasing, but it is nonetheless something worth checking out.
+
+```{r}
+sobj11 +
+  geom_linerange(aes(y=duration, xmin=sleep-sleep_sd, xmax=sleep+sleep_sd))
+```
+
+Arguably, this plot is more difficult to read, and, moreover, visualizing SE and SD is misleading. Nevertheless, I find it rather informative in that we can see the variation of the sleep times. Which is quite large for some individual, while being more consistent. Although SE also indicate some uncertainty, it does not indicate the width of the data. For the future, I will stick with SE on the x-axis to be consistent and not generate too much clutter. 
+
+One alternative could be to visualize with a bars, such that each point receives its own bar length corresponding to the average sleep duration. 
+
+```{r}
+s_sleep2 |>
+  mutate(sleepdep=as.character(sleepdep)) |> #unfactor
+  ggplot(aes(x=sleep, y=duration, fill=sleepdep, group=sleepdep))+
+  geom_col(position=position_dodge(), width = 0.05, alpha=.18)+
+  scale_fill_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour 
+  # Add PSD mean line
+  geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep), col=sleepdep), 
+                 s_sleep2 |> filter(sleepdep=="PSD"))+
+  # add NS mean line
+  geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep), col=sleepdep), 
+                 s_sleep2 |> filter(sleepdep=="NS"))+
+  scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
+  # fix the x-axis (or clock time)
+  scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1)))+
+  coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
+  geom_blank(aes(x=30,y=3))+ # Latest (empty) point
+  geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
+  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
+  scale_y_continuous(breaks=seq(3,8,1)) -> sobj20
+sobj20
+```
 
 
 
