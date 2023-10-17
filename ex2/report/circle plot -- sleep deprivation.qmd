@@ -301,15 +301,28 @@ s_sleep2 |>
   geom_linerange(aes(y=mean(duration), xmin=min(sleep), xmax=max(sleep), col=sleepdep), 
                  s_sleep2 |> filter(sleepdep=="NS"))+
   scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
-  # fix the x-axis (or clock time)
-  scale_x_continuous(breaks=seq(0,31,1), labels=c(seq(0,24,1), seq(1,7,1)))+
   coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
   geom_blank(aes(x=30,y=3))+ # Latest (empty) point
   geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
+    #These change the display of the clock time.
+  # fix the x-axis (or clock time)
   scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
-  scale_y_continuous(breaks=seq(3,8,1)) -> sobj20
+  scale_y_continuous(breaks=seq(3,10,1)) -> sobj20
 sobj20
 ```
+
+In this plot, it is perhaps more obvious that the sleep duration in the PSD condition is reduced as compared to the NS condition. Moreover, the circle plot does fit this type of visualization more than plotting dots, as the bars themselves convey information about length. However, it is perhaps most clearly illustrated by a contrast. That is to say, it is still difficult to estimate the exact value of any data point, but it does put the conditions in contrast. Suggesting, perhaps, that circle plots are better at visualizing contrasts than at presenting data. It should be noted that it can appear that the difference between the NS and the PSD condition is exaggerated since the appears of the bars reduced closer to the circle, as compared to the NS bars. This may, however, serve a purpose as well. Our research, and others, indicate that small deviation (although ours may be considered medium) of sleep amount can have severe impact on performance. 
+
+
+
+
+```{r}
+sobj20 + 
+  geom_point(aes(col=sleepdep)) # these clarify exact data point (& put to contrast)
+```
+
+
+
 
 
 
