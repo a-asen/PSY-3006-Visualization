@@ -6,21 +6,73 @@ editor:
   markdown:
       wrap: 62
 ---
-<!--- #fontfamily: "Arial" -->
+<!--- #fontfamily: "Arial"  idk doesnt work? -->
 ```{r ..}
+#| echo: false
+library(tidyverse)
+# loader script
+list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
+for(x in files){load(x)}
+sleep_diary |>
+  mutate(sleepdep = factor(if_else(pre_control==1, "NS",
+                           ifelse(pre_sleepdep==1, "PSD", NA)), levels = c("PSD","NS")), 
+         subj = as.numeric(subj) 
+         ) |>
+  filter(!(is.na(sleepdep))) -> sleep
 
-# Final plot here
+sleep |>
+  group_by(sleepdep) |>
+  mutate(sd_length = length(sleepdep)) |> ungroup() |>
+  group_by(subj, sleepdep) |>
+  mutate(
+    # Mean sleep duration
+    duration = mean(sleep_duration, na.rm=T),
+    duration_sd = sd(sleep_duration, na.rm=T),
+    duration_se = sd(sleep_duration, na.rm=T) / sqrt(sd_length),
+    # mean sleep time over participant by condition
+    sleep = mean(sleep_time_cum, na.rm=T),
+        # could add clock time here
+    sleep_sd = sd(sleep_time_cum, na.rm=T), 
+    sleep_se = sd(sleep_time_cum, na.rm=T) / sqrt(sd_length),
+    # mean wake time over participant by condition
+    waking = mean(last_awaking_fix, na.rm=T),
+    waking_sd = sd(last_awaking_fix, na.rm=T),
+    waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),
+    ) -> s_sleep2
+
+s_sleep2 |>
+  mutate(sleepdep=as.character(sleepdep)) |> #unfactor
+  ggplot(aes(x=sleep, y=duration, fill=sleepdep, group=sleepdep))+
+  geom_col(position=position_dodge(), width = 0.05, alpha=.18)+
+  scale_fill_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour 
+  scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
+  coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
+  geom_blank(aes(x=30,y=3))+ # Latest (empty) point
+  geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
+    #These change the display of the clock time.
+  scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
+  scale_y_continuous(breaks=seq(3,10,1))+
+  geom_point(aes(col=sleepdep))+
+  theme_minimal()+
+  labs(x="Sleep time", y="Sleep duration", col="Condition", fill="Condition", 
+       title = "Sleep time and duration between conditions",
+       caption="Sleep duration (y) over sleep time (x). NS = normal sleep, PSD = partial sleep deprivation.
+       Length of the bars represents sleep duration, and x location indicate sleep time. 
+       Sleep time according to clock time displayed from 18 (evening) to 6 (morning).")
+  # fix the x-axis (or clock time)
 
 ```
 
 {{< pagebreak >}}
 
 
-Here I will further investigate the use of circle plot by focusing on a different aspect.<!--- WHICH ASPECT?-->
+Here I will further investigate the use of circle plot by focusing on sleep times in a study on sleep deprivation. In a similar way to the seasonal data, sleep can be plotted on a circular plot which can correspond neatly to clock time, as we will also see. Later, I discuss some thoughts about circle plots derived from this investigation and the previous. Essentially, circular plots are good at visualizing summarized data, as well as differences between groups. Moreover, this can be meaningfully displayed according to clock time. Parts of which a normal visualization can miss out on. However, greatly benefiting by being easier to read each data point. 
+
+
 
 First, I combine the data probe and the sleep. The data used for this exploration has been downloaded from OSF (https://osf.io/xq6wr/).
 
-```{r packages}
+```{r load packages & data}
 library(tidyverse)
 # loader script
 list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
@@ -30,9 +82,10 @@ for(x in files){load(x)}
 
 Before we start, some minor changes to the data frame will be done to make the plots look better and make them easier to work with. 
 
-<!--- CHECK IF IT IS NECESSARY WITH BEHAVIOUR PERFORMANCE! -->
+<!--- CHECK IF IT IS NECESSARY WITH BEHAVIOUR PERFORMANCE! 
+no, fuck it leads to problems -->
 
-```{r start}
+```{r transform data}
 sleep_diary |>
   mutate(sleepdep = factor(if_else(pre_control==1, "NS",
                            ifelse(pre_sleepdep==1, "PSD", NA)), levels = c("PSD","NS")), 
@@ -43,22 +96,17 @@ sleep_diary |>
 
 According to the draft idea, I believe it is best to plot the data according to sleep time and sleep duration. More specifically, the x-variable containing the time that participants fell asleep, and the y-variable relating to the amount of sleep participant received. This will be split into their respective conditions and in this way, we should see that participants go to sleep later, and sleep less. 
 
-```{r simple point over all associations}
+```{r simple point plot}
 sleep |>
   ggplot(aes(x=sleep_time, y=sleep_duration, col=sleepdep))+
   geom_point()
-  
 ```
 
 As expected, participants did go to sleep later during the PSD (SD) condition and slept fewer hours as compared to the NS (control). However, a problem with this plot is that it visualizes all the (three) data points pertaining to participants sleep in each condition. To more effectively visualize with a circle plot, I should use a summary statistic of each the sleep. 
 
-<!--- Illustrate data plot with labels attached to each data point? -->
-<!--- Illustrate data plot with labels attached to each data point? -->
-<!--- Illustrate data plot with labels attached to each data point? -->
-
 To illustrate my point, we can visualize sleep duration over each subject, split by condition. 
 
-```{r summary over subj and sleepdep}
+```{r stat summary over subj}
 sleep |>
   ggplot(aes(x=subj, y=sleep_duration, col=sleepdep))+
   geom_point(position=position_dodge(.8), size=1, alpha=.6)+
@@ -67,7 +115,7 @@ sleep |>
 
 This plot produce a summary statistic (mean_se) over each subject for each condition. The result is more of what I am looking for. However, this plot is missing the relation to sleep time, which has to be represented by one of the axis. There is a problem related to this, however, in that each sleep duration point has a related sleep time point. This means that there is an association between all the data points for our plot, and grouping/summarizing within the ggplot is hard (if not impossible). One work around is to transform the data before we plug it into ggplot. 
 
-```{r start plot}
+```{r summary point plot}
 sleep |>
   group_by(subj) |>
   summarize(
@@ -94,7 +142,7 @@ sleep |>
 
 This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance, by using standard error, standard deviation or confidence intervals. For now I will stick with standard error, but this can easily be changed later. 
 
-```{r transformation and simple vis}
+```{r better trans & vis with SE}
 sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
@@ -176,7 +224,7 @@ sobj1
 
 Now we can start by making the circle plot more neat. Firstly, the data points all seem to cluster in around 2-3 hours, at least for the PSD condition. We can change this by placing an invisible point closer to the center, which will increase the distance a bit. Moreover, we can change the sleep to a 24 hour clock, indicating when participants went to sleep. 
 
-```{r}
+```{r pleasing circular}
 sobj1 +
   geom_blank(aes(x=1,y=3))+ # Add an empty element too add some distances from the center
   scale_x_continuous(breaks = seq(0,24,1), limits = c(0,NA), minor_breaks = F)+ # Limits add 0
@@ -190,7 +238,7 @@ In this plot, the x-axis represents the time at which participants fell asleep, 
 
 With the previous plot we are able to approximate when participants went to sleep, and approximately how long they slept. We could possibly make this more clear by using the cumulative sum of the clock instead of a 24 hour clock.
 
-```{r}
+```{r switch to cum_sum}
 sleep |>
   ggplot(aes(x=sleep_time_cum, y=sleep_duration, col=sleepdep))+
   geom_point()
@@ -198,7 +246,7 @@ sleep |>
 
 Firstly, with this plot we can clearly see a downward trend for the sleep duration plotted against the sleep time. Keeping the data in this way may be easier to work with in the future, and we can easily change the appears of the x-axis to the appropriate time (i.e., 0, 1, 2, etc.).
 
-```{r}
+```{r fix timelien for cum_sum}
 sleep |>
   ggplot(aes(x=sleep_time_cum, y=sleep_duration, col=sleepdep))+
   geom_point()+
@@ -207,7 +255,7 @@ sleep |>
 
 This looks similar to previously (which is good), but it should now be easier to work with.
 
-```{r}
+```{r transformation of cum_sum & vis }
 sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
@@ -246,7 +294,7 @@ sobj10
 
 To this end, it is now a rather easy to add a mean line of sleep duration for each conditions. With this, we can clearly see that participants, in general, slept less during the PSD condition than the NS condition. 
 
-```{r}
+```{r circle plot with cum-sum}
 sobj10 +
   coord_polar() +
   theme_minimal()+
@@ -255,7 +303,7 @@ sobj10 +
 
 A benefit with this plot is that all the data points are easier to locate. However, it is now less obvious what the time is, as compared to the previous plots, in which the x-axis corresponded to clock time. One of the benefits of using a circular plot, is to visualize data in an informative or intuitive way. In the above plot, we need to constantly check up against the x-axis to understand which time we are at. This is couple of times easier to do with the normal plot. However, if we turn the location of the circle plot to correspond to the normal clock time, maybe things will turn more neatly. 
 
-```{r}
+```{r neat plot for cum_sum}
 sobj10 + 
   coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
   geom_blank(aes(x=30,y=3))+ # Latest (empty) point
@@ -270,7 +318,7 @@ This plots does indeed look much better. Moreover, we are meaningfully visualizi
 
 One missing feature is that we do not see the uncertainty in each participants sleep time. This can be done by adding a width element to each estimate, which correspond to the uncertainty of the sleep time estimate. However, this may increase clutter of the plot, especially since the data points clutter together more in a circle plot. 
 
-```{r}
+```{r added horizontal se error }
 sobj11 + 
   geom_linerange(aes(y=duration, xmin=sleep-sleep_se, xmax=sleep+sleep_se), linewidth=.7)
 ```
@@ -279,7 +327,7 @@ In this plot, we also get some uncertainty on the x-axis, corresponding to the s
 
 I do not believe visualizing with SD will be more pleasing, but it is nonetheless something worth checking out.
 
-```{r}
+```{r try horizontal SD instead}
 sobj11 +
   geom_linerange(aes(y=duration, xmin=sleep-sleep_sd, xmax=sleep+sleep_sd))
 ```
@@ -288,7 +336,7 @@ Arguably, this plot is more difficult to read, and, moreover, visualizing SE and
 
 One alternative could be to visualize with a bars, such that each point receives its own bar length corresponding to the average sleep duration. 
 
-```{r}
+```{r use bars instead}
 s_sleep2 |>
   mutate(sleepdep=as.character(sleepdep)) |> #unfactor
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, group=sleepdep))+
@@ -313,8 +361,7 @@ sobj20
 
 In this plot, it is perhaps more obvious that the sleep duration in the PSD condition is reduced as compared to the NS condition. Moreover, the circle plot does fit this type of visualization more than plotting dots, as the bars themselves convey information about length. However, it is perhaps most clearly illustrated by a contrast. That is to say, it is still difficult to estimate the exact value of any data point, but it does put the conditions in contrast. Suggesting, perhaps, that circle plots are better at visualizing contrasts than at presenting data. It should be noted that it can appear that the difference between the NS and the PSD condition is exaggerated since the appears of the bars reduced closer to the circle, as compared to the NS bars. This may, however, serve a purpose as well. Our research, and others, indicate that small deviation (although ours may be considered medium) of sleep amount can have severe impact on performance. 
 
-
-```{r}
+```{r Add dots to bars}
 sobj20 + 
   geom_point(aes(col=sleepdep))+ # these clarify exact data point (& put to contrast)
   theme_minimal()+
@@ -323,7 +370,7 @@ sobj20 +
 
 Despite the fact that we leave a fair amount of the plot to nothing (i.e., 4-21), displaying the data in this way is at least meaningful in relation to a clock (at least to some degree). However, this way is at least better than visualizing all 24 hours of the day (see below), since that would create even more non-data ink. Although a plot visualizing all the hours of the day, could benefit by also indicating the wake time of the related sleep sleep times. 
 
-```{r}
+```{r try full clock time}
 sobj20 + 
   geom_point(aes(col=sleepdep))+ # these clarify exact data point (& put to contrast)
   theme_minimal()+
@@ -332,7 +379,7 @@ sobj20 +
   coord_polar(start = 1.57)
 ```
 
-```{r}
+```{r add wake time to plot}
 sobj20 + 
   geom_point(aes(col=sleepdep))+ # these clarify exact data point (& put to contrast)
   theme_minimal()+
@@ -345,7 +392,7 @@ sobj20 +
 
 In this plot we can also see the wake time at around 8 o'clock. Although this should be visualized with a different colour to not mix the sleep time and wake time. For now I will not distinguish between the two as I am mostly interest in visualizing sleep times. Although some investigation into the relationship between sleep time and wake time is warranted. 
 
-```{r}
+```{r add connecting lines between sleep and wake time over sleep duration}
 s_sleep |>
   mutate(sleepdep=as.character(sleepdep)) |> #unfactor
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep, group=sleepdep))+
@@ -368,7 +415,7 @@ sobj30
 
 In this plot, we can see both the sleep times and wake times connected with a x-axis line at the height of the sleep duration. This line connects the sleep time and wake time point which illustrates that during the NS condition participants tended to sleep longer, by going to sleep earlier but nonetheless waking up at the same time. To further add to this point, we can add to this mean lines indicating the mean sleep time and wake time for the different conditions. 
 
-```{r}
+```{r mean vertical lines}
 s_sleep2 |>
   group_by(sleepdep) |>
   summarize(m_sleep = mean(sleep), 
@@ -392,7 +439,7 @@ Depending on what we aim, we can accomplish different things by visualizing with
 
 Thus, circle plots may lose exact information - or at least makes it more difficult to interpret - they can nicely illustrate difference between condition, and they work nicely with clock time. Moreover, circle plots could possible work nicely together with things that tend in circular manners - like the clock and, as previously done, as the seasons. 
 
-```{r}
+```{r remove connecting lines}
 s_sleep |>
   mutate(sleepdep=as.character(sleepdep)) |> #unfactor
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, col=sleepdep, group=sleepdep))+
@@ -413,9 +460,10 @@ s_sleep |>
 ```
 
 
-```{r}
-sobj31 + coord_cartesian()
+```{r normal plot of sleeptime and wake time}
+sobj31 + 
+  coord_cartesian()+
+  scale_x_continuous(breaks=seq(0,24,1), expand = expansion(0))
 ```
-
 
 
