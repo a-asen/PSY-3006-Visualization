@@ -314,14 +314,46 @@ sobj20
 In this plot, it is perhaps more obvious that the sleep duration in the PSD condition is reduced as compared to the NS condition. Moreover, the circle plot does fit this type of visualization more than plotting dots, as the bars themselves convey information about length. However, it is perhaps most clearly illustrated by a contrast. That is to say, it is still difficult to estimate the exact value of any data point, but it does put the conditions in contrast. Suggesting, perhaps, that circle plots are better at visualizing contrasts than at presenting data. It should be noted that it can appear that the difference between the NS and the PSD condition is exaggerated since the appears of the bars reduced closer to the circle, as compared to the NS bars. This may, however, serve a purpose as well. Our research, and others, indicate that small deviation (although ours may be considered medium) of sleep amount can have severe impact on performance. 
 
 
+```{r}
+sleep_and_data |>
+  filter(!is.na(sleepdep)) |>
+  mutate(sd_length = ifelse(sleepdep=="NS", 106, 102)) |> 
+  ungroup() |>
+  group_by(subj, sleepdep) |>
+  reframe(
+    # Mean sleep duration
+    duration = mean(sleep_duration, na.rm=T),
+    duration_sd = sd(sleep_duration, na.rm=T),
+    duration_se = sd(sleep_duration, na.rm=T) / sqrt(sd_length),
+    # mean sleep time over participant by condition
+    sleep = mean(sleep_time_cum, na.rm=T),
+        # could add clock time here
+    sleep_sd = sd(sleep_time_cum, na.rm=T), 
+    sleep_se = sd(sleep_time_cum, na.rm=T) / sqrt(sd_length),
+    # mean wake time over participant by condition
+    waking = mean(last_awaking_fix, na.rm=T),
+    waking_sd = sd(last_awaking_fix, na.rm=T),
+    waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),
+    ae = mean(zlogapen, na.rm=T),
+    bv = mean(zlogbv, na.rm=T),
+    ) |> unique() |> ungroup() |> group_by(sleepdep) |>
+  mutate(ae_m = mean(ae, na.rm=T),
+         bv_m = mean(bv, na.rm=T))
+
+
+s_sleep2
+```
+
 
 
 ```{r}
 sobj20 + 
-  geom_point(aes(col=sleepdep)) # these clarify exact data point (& put to contrast)
+  geom_point(aes(col=sleepdep))+ # these clarify exact data point (& put to contrast)
+  theme_minimal()+
+  labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition")
 ```
 
-
+Despite the fact that we leave a fair amount of the plot to nothing (i.e., 4-21), displaying the data in this way is at least meaningful in relation to a clock (at least to some degree). 
 
 
 
