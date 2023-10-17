@@ -6,9 +6,10 @@ editor:
   markdown:
       wrap: 62
 ---
-<!--- #fontfamily: "Arial"  idk doesnt work? -->
-```{r ..}
+
+```{r t..}
 #| echo: false
+#| include: false
 library(tidyverse)
 # loader script
 list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
@@ -39,17 +40,19 @@ sleep |>
     waking_sd = sd(last_awaking_fix, na.rm=T),
     waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),
     ) -> s_sleep2
+```
 
+```{r p..}
+#| echo: false
 s_sleep2 |>
   mutate(sleepdep=as.character(sleepdep)) |> #unfactor
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, group=sleepdep))+
-  geom_col(position=position_dodge(), width = 0.05, alpha=.18)+
+  geom_col(position=position_dodge2(), width = 0.05, alpha=.18)+
   scale_fill_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour 
   scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
   coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
   geom_blank(aes(x=30,y=3))+ # Latest (empty) point
   geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
-    #These change the display of the clock time.
   scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), minor_breaks = F)+
   scale_y_continuous(breaks=seq(3,10,1))+
   geom_point(aes(col=sleepdep))+
@@ -59,8 +62,6 @@ s_sleep2 |>
        caption="Sleep duration (y) over sleep time (x). NS = normal sleep, PSD = partial sleep deprivation.
        Length of the bars represents sleep duration, and x location indicate sleep time. 
        Sleep time according to clock time displayed from 18 (evening) to 6 (morning).")
-  # fix the x-axis (or clock time)
-
 ```
 
 {{< pagebreak >}}
@@ -81,9 +82,6 @@ for(x in files){load(x)}
 ```
 
 Before we start, some minor changes to the data frame will be done to make the plots look better and make them easier to work with. 
-
-<!--- CHECK IF IT IS NECESSARY WITH BEHAVIOUR PERFORMANCE! 
-no, fuck it leads to problems -->
 
 ```{r transform data}
 sleep_diary |>
@@ -142,7 +140,7 @@ sleep |>
 
 This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance, by using standard error, standard deviation or confidence intervals. For now I will stick with standard error, but this can easily be changed later. 
 
-```{r better trans & vis with SE}
+```{r better trans amd vis with SE}
 sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
@@ -255,7 +253,7 @@ sleep |>
 
 This looks similar to previously (which is good), but it should now be easier to work with.
 
-```{r transformation of cum_sum & vis }
+```{r transformation of cum_sum and vis }
 sleep |>
   group_by(sleepdep) |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
