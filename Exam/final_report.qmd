@@ -16,14 +16,46 @@ Visualizing data is key to comprehend what data provides us in a simple, and eff
 A principle of visualizing that is incredibly flexible. 
 
 
-## Ex 1 
+## Ex 1 - circle: seasonal 
 - [x] Ex1 report
+  - [x] Improved acquire daylight script
+  feedback:
+  circle plot:
+1. change the scale, not the data itself. 
+2. for circle, dont use confidence interval (SE or quartiles).
+3. Maybe use start sleep to  wake time. (If scaled?) 
+4. start & stop of sunlight time (when does sun rise, and when does it reduce)?
+5. sun rise-set // sleep & wake time. 
+  - also on normal plot
+6. use summary 
+ EX: 7.  Use circle for seasonal 
 
-## Ex 2 
+
+  
+## Ex 2 - circle: sleep time 
 - [x] Ex2 report
+  - [ ] Could display the clock time as actual clock (lubridate or POSXI)?
 
-## Ex 3
+## Ex 3 - ? 
 - [ ] Ex3 report
+
+3rd VIS?
+10. Distributions: Yes, but use different dataset, because 
+10.1: Reaction times
+
+USE: 
+continuous:
+1 - reaction time (bodyheight / death age) 
+2 - bimodal (reaction time over sleep preference)
+   rainplot.
+
+discrete: 
+   -  Kruschke lidell visualization. 
+3 - univariate visualization?
+
+3rd 3d visualization. 
+    - Bivariet distributions.
+
 
 ## Ex 4 
 - [ ] Ex4 report
