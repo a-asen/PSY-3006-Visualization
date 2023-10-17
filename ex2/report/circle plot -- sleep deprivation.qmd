@@ -48,7 +48,8 @@ sleep |>
 s_sleep2 |>
   mutate(sleepdep=as.character(sleepdep)) |> #unfactor
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, group=sleepdep))+
-  geom_col(position=position_dodge2(), width = 0.075, alpha=.18)+
+  geom_col(position=position_dodge(), width = 0.05, alpha=.18)+
+  geom_point(aes(col=sleepdep), size=.6)+
   scale_fill_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour 
   scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
   coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
@@ -57,15 +58,14 @@ s_sleep2 |>
   scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), 
                      minor_breaks = F)+
   scale_y_continuous(breaks=seq(3,10,1))+
-  geom_point(aes(col=sleepdep), size=.6)+
   theme_minimal()+
   labs(x="Sleep time", y="Sleep duration", col="Condition", fill="Condition", 
        title = "Sleep time and duration between conditions",
-       caption="NS = normal sleep, PSD = partial sleep deprivation.
-       Length of the bars represents sleep duration, 
-       and x location indicate sleep time. 
-       Sleep time is displayed according to clock time 
-       displayed from 18 (evening) to 6 (morning).")
+       caption="NS = normal sleep, PSD = partial sleep deprivation.")
+       # Length of the bars represents sleep duration, 
+       # and x location indicate sleep time. 
+       # Sleep time is displayed according to clock time 
+       # displayed from 18 (evening) to 6 (morning).")
 ```
 
 {{< pagebreak >}}
@@ -73,6 +73,7 @@ s_sleep2 |>
 
 Here I will further investigate the use of circle plot by focusing on sleep times in a study on sleep deprivation. In a similar way to the seasonal data, sleep can be plotted on a circular plot which can correspond neatly to clock time, as we will also see. Later, I discuss some thoughts about circle plots derived from this investigation and the previous. Essentially, circular plots are good at visualizing summarized data, as well as differences between groups. Moreover, this can be meaningfully displayed according to clock time. Parts of which a normal visualization can miss out on. However, greatly benefiting by being easier to read each data point. 
 
+(Note. The PDF report indicate points and lines bigger than in the quarto document.)
 
 
 First, I combine the data probe and the sleep. The data used for this exploration has been downloaded from OSF (https://osf.io/xq6wr/).
