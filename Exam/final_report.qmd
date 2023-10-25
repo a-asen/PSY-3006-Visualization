@@ -43,33 +43,12 @@ disk drives), astronomical time (daily, monthly, annual), periodic waveforms
 (radio signals), and proportions (the humble pie chart).  GG book (p.215)
 
 
-
-## Ex 3 - ? 
+# Multivariate visualization
+## Ex 3 - 2 continous vars
 - [ ] Ex3 report
 
-3rd VIS?
-10. Distributions: Yes, but use different dataset, because 
-10.1: Reaction times
-
-USE: 
-continuous:
-1 - reaction time (bodyheight / death age) 
-2 - bimodal (reaction time over sleep preference)
-   rainplot.
-
-discrete: 
-   -  Kruschke lidell visualization. 
-3 - univariate visualization?
-
-3rd 3d visualization. 
-    - Bivariet distributions.
-
-
-## Ex 4 
+## Ex 4 - 1 cat 1 continous
 - [ ] Ex4 report
-
-## Ex 5 
-- [ ] Ex5 report
 
 ## Final reflections 
 
