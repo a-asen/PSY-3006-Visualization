@@ -210,21 +210,28 @@ joint_ae.bv +
 With this library we get a more neat visualization of both the individual and joint distribution. We can now make some aesthetic changes to make it more neat. 
 
 ```{r}
-min(trans_mw$zlogapen)->AE_min
-min(trans_mw$zlogbv)->BV_min
-joint_ae.bv+
-  geom_density_2d_filled() +
+min(trans_mw$zlogapen) -> AE_min
+min(trans_mw$zlogbv) -> BV_min
+
+joint_ae.bv +
+  geom_density_2d_filled()+
   theme_minimal()+
-  coord_cartesian(xlim=c(AE_min,2), ylim=c(BV_min,2.5), expand = F)+
-  labs(x= "Z-scored BV", y="Z-scored AE", fill="Density")+
+  labs(x= "Z-scored BV", y="Z-scored AE", fill="Density") -> neat_ae.bv
+neat_ae.bv +  
+  coord_cartesian(expand = F, xlim=c(AE_min,2), ylim=c(BV_min,2.5))+
   geom_xsidedensity()+ 
-  scale_xsidey_continuous(expand=c(0,0)) + 
-  theme(ggside.panel.scale=.2)
-  geom_ysidedensity() -> p_ggside
+  geom_ysidedensity()+
+  scale_xsidey_continuous(expand=F, limits = c(0,1))+
+  theme(ggside.panel.scale=.4) -> p_ggside
 p_ggside  
 ```
 
-One way to make the plot more neat is to zoom into the area that contains most of the density bandwidth. However, this cases some problems with the ggside densities, since they are also scaled to the same coordinates as the main plot. One way to solve this is to increase the range of the side densities. 
+One aesthetic change is to zoom into the main density area of the plot, which is mainly in the bottom left corner. However, doing this, has led to some cases related to the side densities. The side densities inherents the coord_cartersian feature from the ggplot object, making it wider, and thus harder to see the density that is locked between 0 and 1. I have not been able to find a solution to limit only the main plot, but no the side plots. An alternative, is to use scale_x/y with the "limits" parameter. However, this will also remove data points from outside of the graph. Leading to some problems. 
+
+```{r}
+
+```
+
 
 ```{r}
 p_ggside + 
@@ -252,6 +259,11 @@ trans_mw |>
   geom_density_2d_filled()
   geom_point()
 ```
+
+
+
+
+
 
 ```{r}
 plot_ly(trans_mw, x=zlogbv, y=zlogapen)
