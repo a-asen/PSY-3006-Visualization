@@ -170,7 +170,8 @@ joint_ae.bv +
 With this plot we can more easily see the higher probability areas over the joint parameter space. To make it clear that we are looking at the join distibution of AE and BV we can add the individual distributions to the plot by using patchworks.
 
 ```{r}
-library(patchwork)
+#library(patchwork)
+
 # Joint distribution
 joint_ae.bv+
   geom_density2d_filled() -> p_joint 
@@ -205,6 +206,29 @@ joint_ae.bv +
   geom_ysidedensity()
 ```
 
+With this library we get a more neat visualization of both the individual and joint distribution. We can now make some aesthetic changes to make it more neat. 
+
+```{r}
+joint_ae.bv+
+  geom_density_2d_filled() +
+  coord_cartesian(xlim=c(-2,2), ylim=c(-2,2.5))+
+  theme_minimal()+
+  ggside()+
+  geom_xsidedensity()+
+  geom_ysidedensity() -> p_ggside
+p_ggside  
+theme(ggside.panel.scale.y=.5,
+        ggside.panel.scale.x=.5)
+```
+
+One way to make the plot more neat is to zoom into the area that contains most of the density bandwidth. However, this cases some problems with the ggside densities, since they are also scaled to the same coordinates as the main plot. One way to solve this is to increase the range of the side densities. 
+
+```{r}
+p_ggside + 
+  theme(ggside.panel.scale.y=.5,
+        ggside.panel.scale.x=.5)
+
+```
 
 
 using colours within the same graph or facets over different plots. In these cases the dimensions has to be the same or very similar. However, another way of visualizing data multivariate plots can be to use integrate two plots 
