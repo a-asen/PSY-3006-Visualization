@@ -67,13 +67,22 @@ trans_mw |>
   geom_density()
 ```
 
-However in these cases the relationship between the variables may be ambiguous and underexlored. In particular, we may be interested in how these two variables related to each other. We can explore this by visualizing the join distribution with a 2d density plot. This can be done in multiple ways, for instance, we can use hexagons to count the number of occurances within each joint area.
+However in these cases the relationship between the variables may be ambiguous and underexlored. In particular, we may be interested in how these two variables related to each other. We can explore this by visualizing the join distribution with a 2d density plot. This can be done in multiple ways, for instance, we can use hexagons to count the number of occurrences within each joint area.
 
 ```{r}
 trans_mw |> 
   filter(block=="B0") |>
   ggplot(aes(x=zlogbv, y=zlogapen))+ 
-  geom_hex()
+  geom_hex() -> mw_hex
+mw_hex
+```
+
+In this plot we can see how BV and AE relate to each other. This is informative because the assumption with these two variables is that when participants are focused on the task, they should generate high AE score and have consistent BV. If this is the case then we would expect that BV remains around zero, and that AE is high when participants are focused on the task. On the other hand, when participants are not focused on the task, they should show more BV and lower AE. This can be gauged to some degree on the previous plot. To indicate what I mean, I have highlighted the areas corresponding to each state of mind wandering below.
+
+```{r}
+mw_hex +
+  
+  
 ```
 
 
