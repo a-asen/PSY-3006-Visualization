@@ -1,5 +1,5 @@
 ---
-title: "Mutlivariate visualization: continous and continous variable"
+title: "Mutlivariate visualization: continous and continous"
 format: pdf
 lang: en-GB
 editor: 
@@ -20,42 +20,55 @@ editor:
 {{< pagebreak >}}
 
 
-In this exercise I will attempt to visualize two variables. More specifically attempt to implement a multivariate visualization of two variables. For this exercise, I will use data where two variables, behavioural variability (BV) and approximate entropy (AE), that are used to predict the mental state of mind wandering. I start by loading the required files. 
+In these latter exercises, I will visualize the distribution of data. More specifically visualize the distribution of data in relation to each other. In the first (this) exercise, I will visualize two continuous variables, while in the latter I will visualize the distribution of data over a categorical variable. To do this I will use a dataset related to mind wandering where we have two variables that are used to predict mind wandering. These two variables related to behavioural performance during the task and are behavioural variability (BV), a measure of response variation, and approximate entropy (AE) a measure of randomness.
+
+I start by loading the libraries, functions and data. 
 
 ```{r}
 library(tidyverse)
 library(plotly)
 read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
 source("../src/transformation.R") # AE calculation
-nback=25
 ```
 
-I then select only the relevant data. In our case, I only want to use the data from the sham condition of the transcranial magnetic stimulation experiment. 
+I then select the relevant data, in this case, I will only use the data from the "sham" condition. That is the condition in which no manipulation was done to participants. 
 
 ```{r }
 all_mw_data |> 
   select(-region.y) |>
   filter(stimulation == "sham") -> mw_data
 
-da_pro(mw_data) -> trans_mw
+da_pro(mw_data, nback=25) -> trans_mw
 trans_mw
 ```
 
-In multivariate visualization, the idea is to visualize multiple variables at once, and this can be achieved in multiple ways. For one, you could visualize multiple variables on the same plot using different colours:
+We can now start plotting the data. There are a only a couple of ways one can visualize the distribution of data over a variable. This could be with a histogram or a density distribution. A histogram summarize the data according to the number of occurances within a certain span. 
+
+```{r histogram}
+trans_mw |>
+  ggplot(aes(x=zlogapen))+
+  geom_histogram()
+```
+
+It is perhaps better to use a histogram over more meaningful distances of the variable. For instance, an intelligence quotation test, where the ranges can be more meaningful. In our case, however, visualizing the density may be more honest to the data. 
+
+```{r density }
+trans_mw |>
+  ggplot(aes(x=zlogapen))+
+  geom_density()
+```
+
+With a density plot, we can more easily grasp the distribution over each value. In this case, over smaller values of the variable AE (zlogapen) variable. The same can be done for BV, and moreover, we can combine them to show the distribution of each variable. 
 
 ```{r}
 trans_mw |>
-  pivot_longer(c(zlogapen,zlogbv)) |> 
-  ggplot(aes(x=proberound, y=value, col=name))+
-  geom_point(position = position_jitterdodge(.5, dodge.width = .1))
+  pivot_longer(c(zlogapen,zlogbv)) |>
+  ggplot(aes(x=value, col=name))+
+  geom_density()
 ```
 
-Or by using facets: 
 
-```{r }
-
-```
-
+However in these cases the relationship between the variables may be ambiguous. 
 
 
 using colours within the same graph or facets over different plots. In these cases the dimensions has to be the same or very similar. However, another way of visualizing data multivariate plots can be to use integrate two plots 
