@@ -1,6 +1,6 @@
 # Script from
 library(Rcpp)
-sourceCpp("ex3/src/apen.cpp") # load apen conversion
+sourceCpp("../src/apen.cpp") # load apen conversion
 
 nback=25
 
