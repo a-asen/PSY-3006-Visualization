@@ -105,7 +105,6 @@ However in these cases the relationship between the variables may be ambiguous a
 
 ```{r}
 trans_mw |> 
-  filter(block=="B0") |>
   ggplot(aes(x=zlogbv, y=zlogapen))+ 
   geom_hex() -> mw_hex
 mw_hex
@@ -144,8 +143,66 @@ joint_ae.bv +
   geom_density2d(contour_var = "count")
 ```
 
-```{r}
+In this plot, the density function is visualized as a multiplication by the number of observations. Alternatively we could visualize with the "ndensity" which is scaled to a maximum of 1: 
 
+```{r}
+joint_ae.bv + 
+  geom_density2d(contour_var = "ndensity")
+```
+
+The latter two are visualized according to changes to the density function, which may have lead to some changes in number of bins.
+
+If we follow the basic density function, we see that most values fall within the bands of the density function. 
+
+```{r}
+joint_ae.bv + 
+  geom_density2d()+
+  geom_point()
+```
+
+A different way of visualizing this is to use colours for the higher densities. 
+
+```{r}
+joint_ae.bv + 
+  geom_density2d_filled()
+```
+
+With this plot we can more easily see the higher probability areas over the joint parameter space. To make it clear that we are looking at the join distibution of AE and BV we can add the individual distributions to the plot by using patchworks.
+
+```{r}
+library(patchwork)
+# Joint distribution
+joint_ae.bv+
+  geom_density2d_filled() -> p_joint 
+
+# BV distribution
+trans_mw |> 
+  ggplot(aes(zlogbv))+ 
+  geom_density()+
+  theme_void() -> p_bv
+
+# AE distribution
+trans_mw |> 
+  ggplot(aes(zlogapen))+
+  geom_density()+
+  theme_void()+
+  coord_flip() -> p_ae
+
+# Combining useing patchwork
+p_bv + 
+  ggplot()+theme_void() + # Empty element 
+  p_joint + 
+  p_ae
+```
+
+Although we can see the individual distributions and the joint distribution, it is not perfect due to the way patchworks glues plots together. Another solution is to use the package "ggsides", in this library we can add a side density to the main plot with one line of code:
+
+```{r}
+# library(ggside)
+joint_ae.bv + 
+  geom_density_2d_filled()+ 
+  geom_xsidedensity()+
+  geom_ysidedensity()
 ```
 
 
