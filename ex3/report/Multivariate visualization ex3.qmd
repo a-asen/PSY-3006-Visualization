@@ -27,6 +27,8 @@ I start by loading the libraries, functions and data.
 ```{r}
 library(tidyverse)
 library(plotly)
+library(patchwork)
+library(ggside)
 read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
 source("../src/transformation.R") # AE calculation
 ```
@@ -170,8 +172,7 @@ joint_ae.bv +
 With this plot we can more easily see the higher probability areas over the joint parameter space. To make it clear that we are looking at the join distibution of AE and BV we can add the individual distributions to the plot by using patchworks.
 
 ```{r}
-#library(patchwork)
-
+# Here, using the patchwork library
 # Joint distribution
 joint_ae.bv+
   geom_density2d_filled() -> p_joint 
