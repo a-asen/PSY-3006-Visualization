@@ -1,0 +1,54 @@
+---
+title: "Mutlivariate visualization: continous and continous variable"
+format: pdf
+lang: en-GB
+editor: 
+  markdown:
+      wrap: 62
+---
+
+```{r start libs}
+
+```
+
+
+```{r start plot}
+
+```
+
+
+{{< pagebreak >}}
+
+
+
+In multivariate visualization, the idea is to visualize multiple variables at once, and this can be achieved in multiple ways. For one, you could visualize multiple variables on the same plot using different colours:
+
+```{r}
+trans_mw |>
+  pivot_longer(c(zlogapen,zlogbv)) |> 
+  ggplot(aes(x=proberound, y=value, col=name))+
+  geom_point(position = position_jitterdodge(.5, dodge.width = .1))
+```
+
+Or by using facets: 
+
+```{r }
+trans_mw |>
+  pivot_longer(c(zlogapen,zlogbv)) |> 
+  ggplot(aes(x=proberound, y=value, col=name))+
+  facet_wrap(~name)+
+  geom_point(position = position_jitter(.1))
+```
+
+On the other hand, we many want to investigate the distribution of data over each variable. Thus we can use the density:
+
+```{r}
+trans_mw |>
+  pivot_longer(c(zlogapen,zlogbv)) |>
+  ggplot(aes(x=value, col=name))+
+  geom_density()
+```
+
+This plot clearly visualize the distribution of the data compared to the former once. It is difficult to grasp the distribution of the data when it is split over another variable. Alternatively we could show the density over the different categories. 
+
+The former plots do not visualize the distribution of the data easily. Compared to the former plots, this indicate the distribution of the data for each of the variable. 
