@@ -209,16 +209,18 @@ joint_ae.bv +
 With this library we get a more neat visualization of both the individual and joint distribution. We can now make some aesthetic changes to make it more neat. 
 
 ```{r}
+min(trans_mw$zlogapen)->AE_min
+min(trans_mw$zlogbv)->BV_min
 joint_ae.bv+
   geom_density_2d_filled() +
-  coord_cartesian(xlim=c(-2,2), ylim=c(-2,2.5))+
   theme_minimal()+
-  ggside()+
-  geom_xsidedensity()+
+  coord_cartesian(xlim=c(AE_min,2), ylim=c(BV_min,2.5), expand = F)+
+  labs(x= "Z-scored BV", y="Z-scored AE", fill="Density")+
+  geom_xsidedensity()+ 
+  scale_xsidey_continuous(expand=c(0,0)) + 
+  theme(ggside.panel.scale=.2)
   geom_ysidedensity() -> p_ggside
 p_ggside  
-theme(ggside.panel.scale.y=.5,
-        ggside.panel.scale.x=.5)
 ```
 
 One way to make the plot more neat is to zoom into the area that contains most of the density bandwidth. However, this cases some problems with the ggside densities, since they are also scaled to the same coordinates as the main plot. One way to solve this is to increase the range of the side densities. 
@@ -230,6 +232,7 @@ p_ggside +
 
 ```
 
+However, the problem remain. It is still hard to see the exact distributions of the densities on the side. This could plausibly be fixed by re-scaling the side plots. However, I am struggling to find the right code. 
 
 using colours within the same graph or facets over different plots. In these cases the dimensions has to be the same or very similar. However, another way of visualizing data multivariate plots can be to use integrate two plots 
 
