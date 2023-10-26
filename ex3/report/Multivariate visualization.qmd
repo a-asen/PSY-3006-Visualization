@@ -67,8 +67,15 @@ trans_mw |>
   geom_density()
 ```
 
+However in these cases the relationship between the variables may be ambiguous and underexlored. In particular, we may be interested in how these two variables related to each other. We can explore this by visualizing the join distribution with a 2d density plot. This can be done in multiple ways, for instance, we can use hexagons to count the number of occurances within each joint area.
 
-However in these cases the relationship between the variables may be ambiguous. 
+```{r}
+trans_mw |> 
+  filter(block=="B0") |>
+  ggplot(aes(x=zlogbv, y=zlogapen))+ 
+  geom_hex()
+```
+
 
 
 using colours within the same graph or facets over different plots. In these cases the dimensions has to be the same or very similar. However, another way of visualizing data multivariate plots can be to use integrate two plots 
