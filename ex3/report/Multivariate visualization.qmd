@@ -1,0 +1,35 @@
+---
+title: "Mutlivariate visualization: continous and continous variable"
+format: pdf
+lang: en-GB
+editor: 
+  markdown:
+      wrap: 62
+---
+
+```{r start libs}
+
+```
+
+
+```{r start plot}
+
+```
+
+
+{{< pagebreak >}}
+
+
+In this exercise I will attempt to visualize two variables. More specifically attempt to implement a multivariate visualization of two variables. For this exercise, I will use data where two variables, behavioural variability (BV) and approximate entropy (AE), that are used to predict the mental state of mind wandering. 
+
+```{r}
+library(tidyverse)
+read_csv("../data/raw_mwtms_data.csv") -> mw_data 
+source("../src/transformation.R") # AE calculation
+```
+
+
+```{r}
+
+```
+
