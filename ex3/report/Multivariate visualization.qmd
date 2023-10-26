@@ -127,10 +127,26 @@ However, we do not exactly find such a distribution. Although, it is important t
 At any rate, although the hexagons indicate the number of observation within each value, we may benefit from using a density function instead of a count function. 
 
 ```{r}
-
+trans_mw |> 
+  filter(block=="B0") |>
+  ggplot(aes(x=zlogbv, y=zlogapen)) -> joint_ae.bv
+  
+joint_ae.bv +
+  geom_density2d()
 ```
 
+With this plot we can see the probability that a data point falls within a specific value. More specifically how the joint parameter space is distributed. In line with what I wrote above, we see a slight tendency towards the distribution I outlined above. 
 
+We can use different density functions, different binwidths or different number of bins to improve visualization.
+
+```{r}
+joint_ae.bv + 
+  geom_density2d(contour_var = "count")
+```
+
+```{r}
+
+```
 
 
 
