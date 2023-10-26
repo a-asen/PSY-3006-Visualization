@@ -2,9 +2,7 @@
 library(Rcpp)
 sourceCpp("../src/apen.cpp") # load apen conversion
 
-nback=25
-
-da_pro <- function(data){
+da_pro <- function(data, nback){
   data |> group_by(subj,session,block,proberound) |> do({
     d <- .
     ## unravel taps (keys)
