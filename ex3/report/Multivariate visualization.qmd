@@ -20,16 +20,75 @@ editor:
 {{< pagebreak >}}
 
 
-In this exercise I will attempt to visualize two variables. More specifically attempt to implement a multivariate visualization of two variables. For this exercise, I will use data where two variables, behavioural variability (BV) and approximate entropy (AE), that are used to predict the mental state of mind wandering. 
+In this exercise I will attempt to visualize two variables. More specifically attempt to implement a multivariate visualization of two variables. For this exercise, I will use data where two variables, behavioural variability (BV) and approximate entropy (AE), that are used to predict the mental state of mind wandering. I start by loading the required files. 
 
 ```{r}
 library(tidyverse)
-read_csv("../data/raw_mwtms_data.csv") -> mw_data 
+library(plotly)
+read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
 source("../src/transformation.R") # AE calculation
+nback=25
 ```
 
+I then select only the relevant data. In our case, I only want to use the data from the sham condition of the transcranial magnetic stimulation experiment. 
+
+```{r }
+all_mw_data |> 
+  select(-region.y) |>
+  filter(stimulation == "sham") -> mw_data
+
+da_pro(mw_data) -> trans_mw
+trans_mw
+```
+
+In multivariate visualization, the idea is to visualize multiple variables at once, and this can be achieved in multiple ways. For one, you could visualize multiple variables on the same plot using different colours:
 
 ```{r}
+trans_mw |>
+  pivot_longer(c(zlogapen,zlogbv)) |> 
+  ggplot(aes(x=proberound, y=value, col=name))+
+  geom_point(position = position_jitterdodge(.5, dodge.width = .1))
+```
+
+Or by using facets: 
+
+```{r }
 
 ```
+
+
+
+using colours within the same graph or facets over different plots. In these cases the dimensions has to be the same or very similar. However, another way of visualizing data multivariate plots can be to use integrate two plots 
+
+With this, I can explore some basic features of the different variables. Moreover, there are different ways of visualizing multivariate 
+
+```{r}
+trans_mw |> 
+  filter(block=="B0") |>
+  ggplot(aes(x=zlogbv, y=zlogapen))+ 
+  geom_hex()
+  geom_density()
+  geom_contour()
+  
+trans_mw |> 
+  ggplot(aes(x=logbv, y=apen))+
+  geom_density_2d_filled()
+  geom_point()
+```
+
+```{r}
+plot_ly(trans_mw, x=zlogbv, y=zlogapen)
+trans_mw |> 
+  ggplot(aes(x=proberound, y=zlogbv, z=1:3509))+ 
+  geom_point()
+```
+
+```{r}
+trans_mw |> 
+  ggplot(aes(x=proberound, y=zlogapen))+ 
+  geom_point()
+```
+
+
+
 
