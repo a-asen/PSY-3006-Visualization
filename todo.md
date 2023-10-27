@@ -14,7 +14,7 @@
 
 
 ## Exercise 1: circle plot - seasonal
--   [x] Fake data folder
+-   [x] Fake data:
     -   [x] Daylight hour in Tromsø (API call)
     -   [x] Create fake data
     -   [x] Random variation based on a trend
@@ -30,21 +30,34 @@
     - [x] aesthetic changes
     -   [x] other groupings
 
-## Exercise 2: circle plot - sleep
-- [ ] Data: mw-sleep. 
-	- [ ] transform 
-		- [ ] dummy: 24 hours, dot indicate sleep/nosleep, count them (over partic.)
-	
-	- [ ] Plot Circular plot mw-sleep - sleep deprivation time, vs NS-sleep. 
-	- [ ] circle barplot. 
-	- [ ] split by noon-midnight & 6am-6pm 
-	- [ ] Half & half plot???? (NS vs. PSD?)
-	- [ ] Overlay NS & PSD sleep. 
-	- [ ] Compare against normal plot
 
+## Exercise 2: circle plot - sleep
+- [x] Data: mind wandering sleep 
+	- [x] circle barplot. 
+	- [x] split by noon-midnight & 6am-6pm 
+	- [x] Overlay NS & PSD sleep. 
+	- [x] Compare against normal plot
 
 
 ## Exercise 3
+- [ ] Data: mind wandering
+- [ ] Visualization:
+  - [x] Data distribution
+  - [x] Joint distribution
+    - [ ] Joint distribution with individual distribution
+- [ ] Why multivariate visualization?
+
+
+## Exercsise 4
+- [ ] Data: Mind wandering
+- [ ] 
+- [ ] 
+- [ ] 
+
+
+
+
+
 3rd VIS?
 10. Distributions: Yes, but use different dataset, because 
 10.1: Reaction times
@@ -78,7 +91,6 @@ AE plots?
 
 ## Exercise 4
 
-## Exercise 5
 
 ## Exam 
 - [ ] Change exam: short exam report, link to Github (repo) reports. 
