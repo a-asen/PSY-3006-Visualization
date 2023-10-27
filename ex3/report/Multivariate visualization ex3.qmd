@@ -54,7 +54,7 @@ trans_mw |>
 
 It is perhaps a better idea to use a histogram over more meaningful distances of the variable. For instance, an IQ test, where the ranges are be more meaningful. That is, a 5 point increase in IQ is easier to gauge than a .5 increase in zlogapen. Nevertheless, another way of plotting the distribution could be to use a frequency polygon.
 
-```{r}
+```{r freqpoly plot}
 trans_mw |>
   ggplot(aes(x=zlogapen)) +
   geom_freqpoly()
@@ -62,7 +62,7 @@ trans_mw |>
 
 This plot is essentially the same as the histogram, but mimics the density distributions as shown below. It is, however, important to note that this is not a density distribution, as the density is calculated while this plot shows the raw count of each range of value - the same as the histogram. To visualize the distribution more meaningfully, we could decrease the binwidth or increase the number of bins, such that the range of collected data decrease. 
 
-```{r}
+```{r increased freqpoly }
 trans_mw |>
   ggplot(aes(x=zlogapen)) +
   geom_freqpoly(bins=100)
@@ -72,13 +72,13 @@ Indeed, in this plot we get a more neuanced view of how the data is distributed.
 
 Indeed, visualizing the raw AE score suggest that we see that most values center around 0 (floor) and the ceiling. This is perhaps most obvious with a density plot (see below). 
 
-```{r}
+```{r freqpoly of raw ae}
 trans_mw |> 
   ggplot(aes(apen))+ 
   geom_freqpoly(bins=100)
 ```
 
-```{r}
+```{r density of raw ae}
 trans_mw |>
   ggplot(aes(apen))+
   geom_density()
@@ -86,7 +86,7 @@ trans_mw |>
 
 To get a better grasp of the distribution over values can be to use a density visualization. Visualizing using a density function will smooth the distribution such that it is easier to see the estimated distribution. (Note: this is visualized with the z scored and log transformed AE score, which more accurately follow a normal distribution - compare the above with the below)
 
-```{r density }
+```{r density of standardized and log transformed Ae}
 trans_mw |>
   ggplot(aes(x=zlogapen))+
   geom_density()
@@ -96,7 +96,7 @@ A density plot gives us an estimated probability that a data point will be found
 
 By z-scoring AE and BV we can meaningfully plot both distributions in the same plot.  
 
-```{r}
+```{r density of ae anb bv}
 trans_mw |>
   pivot_longer(c(zlogapen,zlogbv)) |>
   ggplot(aes(x=value, col=name))+
@@ -105,7 +105,7 @@ trans_mw |>
 
 However in these cases the relationship between the variables may be ambiguous and underexlored. In particular, we may be interested in how these two variables relate to each other. This can be achieved by visualizing the joint distribution with a 2d density plot. This can be done in multiple ways, for instance, by simply plotting all the data points. 
 
-```{r}
+```{r joint distribution of ae and bv}
 trans_mw |> 
   ggplot(aes(x=zlogbv, y=zlogapen))+ 
   geom_point()
@@ -113,7 +113,7 @@ trans_mw |>
 
 An obvious problem arise as the data points overlap and hide each other. One solution is to add transparency so we can see all (or mostly all) data points - and also how they overlap. 
 
-```{r}
+```{r joint dot plot of ae.bv with transparency }
 trans_mw |> 
   ggplot(aes(x=zlogbv, y=zlogapen))+ 
   geom_point(alpha=.1)
@@ -123,7 +123,7 @@ Nevertheless, it is not easy to gauge the number of observations within each val
 
 Alternatively, and in a similar way to histograms, we can count the number of observations within a span. This can be done by using hexagons: 
 
-```{r}
+```{r hexagonal summary of ae.bv}
 trans_mw |> 
   ggplot(aes(x=zlogbv, y=zlogapen))+ 
   geom_hex() -> mw_hex
@@ -132,7 +132,7 @@ mw_hex
 
 In this plot we can see how BV and AE relate to each other. This is informative because the assumption with these two variables is that when participants are focused on the task, they should generate high AE score and have consistent BV. If this is the case then we would expect that BV remains around zero, and that AE is high when participants are focused on the task. On the other hand, when participants are not focused on the task, they should show more BV and lower AE. This can be gauged to some degree on the previous plot. To indicate what I mean, I have highlighted the areas corresponding to each state of mind wandering below.
 
-```{r}
+```{r hexagon annotations }
 mw_hex +
   annotate("rect", xmin=1.5, xmax=6.5, ymin=-1.75,ymax=1.75, alpha=.0, col="red")+
   annotate("text", label="Mind wandering", x=5.5,y=1.3, alpha=1, col="red")+
@@ -144,7 +144,7 @@ However, we do not exactly find this distribution. Although, it is important to 
 
 We can see that BV have more extreme observations than AE, for instance. Moreover, AE seems to take great leaps for the more extreme values. Nevertheless, most of the data seems to be relatively normally distributed. As noted above, we can see that for BV, data seem to gather around 0 but also around 1.5 standard deviations above 0. In addition to that, we can see that AE does not really change for these values - it seems to be relatively similarly distributed at both 0 and 1.5 standard deviations of BV. In a similar vein, AE have most values clustered around 0 (because of z-scoring), but we can also see that AE have a good amount of observations at the very bottom (close to -2). Furthermore, these data points are mostly clustered around a BV of 0, but seems to follow some normal distribution around a low AE. 
 
-```{r}
+```{r hexagonal annotation different dist}
 mw_hex +
   annotate("rect", xmin=.75, xmax=2, ymin=-1.75,ymax=1.75, alpha=.0, col="red")+
   annotate("rect", xmin=-1.5, xmax=1, ymin=-1.8,ymax=-1.2, alpha=.0, col="red")
@@ -152,7 +152,7 @@ mw_hex +
 
 At any rate, although the hexagons indicate the number of observation within a certain value span. It may be more beneficial to use a density function, which smooths and summarize the distribution in bands of probability. 
 
-```{r}
+```{r 2d density graph}
 trans_mw |> 
   ggplot(aes(x=zlogbv, y=zlogapen)) -> joint_ae.bv
   
@@ -164,14 +164,14 @@ With this plot we can see the probability that a data point falls within a speci
 
 We can use different density functions, different binwidths or different number of bins to improve visualization.
 
-```{r}
+```{r 2d density graph count}
 joint_ae.bv + 
   geom_density2d(contour_var = "count")
 ```
 
 In this plot, the density function is visualized as a multiplication by the number of observations. Alternatively we could visualize with the "ndensity" which is scaled to a maximum of 1: 
 
-```{r}
+```{r 2d density graph ndenstit}
 joint_ae.bv + 
   geom_density2d(contour_var = "ndensity")
 ```
@@ -180,7 +180,7 @@ The latter two are visualized according to changes to the density function, whic
 
 If we follow the basic density function, we see that most values fall within the bands of the density function. 
 
-```{r}
+```{r dot plot and 2d density}
 joint_ae.bv + 
   geom_point(alpha=.1)+
   geom_density2d(col="red", size=1)
@@ -188,14 +188,14 @@ joint_ae.bv +
 
 A different way of visualizing, is to use colours indicating higher probability. 
 
-```{r}
+```{r 2d density coloured}
 joint_ae.bv + 
   geom_density2d_filled()
 ```
 
 With this plot we can more easily see the higher probability areas over the joint parameter space. To make it clear that we are looking at the join distibution of AE and BV we can add the individual distributions to the plot by using patchworks.
 
-```{r}
+```{r 2d density coloured with individual dist}
 # Here, I use the patchwork library
 
 # Joint distribution
@@ -224,7 +224,7 @@ p_bv +
 
 Although we can see the individual distributions and the joint distribution, it is not perfect due to the way patchworks glues plots together. Another solution is to use the package "ggsides", in this library we can add a side density to the main plot with one line of code:
 
-```{r}
+```{r 2d density with individual using ggside}
 # library(ggside)
 joint_ae.bv + 
   geom_density_2d_filled()+ 
@@ -236,7 +236,7 @@ With this library we get a more neat visualization of both the individual and jo
 
 With this, I will try and make the plot more neat with aesthetic changes. 
 
-```{r}
+```{r 2d density with side and zoom}
 min(trans_mw$zlogapen) -> AE_min
 min(trans_mw$zlogbv) -> BV_min
 
@@ -257,7 +257,7 @@ p_ggside
 
 One aesthetic change is to zoom into the main density area of the plot, which is mainly in the bottom left corner. However, doing this, has led to some cases related to the side densities. The side densities inherit the *coord_cartersian* feature from the ggplot object, making it wider, and thus harder to see the density that is locked between 0 and 1. I have not been able to find a solution to limit only the main plot, and not the side plots. An alternative is to use scale_x/y with the "limits" parameter. However, this will also remove data points from outside of the graph. Leading to other problems... 
 
-```{r}
+```{r 2d density  with aesthetic changes 2}
 neat_ae.bv + 
   coord_cartesian(expand=F)+
   scale_x_continuous(limits=c(-2,2))+ 
@@ -277,7 +277,7 @@ Even thought it might not be obvious from the plot above, data points outside th
 
 Thus, if we wish to visualize the distribution of the data, we should include all the data points we can. For this purpose I will stick with the *coord_cartesian* scale, and increase the size of the side plots to improve its visibility.
 
-```{r}
+```{r 2d density with ggside and aesthetic changes}
 neat_ae.bv +  
   coord_cartesian(expand = F, xlim=c(AE_min,2), ylim=c(BV_min,2.5))+
   geom_xsidedensity()+ 
@@ -308,6 +308,7 @@ neat_ae.bv +
   geom_ysidedensity()+
   scale_xsidey_continuous(breaks = c(0, 1), expand = F, limits = c(0,1))+
   scale_ysidex_continuous(breaks = c(0,.5), expand = F, limits = c(0,1))+
+    # limits and expand does not alter the plot!
   theme(ggside.panel.scale = .5)
 ```
 
@@ -332,6 +333,9 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, type="surface")
 There can arise a variety of problem when visualizing things in 3D. However, it can also be uniquely informative - especially if they are interactive. The latter of which is a worthy point, from my perspective, as I can rotate the plot within R. However, granted the reader is reading from a pdf file (or otherwise), the interactive mode is not possible. Nevertheless, this plot do not use *ggplot*, since ggplots do not have a way to visualize things in 3D. For this plot, I have used *plotly*, which is a library that can visualize data in 3D. However, I will not explore plotly in depth as it is beyond the scope of ggplot, but is nevertheless interesting to point out. 
 
 
+
+ VIS RAW DATA ? IDK?
+
 With this, I can explore some basic features of the different variables. Moreover, there are different ways of visualizing multivariate 
 
 ```{r}
@@ -350,7 +354,7 @@ trans_mw |>
 
 
 
-```{r}
+```{r 3d plot with top density 2d density distribution}
 plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, type="surface") |>
   add_surface(
     contours = list(
