@@ -20,7 +20,7 @@ editor:
 {{< pagebreak >}}
 
 
-In these latter exercises, I will visualize the distribution of data. More specifically visualize the distribution of data in relation to each other. In the first (this) exercise, I will visualize two continuous variables, while in the latter I will visualize the distribution of data over a categorical variable. To do this I will use a dataset related to mind wandering where we have two variables that are used to predict mind wandering. These two variables related to behavioural performance during the task and are behavioural variability (BV), a measure of response variation, and approximate entropy (AE) a measure of randomness.
+In the last two exercises, I will visualize the distribution of data. More specifically, visualize the distribution of data in relation to each othe, over a joint distribution space, also called multivariate visualization. In the first (this) exercise, I will visualize two continuous variables, while in the latter I will visualize the distribution of data over a categorical variable. To do this I will use a dataset related to mind wandering where we have two variables that are used to predict mind wandering. These two variables related to behavioural performance during the task and are behavioural variability (BV), a measure of response variation, and approximate entropy (AE) a measure of randomness.
 
 I start by loading the libraries, functions and data. 
 
@@ -115,17 +115,24 @@ mw_hex
 In this plot we can see how BV and AE relate to each other. This is informative because the assumption with these two variables is that when participants are focused on the task, they should generate high AE score and have consistent BV. If this is the case then we would expect that BV remains around zero, and that AE is high when participants are focused on the task. On the other hand, when participants are not focused on the task, they should show more BV and lower AE. This can be gauged to some degree on the previous plot. To indicate what I mean, I have highlighted the areas corresponding to each state of mind wandering below.
 
 ```{r}
-library(ggforce)
 mw_hex +
   annotate("rect", xmin=1.5, xmax=6.5, ymin=-1.75,ymax=1.75, alpha=.0, col="red")+
-  annotate("text", label="Mind wandering", x=4,y=1.3, alpha=1, col="red")+
+  annotate("text", label="Mind wandering", x=5.5,y=1.3, alpha=1, col="red")+
   annotate("rect", xmin=-1.5, xmax=1.5, ymin=1.75,ymax=6.2, alpha=.0, col="red")+
   annotate("text", label="Task focused", x=0,y=5, alpha=1, col="red")
 ```
 
-However, we do not exactly find such a distribution. Although, it is important to point out that these marked areas are quite extreme (but useful for illustrative purposes). Since the data is z-scored, we would not expect a lot of data higher than 2. Thus task focused and mind wandering should be closer, but nevertheless distributed according to the markings. At any rate, this will be explored in the forth exercise - distribution over categories (MW and/or MB). 
+However, we do not exactly find this distribution. Although, it is important to point out that these marked areas are quite extreme (but made for illustrative purposes). Since the data is z-scored, most data will gather within the value of -2 and +2, and only few cases to the extreme. If anything, the annotations I have made should be closer to the center. Regardless, it is difficult to gauge the distribution over various cognitive states from this plot. In the fourth exercise I will investigate the distribution over different cognitive states (mind wandering/mind blanking). There the distribution should be different (i.e., the mean is different), but still follow a normal distribution.  For this exercise, however, I will visualize the joint distribution of AE and BV. This can, nevertheless, reveal some intriguing things as we can see from the plot above. 
 
-At any rate, although the hexagons indicate the number of observation within each value, we may benefit from using a density function instead of a count function. 
+We can see that BV have more extreme observations than AE, for instance. Moreover, AE seems to take great leaps for the more extreme values. Nevertheless, most of the data seems to be relatively normally distributed. Furthermore, we can also see that BV seems to have a peak around 1.5 above 0 (which is more obvious in the individual distribution and the hex plot - compare to the plots below), but that AE is nevertheless low. In a similar vein, AE seems to have some observations close to 0, where BV is nevertheless quite low. I have marked what I mean in the plot below.
+
+```{r}
+mw_hex +
+  annotate("rect", xmin=.75, xmax=2, ymin=-1.75,ymax=1.75, alpha=.0, col="red")+
+  annotate("rect", xmin=-1.5, xmax=1, ymin=-1.8,ymax=-1.2, alpha=.0, col="red")
+```
+
+At any rate, although the hexagons indicate the number of observation within a certain value span. It may be more beneficial to use a density function, which smooths and summarize the distribution in bands of probability. 
 
 ```{r}
 trans_mw |> 
@@ -269,7 +276,6 @@ With this, I can explore some basic features of the different variables. Moreove
 
 ```{r}
 trans_mw |> 
-  filter(block=="B0") |>
   ggplot(aes(x=zlogbv, y=zlogapen))+ 
   geom_hex()
   geom_density()
