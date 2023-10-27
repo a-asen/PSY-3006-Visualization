@@ -103,7 +103,25 @@ trans_mw |>
   geom_density()
 ```
 
-However in these cases the relationship between the variables may be ambiguous and underexlored. In particular, we may be interested in how these two variables relate to each other. This can be achieved by visualizing the joint distribution with a 2d density plot. This can be done in multiple ways, for instance, we can use hexagons to count the number of occurrences within each joint area.
+However in these cases the relationship between the variables may be ambiguous and underexlored. In particular, we may be interested in how these two variables relate to each other. This can be achieved by visualizing the joint distribution with a 2d density plot. This can be done in multiple ways, for instance, by simply plotting all the data points. 
+
+```{r}
+trans_mw |> 
+  ggplot(aes(x=zlogbv, y=zlogapen))+ 
+  geom_point()
+```
+
+An obvious problem arise as the data points overlap and hide each other. One solution is to add transparency so we can see all (or mostly all) data points - and also how they overlap. 
+
+```{r}
+trans_mw |> 
+  ggplot(aes(x=zlogbv, y=zlogapen))+ 
+  geom_point(alpha=.1)
+```
+
+Nevertheless, it is not easy to gauge the number of observations within each value. However, the plot nevertheless reveal some interesting findings. For instance, we can see that for the BV variable, how data points cluster around 0 but also around 1.5 standard deviations above 0. 
+
+Alternatively, and in a similar way to histograms, we can count the number of observations within a span. This can be done by using hexagons: 
 
 ```{r}
 trans_mw |> 
@@ -124,7 +142,7 @@ mw_hex +
 
 However, we do not exactly find this distribution. Although, it is important to point out that these marked areas are quite extreme (but made for illustrative purposes). Since the data is z-scored, most data will gather within the value of -2 and +2, and only few cases to the extreme. If anything, the annotations I have made should be closer to the center. Regardless, it is difficult to gauge the distribution over various cognitive states from this plot. In the fourth exercise I will investigate the distribution over different cognitive states (mind wandering/mind blanking). There the distribution should be different (i.e., the mean is different), but still follow a normal distribution.  For this exercise, however, I will visualize the joint distribution of AE and BV. This can, nevertheless, reveal some intriguing things as we can see from the plot above. 
 
-We can see that BV have more extreme observations than AE, for instance. Moreover, AE seems to take great leaps for the more extreme values. Nevertheless, most of the data seems to be relatively normally distributed. Furthermore, we can also see that BV seems to have a peak around 1.5 above 0 (which is more obvious in the individual distribution and the hex plot - compare to the plots below), but that AE is nevertheless low. In a similar vein, AE seems to have some observations close to 0, where BV is nevertheless quite low. I have marked what I mean in the plot below.
+We can see that BV have more extreme observations than AE, for instance. Moreover, AE seems to take great leaps for the more extreme values. Nevertheless, most of the data seems to be relatively normally distributed. As noted above, we can see that for BV, data seem to gather around 0 but also around 1.5 standard deviations above 0. In addition to that, we can see that AE does not really change for these values - it seems to be relatively similarly distributed at both 0 and 1.5 standard deviations of BV. In a similar vein, AE have most values clustered around 0 (because of z-scoring), but we can also see that AE have a good amount of observations at the very bottom (close to -2). Furthermore, these data points are mostly clustered around a BV of 0, but seems to follow some normal distribution around a low AE. 
 
 ```{r}
 mw_hex +
@@ -136,7 +154,6 @@ At any rate, although the hexagons indicate the number of observation within a c
 
 ```{r}
 trans_mw |> 
-  filter(block=="B0") |>
   ggplot(aes(x=zlogbv, y=zlogapen)) -> joint_ae.bv
   
 joint_ae.bv +
@@ -165,11 +182,11 @@ If we follow the basic density function, we see that most values fall within the
 
 ```{r}
 joint_ae.bv + 
-  geom_density2d()+
-  geom_point()
+  geom_point(alpha=.1)+
+  geom_density2d(col="red", size=1)
 ```
 
-A different way of visualizing this is to use colours for the higher densities. 
+A different way of visualizing, is to use colours indicating higher probability. 
 
 ```{r}
 joint_ae.bv + 
