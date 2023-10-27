@@ -311,43 +311,69 @@ neat_ae.bv +
   theme(ggside.panel.scale = .5)
 ```
 
+Another way of visualizing the data distribution is to use 3 dimensional (3D) plots. 
 
+```{r}
+library(MASS)
+# https://plotly.com/r/3d-surface-plots/
+kde2d(trans_mw$zlogbv, 
+      trans_mw$zlogapen, 
+      n = 100
+      ) -> density_data
 
+plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, type="surface") |>
+  layout(
+    scene = list( 
+      camera = list(
+        eye = list(x=2,y=-1.5,z=2))))
+  
+```
 
-using colours within the same graph or facets over different plots. In these cases the dimensions has to be the same or very similar. However, another way of visualizing data multivariate plots can be to use integrate two plots 
+There can arise a variety of problem when visualizing things in 3D. However, it can also be uniquely informative - especially if they are interactive. The latter of which is a worthy point, from my perspective, as I can rotate the plot within R. However, granted the reader is reading from a pdf file (or otherwise), the interactive mode is not possible. Nevertheless, this plot do not use *ggplot*, since ggplots do not have a way to visualize things in 3D. For this plot, I have used *plotly*, which is a library that can visualize data in 3D. However, I will not explore plotly in depth as it is beyond the scope of ggplot, but is nevertheless interesting to point out. 
+
 
 With this, I can explore some basic features of the different variables. Moreover, there are different ways of visualizing multivariate 
 
 ```{r}
 trans_mw |> 
-  ggplot(aes(x=zlogbv, y=zlogapen))+ 
+  ggplot(aes(x=scale(zlogbv), y=scale(zlogapen)))+ 
   geom_hex()
   geom_density()
   geom_contour()
   
 trans_mw |> 
-  ggplot(aes(x=logbv, y=apen))+
+  ggplot(aes(x=scale(logbv), y=scale(apen)))+
+  geom_point()
+
   geom_density_2d_filled()
-  geom_point()
 ```
-
-
-
 
 
 
 ```{r}
-plot_ly(trans_mw, x=zlogbv, y=zlogapen)
-trans_mw |> 
-  ggplot(aes(x=proberound, y=zlogbv, z=1:3509))+ 
-  geom_point()
+plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, type="surface") |>
+  add_surface(
+    contours = list(
+    z = list(
+      show=TRUE,
+      usecolormap=TRUE,
+      highlightcolor="#ff0000",
+      project=list(z=TRUE)
+      )
+    )
+  ) |>
+   layout(
+    scene = list(
+      camera=list(
+        eye = list(x=1.87, y=0.88, z=-0.64)
+        )
+      )
+    )
 ```
 
-```{r}
-trans_mw |> 
-  ggplot(aes(x=proberound, y=zlogapen))+ 
-  geom_point()
-```
+
+
+
 
 
 
