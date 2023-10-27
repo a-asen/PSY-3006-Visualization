@@ -20,21 +20,40 @@ editor:
 {{< pagebreak >}}
 
 
+For this exercise, I will visualize distributions over a categorical variable. More specifically, I would like to visualize the distribution of AE over different cognitive states (such as mind wandering and mind blanking). As noted in the previous report, visualizing over categories can be more informative if we expect that one state should result in a different outcome. In our case, we might expect that when people report to be focused on the task that their randomness generation is better, as compared to the other cognitive states. 
 
-In multivariate visualization, the idea is to visualize multiple variables at once, and this can be achieved in multiple ways. For one, you could visualize multiple variables on the same plot using different colours:
+Firstly, I load the libraries and transform the data. 
+
+```{r load libraries and data}
+library(tidyverse)
+library(plotly)
+library(patchwork)
+library(ggside)
+read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
+source("../src/transformation.R") # AE calculation
+```
+
+```{r transform data}
+all_mw_data |> 
+  select(-region.y) |>
+  filter(stimulation == "sham") -> mw_data
+
+da_pro(mw_data, nback=25) -> trans_mw
+trans_mw
+```
+
+Then we can start by visualizing the distribution over the different cognitive states. I will start with a simple point plot
 
 ```{r}
 trans_mw |>
-  pivot_longer(c(zlogapen,zlogbv)) |> 
-  ggplot(aes(x=probe1, y=value, col=name))+
-  geom_point(position = position_jitterdodge(.5, dodge.width = .1))
+  ggplot(aes(x=probe1, y=zlogapen))+
+  geom_point(alpha = .2, position = position_jitter(.2))
 ```
 
 Or by using facets: 
 
 ```{r }
 trans_mw |>
-  pivot_longer(c(zlogapen,zlogbv)) |> 
   ggplot(aes(x=proberound, y=value, col=name))+
   facet_wrap(~name)+
   geom_point(position = position_jitter(.1))
