@@ -15,21 +15,26 @@ Visualizing data is key to comprehend what data provides us in a simple, and eff
 
 A principle of visualizing that is incredibly flexible. 
 
+## Introduction and summary: 
+- [ ] Ex1 
+- [ ] Ex2
+- [ ] Ex3 
+- [ ] Ex4 
+
 
 ## Ex 1 - circle: seasonal 
 - [x] Ex1 report
   - [x] Improved acquire daylight script
-  feedback:
+  - Feedback:
   circle plot:
-1. change the scale, not the data itself. 
-2. for circle, dont use confidence interval (SE or quartiles).
-3. Maybe use start sleep to  wake time. (If scaled?) 
-4. start & stop of sunlight time (when does sun rise, and when does it reduce)?
-5. sun rise-set // sleep & wake time. 
-  - also on normal plot
-6. use summary 
- EX: 7.  Use circle for seasonal 
-
+    1. Change the scale, not the data itself. 
+    2. For circle, do not use confidence interval (SE or quartiles).
+    3. Maybe use start sleep to  wake time. (If scaled?) 
+    4. Start & stop of sunlight time instead of hour daylight 
+      - I.e., visualize time when the sun rise and set
+    5. sun rise-set // sleep & wake time. 
+      - also on normal plot
+    6. use summary 
 
   
 ## Ex 2 - circle: sleep time 
@@ -46,10 +51,16 @@ disk drives), astronomical time (daily, monthly, annual), periodic waveforms
 # Multivariate visualization
 ## Ex 3 - 2 continous vars
 - [ ] Ex3 report
+  - In this report I investigate distribution plots. More specifically joint distributions called "multivariate visualization". I utilize patchwork and ggside to explore how to plot individual distributions around a joint distribution space.
+  
+  - 
+  
 
 ## Ex 4 - 1 cat 1 continous
 - [ ] Ex4 report
+  - More meaningful splitting of distributions over certain responses 
 
-## Final reflections 
+
+
 
 
