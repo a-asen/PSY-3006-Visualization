@@ -26,7 +26,7 @@ In multivariate visualization, the idea is to visualize multiple variables at on
 ```{r}
 trans_mw |>
   pivot_longer(c(zlogapen,zlogbv)) |> 
-  ggplot(aes(x=proberound, y=value, col=name))+
+  ggplot(aes(x=probe1, y=value, col=name))+
   geom_point(position = position_jitterdodge(.5, dodge.width = .1))
 ```
 

@@ -313,6 +313,7 @@ neat_ae.bv +
 
 
 
+
 using colours within the same graph or facets over different plots. In these cases the dimensions has to be the same or very similar. However, another way of visualizing data multivariate plots can be to use integrate two plots 
 
 With this, I can explore some basic features of the different variables. Moreover, there are different ways of visualizing multivariate 
