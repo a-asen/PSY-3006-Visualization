@@ -196,7 +196,8 @@ joint_ae.bv +
 With this plot we can more easily see the higher probability areas over the joint parameter space. To make it clear that we are looking at the join distibution of AE and BV we can add the individual distributions to the plot by using patchworks.
 
 ```{r}
-# Here, using the patchwork library
+# Here, I use the patchwork library
+
 # Joint distribution
 joint_ae.bv+
   geom_density2d_filled() -> p_joint 
@@ -214,9 +215,9 @@ trans_mw |>
   theme_void()+
   coord_flip() -> p_ae
 
-# Combining useing patchwork
+# Combining using patchwork
 p_bv + 
-  ggplot()+theme_void() + # Empty element 
+  ggplot()+ theme_void() + # Empty element 
   p_joint + 
   p_ae
 ```
@@ -231,7 +232,9 @@ joint_ae.bv +
   geom_ysidedensity()
 ```
 
-With this library we get a more neat visualization of both the individual and joint distribution. We can now make some aesthetic changes to make it more neat. 
+With this library we get a more neat visualization of both the individual and joint distribution. Moreover, using a coloured 2d density distribution we can more easily see how the data is distributed. Indeed, we can here see that BV seems to have two areas of observations as noted above. Moreover, it seems like AE has a wider distribution, which might be beneficial if we want to observe a difference between cognitive states.  
+
+With this, I will try and make the plot more neat with aesthetic changes. 
 
 ```{r}
 min(trans_mw$zlogapen) -> AE_min
@@ -241,51 +244,74 @@ joint_ae.bv +
   geom_density_2d_filled()+
   theme_minimal()+
   labs(x= "Z-scored BV", y="Z-scored AE", fill="Density") -> neat_ae.bv
+
 neat_ae.bv +  
   coord_cartesian(expand = F, xlim=c(AE_min,2), ylim=c(BV_min,2.5))+
   geom_xsidedensity()+ 
   geom_ysidedensity()+
   scale_xsidey_continuous(expand=F, limits = c(0,1), breaks = seq(0,1,1))+
+  scale_ysidex_continuous(expand=F, limits = c(0,1), breaks = seq(0,1,1))+
   theme(ggside.panel.scale=.4) -> p_ggside
 p_ggside  
 ```
 
-One aesthetic change is to zoom into the main density area of the plot, which is mainly in the bottom left corner. However, doing this, has led to some cases related to the side densities. The side densities inherit the coord_cartersian feature from the ggplot object, making it wider, and thus harder to see the density that is locked between 0 and 1. I have not been able to find a solution to limit only the main plot, and not the side plots. An alternative is to use scale_x/y with the "limits" parameter. However, this will also remove data points from outside of the graph. Leading to other problems... 
+One aesthetic change is to zoom into the main density area of the plot, which is mainly in the bottom left corner. However, doing this, has led to some cases related to the side densities. The side densities inherit the *coord_cartersian* feature from the ggplot object, making it wider, and thus harder to see the density that is locked between 0 and 1. I have not been able to find a solution to limit only the main plot, and not the side plots. An alternative is to use scale_x/y with the "limits" parameter. However, this will also remove data points from outside of the graph. Leading to other problems... 
 
 ```{r}
 neat_ae.bv + 
   coord_cartesian(expand=F)+
-  scale_x_continuous(limits=c(-2,2))+
+  scale_x_continuous(limits=c(-2,2))+ 
   scale_y_continuous(limits=c(-2,3))+
   geom_xsidedensity()+
   geom_ysidedensity()+
-  scale_xsidey_continuous(limit=c(0,1), minor_breaks = F)+
-  scale_ysidex_continuous(limit=c(0,.5), minor_breaks = F)+
+  scale_xsidey_continuous(limit=c(0,1), breaks = 1)+
+  scale_ysidex_continuous(limit=c(0,.5), breaks = .5)+
   theme_ggside_minimal()+
-  theme(ggside.panel.scale=.35)
+  theme(ggside.panel.scale=.35,
+        ggside.panel.grid.minor=element_blank(),
+        ggside.panel.grid.major=element_blank(),
+        )
 ```
 
-Thus, it is problematic to visualize the joint distribution in this way, since data points are being removed from the calculation. I will therefore stick with the coord_cartesian scale, and merely increase the side scales to increase the contrast.
+Even thought it might not be obvious from the plot above, data points outside the range that is displayed are remove. However, the distribution of the remaining data points are valid, but does not capture all the data points anymore (compare to the above or below). 
+
+Thus, if we wish to visualize the distribution of the data, we should include all the data points we can. For this purpose I will stick with the *coord_cartesian* scale, and increase the size of the side plots to improve its visibility.
 
 ```{r}
 neat_ae.bv +  
   coord_cartesian(expand = F, xlim=c(AE_min,2), ylim=c(BV_min,2.5))+
   geom_xsidedensity()+ 
   geom_ysidedensity()+
-  scale_xsidey_continuous(expand=F, limits = c(0,1), breaks = seq(0,1,1))+
-  scale_ysidex_continuous(expand=F, limits = c(0,1), breaks = seq(0,1,.5))+
-  geom_ysideline(aes(x=0))+
-  geom_xsideline(aes(y=0))+
-  theme(ggside.panel.scale=.7,
-        ggside.panel.background=element_blank(), 
-        ggside.panel.grid.minor=element_blank(), 
-        ggside.panel.grid.major=element_blank(), 
-        ggside.panel.border=element_blank())
-
-theme(grid)
+  scale_xsidey_continuous(breaks = c(0, 1))+
+  scale_ysidex_continuous(breaks = c(0,.5))+
+  geom_xsideline(aes(y=0), linetype = 2, alpha =.5)+ 
+  geom_xsideline(aes(y=1), linetype = 2, alpha =.5)+ 
+  geom_ysideline(aes(x=0), linetype = 2, alpha = .5)+ 
+  geom_ysideline(aes(x=1), linetype = 2, alpha = .5)+ 
+    # No idea why these two latter do not show a dashed line...
+  theme(ggside.panel.scale = .8,
+        ggside.panel.background = element_blank(), 
+        ggside.panel.grid.minor = element_blank(), 
+        ggside.panel.grid.major = element_blank(), 
+        ggside.panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        )
 ```
 
-However, the problem remain. It is still hard to see the exact distributions of the densities on the side. This could plausibly be fixed by re-scaling the side plots. However, I am struggling to find the right code. 
+However, the problem remain. It is still hard to see the exact distributions of the densities on the side. This could plausibly be fixed by re-scaling the side plots. However, I have not been able how to do this, even though plausible functions should be able to do it (e.g., scale_xsidey_continous, e.g., https://rdrr.io/cran/ggside/man/ggside-scales-continuous.html). I assume that *coords_cartesian* supersede scale limitations, and thus we are unable to change the scale of the side distributions - see below for an attempt. 
+
+```{r}
+neat_ae.bv +  
+  coord_cartesian(expand = F, xlim=c(AE_min,2), ylim=c(BV_min,2.5))+
+  geom_xsidedensity()+ 
+  geom_ysidedensity()+
+  scale_xsidey_continuous(breaks = c(0, 1), expand = F, limits = c(0,1))+
+  scale_ysidex_continuous(breaks = c(0,.5), expand = F, limits = c(0,1))+
+  theme(ggside.panel.scale = .5)
+```
+
+
 
 using colours within the same graph or facets over different plots. In these cases the dimensions has to be the same or very similar. However, another way of visualizing data multivariate plots can be to use integrate two plots 
 
