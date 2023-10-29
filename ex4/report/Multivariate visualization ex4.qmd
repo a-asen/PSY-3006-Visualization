@@ -63,11 +63,29 @@ trans_mw |>
 In this plot the bars are stacked on top of each other, which can make it problematic to see whether the data is distributed normally, especially for the lower probe responses (higher stacked bars). To fix this, we can position the bars beside each other. 
 
 ```{r}
-
+trans_mw |> 
+  ggplot(aes(x=zlogapen, group=probe1, fill=probe1))+
+  geom_histogram(alpha=.3, position = position_dodge(), col="black", size=.15
+                 ) -> p_hist 
+p_hist
 ```
 
+With this plot, the distribution within each categorical response is more evident, but regardless, still difficult to read. This can be fixed splitting the distribution, which can be done by using facets.
 
-Alternatively we can use densities, which smoothe the distribution.
+```{r}
+p_hist +
+  facet_wrap(~probe1)
+```
+
+In this graph, the distribution within each response is clearly evident and easy to read. Moreover, it appears as though the distribution within the first categorical response is flat, at least compared to the other distributions. To further investigate this, we can easily change the distribution to a density. **The density function will summarize the distribution * WILL IT THO?!?!
+
+```{r}
+trans_mw |> 
+  ggplot(aes(x=zlogapen, group=probe1, fill=probe1, col=probe1))+
+  geom_density(alpha=.3,)
+```
+
+Alternatively we can use densities, which smoothe the distribution and split by.
 
 ```{r}
 trans_mw |> 
@@ -76,6 +94,7 @@ trans_mw |>
   geom_density(alpha=.3)+
   facet_wrap(~probe1)
 ```
+
 
 
 
@@ -91,17 +110,7 @@ trans_mw |>
 
 On the other hand, we many want to investigate the distribution of data over each variable. Thus we can use the density:
 
-```{r}
-trans_mw |>
-  mutate(probe1=as.numeric(probe1)) |>
-  ggplot(aes(x=probe1, y=zlogapen))+
-  geom_density()
-
-
-
-
-
-
+```{r 2d density filled w colour}
 trans_mw |> 
   mutate(probe1=as.numeric(probe1)) |>
   ggplot(aes(x=probe1, y=zlogapen))+
@@ -111,3 +120,6 @@ trans_mw |>
 This plot clearly visualize the distribution of the data compared to the former once. It is difficult to grasp the distribution of the data when it is split over another variable. Alternatively we could show the density over the different categories. 
 
 The former plots do not visualize the distribution of the data easily. Compared to the former plots, this indicate the distribution of the data for each of the variable. 
+
+
+
