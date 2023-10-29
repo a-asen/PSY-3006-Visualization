@@ -29,8 +29,8 @@ library(tidyverse)
 library(plotly)
 library(patchwork)
 library(ggside)
-read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
-source("../src/transformation.R") # AE calculation
+read_csv("../../ex3/data/raw_mwtms_data.csv") -> all_mw_data 
+source("../../ex3/src/transformation.R") # AE calculation
 ```
 
 ```{r transform data}
@@ -50,12 +50,42 @@ trans_mw |>
   geom_point(alpha = .2, position = position_jitter(.2))
 ```
 
+Visualizing data in this way makes it hard to understand the distribution within each category. Although we can clearly see that 3 and 4 have more responses than 1 and 2. That is, the difference between the conditions categories are evident, even though it is not entirely clear whether it is normally distributed. 
+
+To investigate this, we can use histogram and colour them according to the categorical response.
+
+```{r}
+trans_mw |> 
+  ggplot(aes(x=zlogapen, group=probe1, col=probe1,fill=probe1))+
+  geom_histogram(alpha=.3)
+```
+
+In this plot the bars are stacked on top of each other, which can make it problematic to see whether the data is distributed normally, especially for the lower probe responses (higher stacked bars). To fix this, we can position the bars beside each other. 
+
+```{r}
+
+```
+
+
+Alternatively we can use densities, which smoothe the distribution.
+
+```{r}
+trans_mw |> 
+  #mutate(probe1=as.numeric(probe1)) |>
+  ggplot(aes(x=zlogapen, group=probe1, fill=probe1))+
+  geom_density(alpha=.3)+
+  facet_wrap(~probe1)
+```
+
+
+
+
 Or by using facets: 
 
 ```{r }
 trans_mw |>
-  ggplot(aes(x=proberound, y=value, col=name))+
-  facet_wrap(~name)+
+  ggplot(aes(x=probe1, y=zlogapen, col=probe1))+
+  facet_wrap(~probe1)+
   geom_point(position = position_jitter(.1))
 ```
 
@@ -63,9 +93,19 @@ On the other hand, we many want to investigate the distribution of data over eac
 
 ```{r}
 trans_mw |>
-  pivot_longer(c(zlogapen,zlogbv)) |>
-  ggplot(aes(x=value, col=name))+
+  mutate(probe1=as.numeric(probe1)) |>
+  ggplot(aes(x=probe1, y=zlogapen))+
   geom_density()
+
+
+
+
+
+
+trans_mw |> 
+  mutate(probe1=as.numeric(probe1)) |>
+  ggplot(aes(x=probe1, y=zlogapen))+
+  geom_density2d_filled()
 ```
 
 This plot clearly visualize the distribution of the data compared to the former once. It is difficult to grasp the distribution of the data when it is split over another variable. Alternatively we could show the density over the different categories. 
