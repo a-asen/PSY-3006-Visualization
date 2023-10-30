@@ -16,13 +16,15 @@ da_pro <- function(data, nback){
     probe1.resp=as.integer(d$response[d$stimulus=="probe1"])+1
     probe2.resp=as.integer(d$response[d$stimulus=="probe2"])+1
     probe3.resp=as.integer(d$response[d$stimulus=="probe3"])+1
+    
     ## return summary of it
     data.frame(
       probe1=probe1.resp,
       probe2=probe2.resp,
       probe3=probe3.resp,
       apen=apen_int(taps, 2)[3],
-      bv=sd(iti)
+      bv=sd(iti),
+      stim=unique(d$stimulation)
     )
   }) |> ungroup() |>  
     mutate(probe1=ordered(probe1, levels=1:4),
@@ -31,6 +33,7 @@ da_pro <- function(data, nback){
            logapen=-log(log(2)-apen),
            logbv=log(bv),
            zlogapen=(logapen-mean(logapen,na.rm=T))/sd(logapen,na.rm=T),
-           zlogbv=(logbv-mean(logbv,na.rm=T))/sd(logbv,na.rm=T)) -> data.probe
+           zlogbv=(logbv-mean(logbv,na.rm=T))/sd(logbv,na.rm=T),
+           ) -> data.probe
   return(data.probe)
 }
