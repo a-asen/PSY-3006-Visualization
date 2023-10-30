@@ -77,38 +77,26 @@ p_hist +
   facet_wrap(~probe1)
 ```
 
-In this graph, the distribution within each response is clearly evident and easy to read. Moreover, it appears as though the distribution within the first categorical response is flat, at least compared to the other distributions. To further investigate this, we can easily change the distribution to a density. **The density function will summarize the distribution * WILL IT THO?!?!
+In this graph, the distribution within each response is clearly evident and easy to read. Moreover, it appears as though the distribution within the first categorical response is flat, at least compared to the other distributions. To further investigate this, we can easily change the distribution to a density distribution. A kernel density estimation creates a smooth and continuous representation of the distribution. 
 
 ```{r}
 trans_mw |> 
   ggplot(aes(x=zlogapen, group=probe1, fill=probe1, col=probe1))+
-  geom_density(alpha=.3,)
+  geom_density(alpha=.2)
 ```
 
-Alternatively we can use densities, which smoothe the distribution and split by.
+As we can see from the plot all of the distributions over each category are surprisingly similar, at least compared to the histogram representation. We can further split the difference between the distributions by using *facets*. 
 
 ```{r}
 trans_mw |> 
-  #mutate(probe1=as.numeric(probe1)) |>
   ggplot(aes(x=zlogapen, group=probe1, fill=probe1))+
   geom_density(alpha=.3)+
   facet_wrap(~probe1)
 ```
 
+With this plot, we can see more nuances in each distribution. However, they appear to be more similar than dissimilar. 
 
-
-
-
-Or by using facets: 
-
-```{r }
-trans_mw |>
-  ggplot(aes(x=probe1, y=zlogapen, col=probe1))+
-  facet_wrap(~probe1)+
-  geom_point(position = position_jitter(.1))
-```
-
-On the other hand, we many want to investigate the distribution of data over each variable. Thus we can use the density:
+In a similar way to exercise 3, we can also visualize the distribution using a 2d density visualization. 
 
 ```{r 2d density filled w colour}
 trans_mw |> 
@@ -117,9 +105,58 @@ trans_mw |>
   geom_density2d_filled()
 ```
 
+We can clearly see that the fourth response received more responses than the first. However, since the density is spread over plus and minus values, it appears as though responses are spread around the categorical response. It is important to point out that it remains a bit ambiguous how to interpret the distribution. Readers are aided to thing of the distribution as happening in two dimensions, when it only really happens over one dimension. That is to say, the data distribution within one categorical response only happens according to the cluster of data points of AE values - not at the same time a distribution around the probe response. It is suggested that the data distributes around each response (e.g., 2.9 to 3.1), even though they are perfectly symmetrical and one side could safely be removed. With such a choice, it would be more evident that we are talking about only a one dimensional distribution over different categories. One way of achieveing this is to use the *ggridges* library, which makes it easy to visualize data distributions over categories. 
+
+```{r 2d density filled w colour}
+library(ggridges)
+trans_mw |> 
+  ggplot(aes(x=zlogapen, y=probe1, fill=probe1))+
+  geom_density_ridges(scale = 1.3, alpha=.3)+
+  coord_flip()
+```
+
+With this plot, we can more easily understand that we are talking about a distribution over one categorical response. Moreover, it is easier to comprehend the distribution over each categorical response then the (above) 2d distribution. The *ggridges* library is clearly superior in many regards, as it overlays the distributions without disrupting the distribution behind it, but still making comparisons easily. For instance, the first cases used histograms, which makes it hard to compared the distribution, because it uses count summary. While using density made comparison of the distribution easier, it was hard to see the individual distributions when they were overlapped, but difficult to compared when they were split by facets. Thus, *ggridges* makes it a better compromise between these two options, making it easier to both see the individual distribution, but also compare the distribution over each response. 
+
+```{r}
+trans_mw |> 
+  pivot_longer(c(block, probe1)) |>
+  ggplot(aes(x=zlogbv, y=name))+
+  geom_density_ridges(scale = 3, alpha=.3)+
+  geom_vline(xintercept=0)
+
+```
+
+
+
+
+
 This plot clearly visualize the distribution of the data compared to the former once. It is difficult to grasp the distribution of the data when it is split over another variable. Alternatively we could show the density over the different categories. 
 
 The former plots do not visualize the distribution of the data easily. Compared to the former plots, this indicate the distribution of the data for each of the variable. 
+
+```{r}
+trans_mw |> 
+  ggplot(aes(x=zlogapen, y=probe1, fill = 0.5 - abs(0.5 - stat(ecdf))))+
+  geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T)+
+  scale_fill_viridis_c(name = "Tail probability", option = "inferno")
+  coord_flip()
+  # https://wilkelab.org/ggridges/articles/introduction.html
+```
+
+
+ 
+```{r cumulative evidence}
+trans_mw |> # https://stackoverflow.com/a/39432933/21637065
+  ggplot(aes(x=apen, col=probe1))+
+  stat_ecdf()
+```
+
+
+
+
+
+
+
 
 
 
