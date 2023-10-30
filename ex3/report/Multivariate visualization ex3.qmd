@@ -183,7 +183,7 @@ If we follow the basic density function, we see that most values fall within the
 ```{r dot plot and 2d density}
 joint_ae.bv + 
   geom_point(alpha=.1)+
-  geom_density2d(col="red", size=1)
+  geom_density2d(col="red", linewidth=1)
 ```
 
 A different way of visualizing, is to use colours indicating higher probability. 
@@ -322,7 +322,8 @@ kde2d(trans_mw$zlogbv,
       n = 100
       ) -> density_data
 
-plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, type="surface") |>
+plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, 
+        type="surface") |>
   layout(
     scene = list( 
       camera = list(
@@ -355,7 +356,8 @@ trans_mw |>
 
 
 ```{r 3d plot with top density 2d density distribution}
-plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, type="surface") |>
+plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, 
+        type="surface") |>
   add_surface(
     contours = list(
     z = list(
