@@ -71,9 +71,9 @@ s_sleep2 |>
 {{< pagebreak >}}
 
 
-Here I will further investigate the use of circle plot by focusing on sleep times in a study on sleep deprivation. In a similar way to the seasonal data, sleep can be plotted on a circular plot which can correspond neatly to clock time, as we will also see. Later, I discuss some thoughts about circle plots derived from this investigation and the previous. Essentially, circular plots are good at visualizing summarized data, as well as differences between groups. Moreover, this can be meaningfully displayed according to clock time. Parts of which a normal visualization can miss out on. However, greatly benefiting by being easier to read each data point. 
+Here, I will further investigate the use of circle plot by focusing on sleep times in a study on sleep deprivation. Similarly to the seasonal data, sleep can be plotted on a circular plot which can correspond neatly to clock time, as we will also see. Later, I discuss some thoughts about circle plots derived from this investigation and the previous. Essentially, circular plots are good at visualizing summarized data, as well as differences between groups. Moreover, this can be meaningfully displayed according to clock time. Parts of which a normal visualization can miss out on. However, greatly benefiting by being easier to read each data point. 
 
-(Note. The PDF report indicate points and lines bigger than in the quarto document.)
+(Note. The PDF export draws the points and lines larger than what is seen in the quarto document in RStudio.)
 
 
 First, I combine the data probe and the sleep. The data used for this exploration has been downloaded from OSF (https://osf.io/xq6wr/).
@@ -98,7 +98,7 @@ sleep_diary |>
   filter(!(is.na(sleepdep))) -> sleep
 ```
 
-According to the draft idea, I believe it is best to plot the data according to sleep time and sleep duration. More specifically, the x-variable containing the time that participants fell asleep, and the y-variable relating to the amount of sleep participant received. This will be split into their respective conditions and in this way, we should see that participants go to sleep later, and sleep less. 
+According to the draft idea, I believe it is best to plot the data according to sleep time and sleep duration. More specifically, the x-variable contains the time that participants fell asleep, and the y-variable relates to the amount of sleep the participant received. This will be split into their respective conditions and in this way, we should see that participants go to sleep later, and sleep less. 
 
 ```{r simple point plot}
 sleep |>
@@ -106,7 +106,7 @@ sleep |>
   geom_point()
 ```
 
-As expected, participants did go to sleep later during the PSD (SD) condition and slept fewer hours as compared to the NS (control). However, a problem with this plot is that it visualizes all the (three) data points pertaining to participants sleep in each condition. To more effectively visualize with a circle plot, I should use a summary statistic of each the sleep. 
+As expected, participants did go to sleep later during the PSD (SD) condition and slept fewer hours as compared to the NS (control). However, a problem with this plot is that it visualizes all the (three) data points pertaining to participants sleep in each condition. To more effectively visualize with a circle plot, I should use a summary statistic of each of the sleep conditions. 
 
 To illustrate my point, we can visualize sleep duration over each subject, split by condition. 
 
@@ -117,7 +117,7 @@ sleep |>
   stat_summary()
 ```
 
-This plot produce a summary statistic (mean_se) over each subject for each condition. The result is more of what I am looking for. However, this plot is missing the relation to sleep time, which has to be represented by one of the axis. There is a problem related to this, however, in that each sleep duration point has a related sleep time point. This means that there is an association between all the data points for our plot, and grouping/summarizing within the ggplot is hard (if not impossible). One work around is to transform the data before we plug it into ggplot. 
+This plot produces a summary statistic (mean_se) over each subject for each condition. The result is more of what I am looking for. However, this plot misses the relation to sleep time, which has to be represented by one of the axes. There is a problem related to this, however, in that, each sleep duration point has a related sleep time point. This means that there is an association between all the data points for our plot, and grouping/summarizing within the ggplot is hard (if not impossible). One work around is to transform the data before we plug it into ggplot. 
 
 ```{r summary point plot}
 sleep |>
@@ -144,7 +144,7 @@ sleep |>
   geom_point(size=2)
 ```
 
-This result in a plot that seem to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance, by using standard error, standard deviation or confidence intervals. For now I will stick with standard error, but this can easily be changed later. 
+This results in a plot that seems to contain more of what I am looking for. Another thing that could be added to the plot is some uncertainty relating to the data. For instance, by using standard error, standard deviation or confidence intervals. For now, I will stick with standard error, but this can easily be changed later. 
 
 ```{r better trans amd vis with SE}
 sleep |>
@@ -173,9 +173,9 @@ s_sleep |>
   geom_errorbar(aes(ymin=duration-duration_se, ymax=duration+duration_se))
 ```
 
-Here I improved upon the data transformation and included a calculation of the standard error (SE) and standard deviation (SD). This will be used to indicate some uncertainty in our estimate or indicate the variation of the data. As noted previously, circle plots are more apt at visualizing summarized data than the raw data. In particular, when the data points cluster on or near each other, as the circle plot transform the layout of the plot in such a way as to make it difficulty to read or interpret. With this, we can proceed to make it circular.
+Here, I improved upon the data transformation and included a calculation of the standard error (SE) and standard deviation (SD). This will be used to indicate some uncertainty in our estimate or indicate the variation of the data. As noted previously, circle plots are more apt at visualizing summarized data than the raw data. In particular, when the data points cluster on or near each other, as the circle plot transforms the layout of the plot in such a way as to make it difficulty to read or interpret. With this, we can proceed to make it circular.
 
-Before we move on, I would like to quickly investigate whether to stick with SD or SE. To me SD appear to be more informative as it indicate, to some degree, the width of the data. However, exactly why the width of the data is important or interesting may be more difficult to justify. In our case, the SD indicate variation in sleep time. Since we are estimating participants sleep duration, their SD should (hopefully) be rather small, indicating more consistent sleep duration. On the other hand, visualizing SE would indicate the error of the estimate, which also partially indicate that the uncertainty is wider, although it does not really indicate just how wide - in my opinion. To do this, we simply change the calculated "_se" to "_sd" in the "linerange" argument. 
+Before we move on, I would like to quickly investigate whether to stick with SD or SE. To me, SD appears to be more informative as it indicates, to some degree, the width of the data. However, exactly why the width of the data is important or interesting may be more difficult to justify. In our case, the SD indicates variation in sleep time. Since we are estimating participants' sleep duration, their SD should (hopefully) be rather small, indicating more consistent sleep duration. On the other hand, visualizing SE would indicate the error of the estimate, which also partially indicates that the uncertainty is wider, although it does not really indicate just how wide - in my opinion. To achieve this, we simply change the calculated "_se" to "_sd" in the "linerange" argument. 
 
 ```{r SD test}
 s_sleep |>
@@ -196,7 +196,7 @@ s_sleep |>
 
 ```
 
-Indeed, with the SD in the circular plot, it turns it to a mess. It even seems like some points are lost in the soup of the PSD sleep times.  Thus, for further investigation I will stick with SE, which makes the data points more readable, unless otherwise noted. 
+Indeed, with the SD in the circular plot, it turns it into a mess. It even seems like some points are lost in the soup of the PSD sleep times.  Thus, for further investigation I will stick with SE, which makes the data points more readable, unless otherwise noted. 
 
 ```{r better transformation and circle plot}
 sleep |>
@@ -226,7 +226,7 @@ sleep |>
 sobj1
 ```
 
-Now we can start by making the circle plot more neat. Firstly, the data points all seem to cluster in around 2-3 hours, at least for the PSD condition. We can change this by placing an invisible point closer to the center, which will increase the distance a bit. Moreover, we can change the sleep to a 24 hour clock, indicating when participants went to sleep. 
+Now we can start by making the circle plot more neat. Firstly, the data points all seem to cluster in around 2-3 hours, at least for the PSD condition. We can change this by placing an invisible point closer to the centre, which will increase the distance a bit. Moreover, we can change the sleep to a 24-hour clock, indicating when participants went to sleep. 
 
 ```{r pleasing circular}
 sobj1 +
@@ -239,9 +239,9 @@ sobj1 +
 sobj2
 ```
 
-In this plot, the x-axis represents the time at which participants fell asleep, while the y-axis represents the amount of sleep participants received. From the plot, we can clearly see that during the NS condition, participants went to sleep earlier and slept for longer as compared to the PSD condition. During the PSD condition, participants went to sleep later, and also slept shorter (indicated with points closer to the center.
+In this plot, the x-axis represents the time at which participants fell asleep, while the y-axis represents the amount of sleep participants received. From the plot, we can clearly see that during the NS condition, participants went to sleep earlier and slept for longer as compared to the PSD condition. During the PSD condition, participants went to sleep later, and also slept shorter (indicated with points closer to the centre.
 
-With the previous plot we are able to approximate when participants went to sleep, and approximately how long they slept. We could possibly make this more clear by using the cumulative sum of the clock instead of a 24 hour clock.
+With the previous plot, we can approximate when participants went to sleep, and approximately how long they slept. We could possibly make this more clear by using the cumulative sum of the clock instead of a 24-hour clock.
 
 ```{r switch to cum_sum}
 sleep |>
@@ -249,7 +249,7 @@ sleep |>
   geom_point()
 ```
 
-Firstly, with this plot we can clearly see a downward trend for the sleep duration plotted against the sleep time. Keeping the data in this way may be easier to work with in the future, and we can easily change the appears of the x-axis to the appropriate time (i.e., 0, 1, 2, etc.).
+Firstly, with this plot, we can clearly see a downward trend for the sleep duration plotted against the sleep time. Keeping the data in this way may be easier to work with in the future, and we can easily change the appears of the x-axis to the appropriate time (i.e., 0, 1, 2, etc.).
 
 ```{r fix timelien for cum_sum}
 sleep |>
@@ -298,7 +298,7 @@ s_sleep2 |>
 sobj10
 ```
 
-To this end, it is now a rather easy to add a mean line of sleep duration for each conditions. With this, we can clearly see that participants, in general, slept less during the PSD condition than the NS condition. 
+To this end, it is now a rather easy to add a mean line of sleep duration for each condition. With this, we can clearly see that participants, in general, slept less during the PSD condition than the NS condition. 
 
 ```{r circle plot with cum-sum}
 sobj10 +
@@ -307,7 +307,7 @@ sobj10 +
   geom_blank(aes(y=3.5))
 ```
 
-A benefit with this plot is that all the data points are easier to locate. However, it is now less obvious what the time is, as compared to the previous plots, in which the x-axis corresponded to clock time. One of the benefits of using a circular plot, is to visualize data in an informative or intuitive way. In the above plot, we need to constantly check up against the x-axis to understand which time we are at. This is couple of times easier to do with the normal plot. However, if we turn the location of the circle plot to correspond to the normal clock time, maybe things will turn more neatly. 
+A benefit of this plot is that all the data points are easier to locate. However, it is now less obvious what the time is, as compared to the previous plots, in which the x-axis corresponded to clock time. One of the benefits of using a circular plot, is to visualize data in an informative or intuitive way. In the above plot, we need to constantly check up against the x-axis to understand which time we are at. This is a couple of times easier to do with the normal plot. However, if we turn the location of the circle plot to correspond to the normal clock time, maybe things will turn more neatly. 
 
 ```{r neat plot for cum_sum}
 sobj10 + 
@@ -321,9 +321,9 @@ sobj10 +
 sobj11
 ```
 
-This plots does indeed look much better. Moreover, we are meaningfully visualizing clock time, at least to some degree, within a 12-hour span. From 18 to 6, which should (and in our case do) capture all sleep estimates in a visually pleasing way. Moreover, the layout of the circle correspond to a large extent with the plot containing all hours of the day 
+This plot does indeed look much better. Moreover, we are meaningfully visualizing clock time, at least to some degree, within a 12-hour span. From 18 to 6, which should (and in our case do) capture all sleep estimates in a visually pleasing way. Moreover, the layout of the circle corresponds to a large extent with the plot containing all hours of the day 
 
-One missing feature is that we do not see the uncertainty in each participants sleep time. This can be done by adding a width element to each estimate, which correspond to the uncertainty of the sleep time estimate. However, this may increase clutter of the plot, especially since the data points clutter together more in a circle plot. 
+One missing feature is that we do not see the uncertainty in each participant's sleep time. This can be done by adding a width element to each estimate, which corresponds to the uncertainty of the sleep time estimate. However, this may increase clutter of the plot, especially since the data points clutter together more in a circle plot. 
 
 ```{r added horizontal se error }
 sobj11 + 
@@ -340,9 +340,9 @@ sobj11 +
   geom_linerange(aes(y=duration, xmin=sleep-sleep_sd, xmax=sleep+sleep_sd))
 ```
 
-Arguably, this plot is more difficult to read, and, moreover, visualizing SE and SD is misleading. Nevertheless, I find it rather informative in that we can see the variation of the sleep times. Which is quite large for some individual, while being more consistent. Although SE also indicate some uncertainty, it does not indicate the width of the data. For the future, I will stick with SE on the x-axis to be consistent and not generate too much clutter. 
+Arguably, this plot is more difficult to read, and, moreover, visualizing SE and SD is misleading. Nevertheless, I find it rather informative in that we can see the variation of the sleep times. Which is considerable for some individual, while being more consistent. Although SE also indicates some uncertainty, it does not indicate the width of the data. For the future, I will stick with SE on the x-axis to be consistent and not generate too much clutter. 
 
-One alternative could be to visualize with a bars, such that each point receives its own bar length corresponding to the average sleep duration. 
+One alternative could be to visualize with a bar, such that each point receives its own bar length corresponding to the average sleep duration. 
 
 ```{r use bars instead}
 s_sleep2 |>
@@ -370,7 +370,7 @@ s_sleep2 |>
 sobj20
 ```
 
-In this plot, it is perhaps more obvious that the sleep duration in the PSD condition is reduced as compared to the NS condition. Moreover, the circle plot does fit this type of visualization more than plotting dots, as the bars themselves convey information about length. However, it is perhaps most clearly illustrated by a contrast. That is to say, it is still difficult to estimate the exact value of any data point, but it does put the conditions in contrast. Suggesting, perhaps, that circle plots are better at visualizing contrasts than at presenting data. It should be noted that it can appear that the difference between the NS and the PSD condition is exaggerated since the appears of the bars reduced closer to the circle, as compared to the NS bars. This may, however, serve a purpose as well. Our research, and others, indicate that small deviation (although ours may be considered medium) of sleep amount can have severe impact on performance. 
+In this plot, it is perhaps more obvious that the sleep duration in the PSD condition is reduced as compared to the NS condition. Moreover, the circle plot does fit this type of visualization more than plotting dots, as the bars themselves convey information about length. However, it is perhaps most clearly illustrated by a contrast. That is to say, it is still difficult to estimate the exact value of any data point, but it does put the conditions in contrast. Suggesting, perhaps, that circle plots are better at visualizing contrasts than at presenting data. It should be noted that it can appear that the difference between the NS and the PSD condition is exaggerated since the appears of the bars reduced closer to the circle, as compared to the NS bars. This may, however, serve a purpose as well. Our research, and others, indicate that a small deviation (although ours may be considered medium) of sleep amount can have a severe impact on performance. 
 
 ```{r Add dots to bars}
 sobj20 + 
@@ -379,7 +379,7 @@ sobj20 +
   labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition")
 ```
 
-Despite the fact that we leave a fair amount of the plot to nothing (i.e., 4-21), displaying the data in this way is at least meaningful in relation to a clock (at least to some degree). However, this way is at least better than visualizing all 24 hours of the day (see below), since that would create even more non-data ink. Although a plot visualizing all the hours of the day, could benefit by also indicating the wake time of the related sleep sleep times. 
+Even though we leave a fair amount of the plot to nothing (i.e., 4-21), displaying the data in this way is at least meaningful in relation to a clock (at least to some degree). However, this way is at least better than visualizing all 24 hours of the day (see below), since that would create even more non-data ink. Although, a plot visualizing all the hours of the day could benefit by also indicating the wake time of the related sleep times. 
 
 ```{r try full clock time}
 sobj20 + 
@@ -401,7 +401,7 @@ sobj20 +
   geom_point(aes(x=waking, col=sleepdep))
 ```
 
-In this plot we can also see the wake time at around 8 o'clock. Although this should be visualized with a different colour to not mix the sleep time and wake time. For now I will not distinguish between the two as I am mostly interest in visualizing sleep times. Although some investigation into the relationship between sleep time and wake time is warranted. 
+In this plot, we can also see the wake time at around 8 o'clock. Although this should be visualized with a different colour to not mix the sleep time and wake time. For now, I will not distinguish between the two, as I am mostly interested in visualizing sleep times. Although some investigation into the relationship between sleep time and wake time is warranted. 
 
 ```{r add connecting lines between sleep and wake time over sleep duration}
 s_sleep |>
@@ -424,7 +424,7 @@ s_sleep |>
 sobj30
 ```
 
-In this plot, we can see both the sleep times and wake times connected with a x-axis line at the height of the sleep duration. This line connects the sleep time and wake time point which illustrates that during the NS condition participants tended to sleep longer, by going to sleep earlier but nonetheless waking up at the same time. To further add to this point, we can add to this mean lines indicating the mean sleep time and wake time for the different conditions. 
+In this plot, we can see both the sleep times and wake times connected with an x-axis line at the height of the sleep duration. This line connects the sleep time and wake time point, which illustrates that during the NS condition, participants tended to sleep longer, by going to sleep earlier but nonetheless waking up at the same time. To further add to this point, we can add to this mean lines indicating the mean sleep time and wake time for the different conditions. 
 
 ```{r mean vertical lines}
 s_sleep2 |>
@@ -442,13 +442,13 @@ sobj30 +
 sobj31
 ```
 
-In this plot we can see the average sleep times (dark blue, darkred) and wake time (blue, red) for the NS and PSD respectively. As we can clearly see, participants did go to sleep later during the PSD condition, but still woke up around the same time. It is perhaps a little less obvious with the lines connecting each data point (see below). Although the lines makes it more difficult to see each data point, it does tell the story of the difference between the conditions. We can see that virtually all the participants in the NS condition is above the lines of the PSD conditions. This is a good sign, as it indicates that participants slept more in the NS condition as compared to the PSD condition. However, it is again important to point out that it is rather difficult to read the exact value of each data point. Indeed, as can be seen (two) below, plotting data in a normal way makes it way more easier to read the sleep duration. It is way more intuitive to read the values from a normal plot than a circle plot. 
+In this plot, we can see the average sleep times (dark blue, dark red) and wake time (blue, red) for the NS and PSD respectively. As we can clearly see, participants did go to sleep later during the PSD condition, but still woke up around the same time. It is perhaps a little less obvious with the lines connecting each data point (see below). Although the lines make it more difficult to see each data point, it does tell the story of the difference between the conditions. We can see that virtually all the participants in the NS condition are above the lines of the PSD conditions. This is a good sign, as it indicates that participants slept more in the NS condition as compared to the PSD condition. However, it is again important to point out that it is rather difficult to read the exact value of each data point. Indeed, as can be seen (two) below, plotting data in a normal way makes it way easier to read the sleep duration. It is way more intuitive to read the values from a normal plot than a circle plot. 
 
-It stands to reason, then, that circle plot may convey an essence but missing details, while a normal plot can convey the exact information of each data point, but perhaps not as neatly. Although the last plot is not as neat as the circle plot, I have not put effort into making it more neat (and will not currently). However, visualizing in this way, seems to be a waste of ink, as the same information is conveyed along the lines from sleep time to the wake time. Indeed, the second plot I created (at the very start) summarize the sleep amount over each participant and displays all the information. However, this plot does not incorporate clock time in any meaningful way. 
+It stands to reason, then, that a circle plot may convey an essence but missing details, while a normal plot can convey the exact information about each data point, but perhaps not as neatly. Although the last plot is not as neat as the circle plot, I have not put effort into making it more neat (and will not currently). However, visualizing in this way, seems to be a waste of ink, as the same information is conveyed along the lines from sleep time to wake time. Indeed, the second plot I created (at the very start) summarizes the sleep amount over each participant and displays all the information. However, this plot does not incorporate clock time in any meaningful way. 
 
-Depending on what we aim, we can accomplish different things by visualizing with circular plots and normal plots. Indeed, the second plot clearly visualize the sleep amount for each participant across condition, and display each of the data points. In essence, this plot illustrate the sleep duration of each participant across conditions clearly. However, it does not tell us anything about when participants went to sleep and woke up. The latest circle plots, clearly approximates the sleeping times (and waking times) and puts the _conditions_ at contrast. In may ways, this is what we want. We want to investigate whether participants slept less during the PSD condition AND whether they went to sleep later as compared to the NS condition. 
+Depending on what we aim, we can accomplish different things by visualizing with circular plots and normal plots. Indeed, the second plot clearly visualizes the sleep amount for each participant across conditions, and displays each of the data points. In essence, this plot illustrates the sleep duration of each participant across conditions clearly. However, it does not tell us anything about when participants went to sleep and woke up. The latest circle plots, clearly approximates the sleeping times (and waking times) and puts the _conditions_ in contrast. In many ways, this is what we want. We want to investigate whether participants slept less during the PSD condition AND whether they went to sleep later as compared to the NS condition. 
 
-Thus, circle plots may lose exact information - or at least makes it more difficult to interpret - they can nicely illustrate difference between condition, and they work nicely with clock time. Moreover, circle plots could possible work nicely together with things that tend in circular manners - like the clock and, as previously done, as the seasons. 
+Thus, circle plots may lose exact information - or at least make it more difficult to interpret - they can nicely illustrate differences between conditions, and they work nicely with clock time. Moreover, circle plots could possibly work nicely together with things that tend in circular manners - like the clock and, as previously done, as the seasons. 
 
 ```{r remove connecting lines}
 s_sleep |>
@@ -476,5 +476,4 @@ sobj31 +
   coord_cartesian()+
   scale_x_continuous(breaks=seq(0,24,1), expand = expansion(0))
 ```
-
 
