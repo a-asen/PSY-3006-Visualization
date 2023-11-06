@@ -8,32 +8,80 @@ editor:
 ---
 
 ```{r start libs}
+#| include: false
+#| echo: false
+library(tidyverse)
+library(ggside)
 
+read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
+source("../src/transformation.R") # AE calculation
+
+all_mw_data |> 
+  filter(stimulation == "sham") -> mw_data
+
+suppressWarnings(da_pro(mw_data, nback=25)) -> trans_mw
+
+min(trans_mw$zlogapen) -> AE_min
+min(trans_mw$zlogbv) -> BV_min
 ```
-
 
 ```{r start plot}
-
+#| include: false
+trans_mw |> 
+  ggplot(aes(x=zlogbv, y=zlogapen)) +
+  geom_density_2d_filled()+
+  theme_minimal()+
+  labs(x= "Z-scored BV", y="Z-scored AE", fill="Density") +
+  coord_cartesian(expand = F, xlim=c(AE_min,2), ylim=c(BV_min,2.5))+
+  geom_xsidedensity()+ 
+  geom_ysidedensity()+
+  scale_xsidey_continuous(breaks = c(0, 1))+
+  scale_ysidex_continuous(breaks = c(0,.5))+
+  geom_xsideline(aes(y=0), linetype = 2, alpha =.5)+ 
+  geom_xsideline(aes(y=1), linetype = 2, alpha =.5)+ 
+  geom_ysideline(aes(x=0), linetype = 2, alpha = .5)+ 
+  geom_ysideline(aes(x=1), linetype = 2, alpha = .5)+ 
+  theme(ggside.panel.scale = .8,
+        ggside.panel.background = element_blank(), 
+        ggside.panel.grid.minor = element_blank(), 
+        ggside.panel.grid.major = element_blank(), 
+        ggside.panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        )
 ```
-
 
 {{< pagebreak >}}
 
+In the last two exercises, I will visualize the distribution
+of data. More specifically, visualize the distribution of data
+in relation to each othe, over a joint distribution space,
+also called multivariate visualization. In the first (this)
+exercise, I will visualize two continuous variables, while in
+the latter I will visualize the distribution of data over a
+categorical variable. To do this I will use a dataset related
+to mind wandering where we have two variables that are used to
+predict mind wandering. These two variables related to
+behavioural performance during the task and are behavioural
+variability (BV), a measure of response variation, and
+approximate entropy (AE) a measure of randomness.
 
-In the last two exercises, I will visualize the distribution of data. More specifically, visualize the distribution of data in relation to each othe, over a joint distribution space, also called multivariate visualization. In the first (this) exercise, I will visualize two continuous variables, while in the latter I will visualize the distribution of data over a categorical variable. To do this I will use a dataset related to mind wandering where we have two variables that are used to predict mind wandering. These two variables related to behavioural performance during the task and are behavioural variability (BV), a measure of response variation, and approximate entropy (AE) a measure of randomness.
-
-I start by loading the libraries, functions and data. 
+I start by loading the libraries, functions and data.
 
 ```{r load libraries and data}
 library(tidyverse)
-library(plotly)
 library(patchwork)
 library(ggside)
+library(plotly)
+library(MASS)
+
 read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
 source("../src/transformation.R") # AE calculation
 ```
 
-I then select the relevant data, in this case, I will only use the data from the "sham" condition. That is the condition in which no manipulation was done to participants. 
+I then select the relevant data, in this case, I will only use
+the data from the "sham" condition. That is the condition in
+which no manipulation was done to participants.
 
 ```{r transformation}
 all_mw_data |> 
@@ -44,7 +92,11 @@ da_pro(mw_data, nback=25) -> trans_mw
 trans_mw
 ```
 
-We can now start plotting the data. There are a only a couple of ways one can visualize the distribution of data over a variable. This could be with a histogram or a density distribution. A histogram summarize the data according to the number of occurances within a certain span. 
+We can now start plotting the data. There are a only a couple
+of ways one can visualize the distribution of data over a
+variable. This could be with a histogram or a density
+distribution. A histogram summarize the data according to the
+number of occurances within a certain span.
 
 ```{r histogram}
 trans_mw |>
@@ -52,7 +104,12 @@ trans_mw |>
   geom_histogram()
 ```
 
-It is perhaps a better idea to use a histogram over more meaningful distances of the variable. For instance, an IQ test, where the ranges are be more meaningful. That is, a 5 point increase in IQ is easier to gauge than a .5 increase in zlogapen. Nevertheless, another way of plotting the distribution could be to use a frequency polygon.
+It is perhaps a better idea to use a histogram over more
+meaningful distances of the variable. For instance, an IQ
+test, where the ranges are be more meaningful. That is, a 5
+point increase in IQ is easier to gauge than a .5 increase in
+zlogapen. Nevertheless, another way of plotting the
+distribution could be to use a frequency polygon.
 
 ```{r freqpoly plot}
 trans_mw |>
@@ -60,7 +117,14 @@ trans_mw |>
   geom_freqpoly()
 ```
 
-This plot is essentially the same as the histogram, but mimics the density distributions as shown below. It is, however, important to note that this is not a density distribution, as the density is calculated while this plot shows the raw count of each range of value - the same as the histogram. To visualize the distribution more meaningfully, we could decrease the binwidth or increase the number of bins, such that the range of collected data decrease. 
+This plot is essentially the same as the histogram, but mimics
+the density distributions as shown below. It is, however,
+important to note that this is not a density distribution, as
+the density is calculated while this plot shows the raw count
+of each range of value - the same as the histogram. To
+visualize the distribution more meaningfully, we could
+decrease the binwidth or increase the number of bins, such
+that the range of collected data decrease.
 
 ```{r increased freqpoly }
 trans_mw |>
@@ -68,9 +132,20 @@ trans_mw |>
   geom_freqpoly(bins=100)
 ```
 
-Indeed, in this plot we get a more neuanced view of how the data is distributed. More specifically, we can see that there are a lot of values close to -2. This may be because of how AE is calculated where we can get a ceiling or flooring effect. Even though this specific value receives a lot of observation, most values are distributed around 0. Indeed, the range of the normal distribution is greater than the sum of this extreme score (see below). Moreover, we can see that certain values receives more counts than others, and this may again stem from a limit of how AE is calculated. 
+Indeed, in this plot we get a more neuanced view of how the
+data is distributed. More specifically, we can see that there
+are a lot of values close to -2. This may be because of how AE
+is calculated where we can get a ceiling or flooring effect.
+Even though this specific value receives a lot of observation,
+most values are distributed around 0. Indeed, the range of the
+normal distribution is greater than the sum of this extreme
+score (see below). Moreover, we can see that certain values
+receives more counts than others, and this may again stem from
+a limit of how AE is calculated.
 
-Indeed, visualizing the raw AE score suggest that we see that most values center around 0 (floor) and the ceiling. This is perhaps most obvious with a density plot (see below). 
+Indeed, visualizing the raw AE score suggest that we see that
+most values center around 0 (floor) and the ceiling. This is
+perhaps most obvious with a density plot (see below).
 
 ```{r freqpoly of raw ae}
 trans_mw |> 
@@ -84,7 +159,13 @@ trans_mw |>
   geom_density()
 ```
 
-To get a better grasp of the distribution over values can be to use a density visualization. Visualizing using a density function will smooth the distribution such that it is easier to see the estimated distribution. (Note: this is visualized with the z scored and log transformed AE score, which more accurately follow a normal distribution - compare the above with the below)
+To get a better grasp of the distribution over values can be
+to use a density visualization. Visualizing using a density
+function will smooth the distribution such that it is easier
+to see the estimated distribution. (Note: this is visualized
+with the z scored and log transformed AE score, which more
+accurately follow a normal distribution - compare the above
+with the below)
 
 ```{r density of standardized and log transformed Ae}
 trans_mw |>
@@ -92,9 +173,14 @@ trans_mw |>
   geom_density()
 ```
 
-A density plot gives us an estimated probability that a data point will be found within that value. With this plot, it is more evident that the data is distributed according to a normal distribution - at least following the relevant transformations (z-score of the -log(log(2)-apen)). 
+A density plot gives us an estimated probability that a data
+point will be found within that value. With this plot, it is
+more evident that the data is distributed according to a
+normal distribution - at least following the relevant
+transformations (z-score of the -log(log(2)-apen)).
 
-By z-scoring AE and BV we can meaningfully plot both distributions in the same plot.  
+By z-scoring AE and BV we can meaningfully plot both
+distributions in the same plot.
 
 ```{r density of ae anb bv}
 trans_mw |>
@@ -103,7 +189,12 @@ trans_mw |>
   geom_density()
 ```
 
-However in these cases the relationship between the variables may be ambiguous and underexlored. In particular, we may be interested in how these two variables relate to each other. This can be achieved by visualizing the joint distribution with a 2d density plot. This can be done in multiple ways, for instance, by simply plotting all the data points. 
+However in these cases the relationship between the variables
+may be ambiguous and underexlored. In particular, we may be
+interested in how these two variables relate to each other.
+This can be achieved by visualizing the joint distribution
+with a 2d density plot. This can be done in multiple ways, for
+instance, by simply plotting all the data points.
 
 ```{r joint distribution of ae and bv}
 trans_mw |> 
@@ -111,7 +202,9 @@ trans_mw |>
   geom_point()
 ```
 
-An obvious problem arise as the data points overlap and hide each other. One solution is to add transparency so we can see all (or mostly all) data points - and also how they overlap. 
+An obvious problem arise as the data points overlap and hide
+each other. One solution is to add transparency so we can see
+all (or mostly all) data points - and also how they overlap.
 
 ```{r joint dot plot of ae.bv with transparency }
 trans_mw |> 
@@ -119,9 +212,15 @@ trans_mw |>
   geom_point(alpha=.1)
 ```
 
-Nevertheless, it is not easy to gauge the number of observations within each value. However, the plot nevertheless reveal some interesting findings. For instance, we can see that for the BV variable, how data points cluster around 0 but also around 1.5 standard deviations above 0. 
+Nevertheless, it is not easy to gauge the number of
+observations within each value. However, the plot nevertheless
+reveal some interesting findings. For instance, we can see
+that for the BV variable, how data points cluster around 0 but
+also around 1.5 standard deviations above 0.
 
-Alternatively, and in a similar way to histograms, we can count the number of observations within a span. This can be done by using hexagons: 
+Alternatively, and in a similar way to histograms, we can
+count the number of observations within a span. This can be
+done by using hexagons:
 
 ```{r hexagonal summary of ae.bv}
 trans_mw |> 
@@ -130,7 +229,17 @@ trans_mw |>
 mw_hex
 ```
 
-In this plot we can see how BV and AE relate to each other. This is informative because the assumption with these two variables is that when participants are focused on the task, they should generate high AE score and have consistent BV. If this is the case then we would expect that BV remains around zero, and that AE is high when participants are focused on the task. On the other hand, when participants are not focused on the task, they should show more BV and lower AE. This can be gauged to some degree on the previous plot. To indicate what I mean, I have highlighted the areas corresponding to each state of mind wandering below.
+In this plot we can see how BV and AE relate to each other.
+This is informative because the assumption with these two
+variables is that when participants are focused on the task,
+they should generate high AE score and have consistent BV. If
+this is the case then we would expect that BV remains around
+zero, and that AE is high when participants are focused on the
+task. On the other hand, when participants are not focused on
+the task, they should show more BV and lower AE. This can be
+gauged to some degree on the previous plot. To indicate what I
+mean, I have highlighted the areas corresponding to each state
+of mind wandering below.
 
 ```{r hexagon annotations }
 mw_hex +
@@ -140,9 +249,36 @@ mw_hex +
   annotate("text", label="Task focused", x=0,y=5, alpha=1, col="red")
 ```
 
-However, we do not exactly find this distribution. Although, it is important to point out that these marked areas are quite extreme (but made for illustrative purposes). Since the data is z-scored, most data will gather within the value of -2 and +2, and only few cases to the extreme. If anything, the annotations I have made should be closer to the center. Regardless, it is difficult to gauge the distribution over various cognitive states from this plot. In the fourth exercise I will investigate the distribution over different cognitive states (mind wandering/mind blanking). There the distribution should be different (i.e., the mean is different), but still follow a normal distribution.  For this exercise, however, I will visualize the joint distribution of AE and BV. This can, nevertheless, reveal some intriguing things as we can see from the plot above. 
+However, we do not exactly find this distribution. Although,
+it is important to point out that these marked areas are quite
+extreme (but made for illustrative purposes). Since the data
+is z-scored, most data will gather within the value of -2 and
++2, and only few cases to the extreme. If anything, the
+annotations I have made should be closer to the center.
+Regardless, it is difficult to gauge the distribution over
+various cognitive states from this plot. In the fourth
+exercise I will investigate the distribution over different
+cognitive states (mind wandering/mind blanking). There the
+distribution should be different (i.e., the mean is
+different), but still follow a normal distribution. For this
+exercise, however, I will visualize the joint distribution of
+AE and BV. This can, nevertheless, reveal some intriguing
+things as we can see from the plot above.
 
-We can see that BV have more extreme observations than AE, for instance. Moreover, AE seems to take great leaps for the more extreme values. Nevertheless, most of the data seems to be relatively normally distributed. As noted above, we can see that for BV, data seem to gather around 0 but also around 1.5 standard deviations above 0. In addition to that, we can see that AE does not really change for these values - it seems to be relatively similarly distributed at both 0 and 1.5 standard deviations of BV. In a similar vein, AE have most values clustered around 0 (because of z-scoring), but we can also see that AE have a good amount of observations at the very bottom (close to -2). Furthermore, these data points are mostly clustered around a BV of 0, but seems to follow some normal distribution around a low AE. 
+We can see that BV have more extreme observations than AE, for
+instance. Moreover, AE seems to take great leaps for the more
+extreme values. Nevertheless, most of the data seems to be
+relatively normally distributed. As noted above, we can see
+that for BV, data seem to gather around 0 but also around 1.5
+standard deviations above 0. In addition to that, we can see
+that AE does not really change for these values - it seems to
+be relatively similarly distributed at both 0 and 1.5 standard
+deviations of BV. In a similar vein, AE have most values
+clustered around 0 (because of z-scoring), but we can also see
+that AE have a good amount of observations at the very bottom
+(close to -2). Furthermore, these data points are mostly
+clustered around a BV of 0, but seems to follow some normal
+distribution around a low AE.
 
 ```{r hexagonal annotation different dist}
 mw_hex +
@@ -150,7 +286,10 @@ mw_hex +
   annotate("rect", xmin=-1.5, xmax=1, ymin=-1.8,ymax=-1.2, alpha=.0, col="red")
 ```
 
-At any rate, although the hexagons indicate the number of observation within a certain value span. It may be more beneficial to use a density function, which smooths and summarize the distribution in bands of probability. 
+At any rate, although the hexagons indicate the number of
+observation within a certain value span. It may be more
+beneficial to use a density function, which smooths and
+summarize the distribution in bands of probability.
 
 ```{r 2d density graph}
 trans_mw |> 
@@ -160,25 +299,36 @@ joint_ae.bv +
   geom_density2d()
 ```
 
-With this plot we can see the probability that a data point falls within a specific value. More specifically how the joint parameter space is distributed. In line with what I wrote above, we see a slight tendency towards the distribution I outlined above. 
+With this plot we can see the probability that a data point
+falls within a specific value. More specifically how the joint
+parameter space is distributed. In line with what I wrote
+above, we see a slight tendency towards the distribution I
+outlined above.
 
-We can use different density functions, different binwidths or different number of bins to improve visualization.
+We can use different density functions, different binwidths or
+different number of bins to improve visualization.
 
 ```{r 2d density graph count}
 joint_ae.bv + 
   geom_density2d(contour_var = "count")
 ```
 
-In this plot, the density function is visualized as a multiplication by the number of observations. Alternatively we could visualize with the "ndensity" which is scaled to a maximum of 1: 
+In this plot, the density function is visualized as a
+multiplication by the number of observations. Alternatively we
+could visualize with the "ndensity" which is scaled to a
+maximum of 1:
 
 ```{r 2d density graph ndenstit}
 joint_ae.bv + 
   geom_density2d(contour_var = "ndensity")
 ```
 
-The latter two are visualized according to changes to the density function, which may have lead to some changes in number of bins.
+The latter two are visualized according to changes to the
+density function, which may have lead to some changes in
+number of bins.
 
-If we follow the basic density function, we see that most values fall within the bands of the density function. 
+If we follow the basic density function, we see that most
+values fall within the bands of the density function.
 
 ```{r dot plot and 2d density}
 joint_ae.bv + 
@@ -186,14 +336,18 @@ joint_ae.bv +
   geom_density2d(col="red", linewidth=1)
 ```
 
-A different way of visualizing, is to use colours indicating higher probability. 
+A different way of visualizing, is to use colours indicating
+higher probability.
 
 ```{r 2d density coloured}
 joint_ae.bv + 
   geom_density2d_filled()
 ```
 
-With this plot we can more easily see the higher probability areas over the joint parameter space. To make it clear that we are looking at the join distibution of AE and BV we can add the individual distributions to the plot by using patchworks.
+With this plot we can more easily see the higher probability
+areas over the joint parameter space. To make it clear that we
+are looking at the join distibution of AE and BV we can add
+the individual distributions to the plot by using patchworks.
 
 ```{r 2d density coloured with individual dist}
 # Here, I use the patchwork library
@@ -222,7 +376,11 @@ p_bv +
   p_ae
 ```
 
-Although we can see the individual distributions and the joint distribution, it is not perfect due to the way patchworks glues plots together. Another solution is to use the package "ggsides", in this library we can add a side density to the main plot with one line of code:
+Although we can see the individual distributions and the joint
+distribution, it is not perfect due to the way patchworks
+glues plots together. Another solution is to use the package
+"ggsides", in this library we can add a side density to the
+main plot with one line of code:
 
 ```{r 2d density with individual using ggside}
 # library(ggside)
@@ -232,9 +390,16 @@ joint_ae.bv +
   geom_ysidedensity()
 ```
 
-With this library we get a more neat visualization of both the individual and joint distribution. Moreover, using a coloured 2d density distribution we can more easily see how the data is distributed. Indeed, we can here see that BV seems to have two areas of observations as noted above. Moreover, it seems like AE has a wider distribution, which might be beneficial if we want to observe a difference between cognitive states.  
+With this library we get a more neat visualization of both the
+individual and joint distribution. Moreover, using a coloured
+2d density distribution we can more easily see how the data is
+distributed. Indeed, we can here see that BV seems to have two
+areas of observations as noted above. Moreover, it seems like
+AE has a wider distribution, which might be beneficial if we
+want to observe a difference between cognitive states.
 
-With this, I will try and make the plot more neat with aesthetic changes. 
+With this, I will try and make the plot more neat with
+aesthetic changes.
 
 ```{r 2d density with side and zoom}
 min(trans_mw$zlogapen) -> AE_min
@@ -255,7 +420,17 @@ neat_ae.bv +
 p_ggside  
 ```
 
-One aesthetic change is to zoom into the main density area of the plot, which is mainly in the bottom left corner. However, doing this, has led to some cases related to the side densities. The side densities inherit the *coord_cartersian* feature from the ggplot object, making it wider, and thus harder to see the density that is locked between 0 and 1. I have not been able to find a solution to limit only the main plot, and not the side plots. An alternative is to use scale_x/y with the "limits" parameter. However, this will also remove data points from outside of the graph. Leading to other problems... 
+One aesthetic change is to zoom into the main density area of
+the plot, which is mainly in the bottom left corner. However,
+doing this, has led to some cases related to the side
+densities. The side densities inherit the *coord_cartersian*
+feature from the ggplot object, making it wider, and thus
+harder to see the density that is locked between 0 and 1. I
+have not been able to find a solution to limit only the main
+plot, and not the side plots. An alternative is to use
+scale_x/y with the "limits" parameter. However, this will also
+remove data points from outside of the graph. Leading to other
+problems...
 
 ```{r 2d density  with aesthetic changes 2}
 neat_ae.bv + 
@@ -273,9 +448,16 @@ neat_ae.bv +
         )
 ```
 
-Even thought it might not be obvious from the plot above, data points outside the range that is displayed are remove. However, the distribution of the remaining data points are valid, but does not capture all the data points anymore (compare to the above or below). 
+Even thought it might not be obvious from the plot above, data
+points outside the range that is displayed are remove.
+However, the distribution of the remaining data points are
+valid, but does not capture all the data points anymore
+(compare to the above or below).
 
-Thus, if we wish to visualize the distribution of the data, we should include all the data points we can. For this purpose I will stick with the *coord_cartesian* scale, and increase the size of the side plots to improve its visibility.
+Thus, if we wish to visualize the distribution of the data, we
+should include all the data points we can. For this purpose I
+will stick with the *coord_cartesian* scale, and increase the
+size of the side plots to improve its visibility.
 
 ```{r 2d density with ggside and aesthetic changes}
 neat_ae.bv +  
@@ -288,7 +470,7 @@ neat_ae.bv +
   geom_xsideline(aes(y=1), linetype = 2, alpha =.5)+ 
   geom_ysideline(aes(x=0), linetype = 2, alpha = .5)+ 
   geom_ysideline(aes(x=1), linetype = 2, alpha = .5)+ 
-    # No idea why these two latter do not show a dashed line...
+    # No idea why these latter two do not draw a dashed line...
   theme(ggside.panel.scale = .8,
         ggside.panel.background = element_blank(), 
         ggside.panel.grid.minor = element_blank(), 
@@ -299,7 +481,16 @@ neat_ae.bv +
         )
 ```
 
-However, the problem remain. It is still hard to see the exact distributions of the densities on the side. This could plausibly be fixed by re-scaling the side plots. However, I have not been able how to do this, even though plausible functions should be able to do it (e.g., scale_xsidey_continous, e.g., https://rdrr.io/cran/ggside/man/ggside-scales-continuous.html). I assume that *coords_cartesian* supersede scale limitations, and thus we are unable to change the scale of the side distributions - see below for an attempt. 
+However, the problem remain. It is still hard to see the exact
+distributions of the densities on the side. This could
+plausibly be fixed by re-scaling the side plots. However, I
+have not been able how to do this, even though plausible
+functions should be able to do it (e.g.,
+scale_xsidey_continous, e.g.,
+https://rdrr.io/cran/ggside/man/ggside-scales-continuous.html).
+I assume that *coords_cartesian* supersede (local) scale
+changes, and thus I are unable to change the scale of the side
+distributions - see below for an attempt.
 
 ```{r}
 neat_ae.bv +  
@@ -312,10 +503,10 @@ neat_ae.bv +
   theme(ggside.panel.scale = .5)
 ```
 
-Another way of visualizing the data distribution is to use 3 dimensional (3D) plots. 
+Another way of visualizing the data distribution is to use 3
+dimensional (3D) plots.
 
 ```{r}
-library(MASS)
 # https://plotly.com/r/3d-surface-plots/
 kde2d(trans_mw$zlogbv, 
       trans_mw$zlogapen, 
@@ -327,17 +518,34 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
   layout(
     scene = list( 
       camera = list(
-        eye = list(x=2,y=-1.5,z=2))))
-  
+        eye = list(x=2,y=-1.5,z=2)))) -> plotly_plot
+  #' plotly creates a html element that cannot be converted by quarto. Therefore, 
+  #' I saved the picture and link it in the below (as ![pic](path)) 
 ```
+![test](../figs/plotly_plot1.png)
 
-There can arise a variety of problem when visualizing things in 3D. However, it can also be uniquely informative - especially if they are interactive. The latter of which is a worthy point, from my perspective, as I can rotate the plot within R. However, granted the reader is reading from a pdf file (or otherwise), the interactive mode is not possible. Nevertheless, this plot do not use *ggplot*, since ggplots do not have a way to visualize things in 3D. For this plot, I have used *plotly*, which is a library that can visualize data in 3D. However, I will not explore plotly in depth as it is beyond the scope of ggplot, but is nevertheless interesting to point out. 
+There can arise a variety of problem when visualizing things
+in 3D. However, it can also be uniquely informative -
+especially if they are interactive. The latter of which is a
+worthy point, from my perspective, as I can rotate the plot
+within R. However, granted the reader is reading from a pdf
+file (or otherwise), the interactive mode is not possible.
+Nevertheless, this plot do not use *ggplot*, since ggplots do
+not have a way to visualize things in 3D. For this plot, I
+have used *plotly*, which is a library that can visualize data
+in 3D. However, I will not explore plotly in depth as it is
+beyond the scope of ggplot, but is nevertheless interesting to
+point out.
 
 
 
- VIS RAW DATA ? IDK?
 
-With this, I can explore some basic features of the different variables. Moreover, there are different ways of visualizing multivariate 
+
+VIS RAW DATA ? IDK?
+
+With this, I can explore some basic features of the different
+variables. Moreover, there are different ways of visualizing
+multivariate
 
 ```{r}
 trans_mw |> 
@@ -352,8 +560,6 @@ trans_mw |>
 
   geom_density_2d_filled()
 ```
-
-
 
 ```{r 3d plot with top density 2d density distribution}
 plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, 
@@ -376,11 +582,3 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
       )
     )
 ```
-
-
-
-
-
-
-
-
