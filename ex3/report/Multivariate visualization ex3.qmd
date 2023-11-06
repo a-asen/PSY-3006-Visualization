@@ -524,45 +524,10 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
 ```
 ![test](../figs/plotly_plot1.png)
 
-There can arise a variety of problem when visualizing things
-in 3D. However, it can also be uniquely informative -
-especially if they are interactive. The latter of which is a
-worthy point, from my perspective, as I can rotate the plot
-within R. However, granted the reader is reading from a pdf
-file (or otherwise), the interactive mode is not possible.
-Nevertheless, this plot do not use *ggplot*, since ggplots do
-not have a way to visualize things in 3D. For this plot, I
-have used *plotly*, which is a library that can visualize data
-in 3D. However, I will not explore plotly in depth as it is
-beyond the scope of ggplot, but is nevertheless interesting to
-point out.
-
-
-
-
-
-VIS RAW DATA ? IDK?
-
-With this, I can explore some basic features of the different
-variables. Moreover, there are different ways of visualizing
-multivariate
-
-```{r}
-trans_mw |> 
-  ggplot(aes(x=scale(zlogbv), y=scale(zlogapen)))+ 
-  geom_hex()
-  geom_density()
-  geom_contour()
-  
-trans_mw |> 
-  ggplot(aes(x=scale(logbv), y=scale(apen)))+
-  geom_point()
-
-  geom_density_2d_filled()
-```
+Moreover, we can add a contour to the top of the plotly to both see a 2d and 3d representation. 
 
 ```{r 3d plot with top density 2d density distribution}
-plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z, 
+plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
         type="surface") |>
   add_surface(
     contours = list(
@@ -580,5 +545,19 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
         eye = list(x=1.87, y=0.88, z=-0.64)
         )
       )
-    )
+    ) -> plotly_plot2
 ```
+![Plotly plot 2](../figs/plotly_plot2.png)
+
+There can arise a variety of problem when visualizing things
+in 3D. However, it can also be uniquely informative -
+especially since these plots are interactive. That is, the plot can be rotated and zoomed within R (it is a HTML element). However, if the reader is reading through a texxt format (e.g., pdf) file (or otherwise), such an interactive exploration of the data distribution is not possible. Nevertheless, this plot do not use *ggplot*, since ggplots do
+not have a way to visualize things in 3D. For this plot, I
+have used *plotly*, which is a library that can visualize data
+in 3D. However, I will not explore plotly in depth as it is
+beyond the scope of ggplot, but is nevertheless interesting to
+point out.
+
+Thus, in summary, visualizing the joint distribution of two variables can be informative in relation to how these variables interact. It can become evident whether the distribution change depending on some variable. In this case, we would expect that higher values of AE would be associated with more consistent BV. Although, it is not entirely clear whether this is the case as there is much variation in the distributions. 
+
+
