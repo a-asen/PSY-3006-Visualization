@@ -132,6 +132,16 @@ trans_mw |>
 
 
 
+
+
+NO Z SCORE? 
+
+
+
+
+
+
+
 ```{r}
 trans_mw |> 
   pivot_longer(c(probe1,block)) |>
