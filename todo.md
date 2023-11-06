@@ -29,6 +29,7 @@
     -   [x] circle plot
     - [x] aesthetic changes
     -   [x] other groupings
+- [ ] Add Feedback
 
 
 ## Exercise 2: circle plot - sleep
@@ -37,16 +38,16 @@
 	- [x] split by noon-midnight & 6am-6pm 
 	- [x] Overlay NS & PSD sleep. 
 	- [x] Compare against normal plot
-
+- [ ] Add Feedback
 
 ## Exercise 3
 - [x] Data: mind wandering
-- [ ] Visualization:
+- [x] Visualization:
   - [x] Data distribution
   - [x] Joint distribution
     - [x] Joint distribution with individual distribution
 - [ ] Why multivariate visualization?
-
+- [ ] Add Feedback
 
 ## Exercsise 4
 - [x] Data: Mind wandering
@@ -54,7 +55,7 @@
   - [x] Distribution w/hist/other
   - [ ] Ridge
   - [ ] 2D density? 
-
+- [ ] Add Feedback
 
 
 
