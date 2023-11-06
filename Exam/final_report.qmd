@@ -16,10 +16,10 @@ Visualizing data is key to comprehend what data provides us in a simple, and eff
 A principle of visualizing that is incredibly flexible. 
 
 ## Introduction and summary: 
-- [ ] Ex1 
-- [ ] Ex2
-- [ ] Ex3 
-- [ ] Ex4 
+- [ ] Ex1 - circle year 
+- [ ] Ex2 - circle clock 
+- [ ] Ex3 - mutl-vis cont-cont
+- [ ] Ex4 - mult-vis cat-cont
 
 
 ## Ex 1 - circle: seasonal 
