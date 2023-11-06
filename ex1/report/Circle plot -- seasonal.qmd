@@ -60,22 +60,14 @@ Visualizing data in a circle may offer a novel way to explore seasonal changes.
 This approach may be valuable for data sets related to changes over time,
 particularly over seasons. Take for instance, Tromsø, it is located above [above
 the arctic circle](https://en.wikipedia.org/wiki/Arctic_Circle) and exhibits some
-of the most extreme daylight changes - from no sunlight at winter, to only
-sunlight at summer. A remarkable change in season which could neatly be displayed
+of the most extreme daylight changes - from no sunlight in winter, to only
+sunlight in summer. A remarkable change in season which could neatly be displayed
 in a circular plot.
 
-For this purpose, I want explore the utility of visualizing a data in a circular
-way. We recently had a study that investigated participants when they were sleep
-deprived and when they were not. To this end, we gathered data regarding
-participants sleep time and wake time, as well as controlling with an Actigraphy.
-Although I will not use that data here, the data is well suited to visualize
-changes during a season.
+For this purpose, I would like to explore the utility of visualizing a data circularly. We recently had a study that investigated participants when they were sleeping deprived and when they were not. To this end, we gathered data regarding participants' sleep time and wake time, as well as controlling with an Actigraphy. Although I will not use that data here, the data is well suited to visualize changes during a season.
 
 With this idea in mind, I have created fake sleep data of X along with the sleep
-rise and set times located at Tromsø. The sleep data follow the pattern of the sun
-changes throughout the changes along with some additional noise. The goal is to
-visualize the sleep time, wake time, and sun rise changes throughout a year (2022)
-in a circular way.
+rise and set times located at Tromsø. The sleep data follow the pattern of the sun changes throughout the year, along with some additional noise. The  goal is to visualize the sleep time, wake time, and sun rise changes throughout a year (2022) circularly.
 
 ## Standard visualizing
 
@@ -87,8 +79,7 @@ library(tidyverse) # libs
 load("../data/sleep_data.rdata") # load data
 ```
 
-To start of, we can visualize the data according to sleep amount throughout the
-year.
+To start off, we can visualize the data according to sleep amount throughout the year.
 
 ```{r normal point}
 sleep_data |>
@@ -96,9 +87,7 @@ sleep_data |>
   geom_point()
 ```
 
-We can see that the data starts off high (in January) and reduce towards middle
-(summer) and increase towards the end (winter). To investigate the average
-throughout the year, we can add a geom_smooth.
+We can see that the data starts off high (in January) and reduces towards the middle (summer) and increases towards the end (winter). To investigate the average throughout the year, we can add a geom_smooth.
 
 ```{r normal point+mean}
 sleep_data |>
@@ -174,7 +163,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,4))
 ```
 
-Here we can quite neatly see the the amount of sleep each day in relation to the
+Here we can quite neatly see the amount of sleep each day in relation to the
 number of daylight hours. Although we should note that a lot of date is being
 shown that does not contain a lot of data. For instance, the distance over 11
 hours and below 5 hours contain very little data as compared to in between 11 and
@@ -182,25 +171,19 @@ hours and below 5 hours contain very little data as compared to in between 11 an
 Either by transformation, or, with a different, right hand, scale, ranging from 0
 to 24 hours. The latter of which might be more satisfactory to understand the
 radical changes throughout the year. However, I will move on to visualizing in a
-cricluar way and then discuss and suggest a final plot.
+circular way, and then discuss and suggest a final plot.
 
 ## Circular plot
 
 It is rather easy to display data in circles using ggplot. We can simply use the
-code "coord_polar" which transforms the data to fit a circle. However, some of my
-earlier attempts utilized the "circlize" with inspiration from [R-Gallery - chord
-diagram](https://www.kyle-w-brown.com/R-Gallery/flow.html#chord-diagram). A
-packages that works great but is also more limiting than ggplots. Moreover, Kyle
-Brown also talk about [circular
-barplots](https://www.kyle-w-brown.com/R-Gallery/ranking.html#circular-barplot)
-earlier in the book, which utilizes ggplot.
+code "coord_polar" which transforms the data to fit a circle. However, some of my earlier attempts utilized the "circlize" with inspiration from [R-Gallery - chord diagram](https://www.kyle-w-brown.com/R-Gallery/flow.html#chord-diagram). A package that works great, but is more limiting than ggplots. Moreover, Kyle Brown also talks about [circular barplots](https://www.kyle-w-brown.com/R-Gallery/ranking.html#circular-barplot) earlier in the book, which utilizes ggplot.
 
 As discussed earlier, the benefits of using ggplots is that it is made to be
 flexible at the various stages of visualizing data. On the other hand, [*circlize*
 is based on](https://jokergoo.github.io/circlize_book/book/introduction.html)
 [Circos](http://circos.ca/) a Perl implementation of circular data visualization, which is implemented particularly for genomic research. Which seems to be both its strength and, in my case, its flaws. Therefore, utilizing ggplots may be beneficial for my case, as it has more flexibility in changing the plot. 
 
-First I test the "coord_polar" implementation.  
+First, I tested the "coord_polar" implementation.  
 
 ```{r circle point}
 sleep_data |>
@@ -209,7 +192,7 @@ sleep_data |>
   coord_polar()
 ```
 
-It seems that the transformation also limits the range of the y-axis for us. The automatic limitation seems to be somewhat problematic, as our smallest data point is in the very center of the plot. Moreover, the layout of the circle do not follow the convention I would like to follow. In my case, I would like the year to start at the bottom (1 of January) and have breaks at each (or approximately) month.
+It seems that the transformation also limits the range of the y-axis for us. The automatic limitation seems somewhat problematic, as our smallest data point is in the very centre of the plot. Moreover, the layout of the circle does not follow the convention I would like to follow. In my case, I would like the year to start at the bottom (1 of January) and have breaks at each (or approximately) month.
 
 ```{r circle point transform}
 sleep_data |>
@@ -237,7 +220,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,4))
 ```
 
-The plot looks more interesting as the sunlight changes throughout the year. However, it is much harder to grasp the values of the sleep amount. As noted earlier, a remedy for this is to transform the daylight_length_h to correspond to the sleep amount. We can do this by reducing the maximum value by some value, lets use 3. Then the plot daylight visualization should extend to, and not beyond, 8 (24/3).
+The plot looks more interesting as the sunlight changes throughout the year. However, it is much harder to grasp the values of the sleep amount. As noted earlier, a remedy for this is to transform the daylight_length_h to correspond to the sleep amount. We can do this by reducing the maximum value by some value, let's use 3. Then the plot daylight visualization should extend to, and not beyond, 8 (24/3).
 
 ```{r circle sun+dark transform 1}
 reduction <- 3
@@ -283,7 +266,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,2))
 ```
 
-Here the daylight length extends beyond the data points, but still overlaps with each data point. We can try to reduce the daylight length to reach, maximally, below the lowest data point.  
+Here, the daylight length extends beyond the data points, but still overlaps with each data point. We can try to reduce the daylight length to reach, maximally, below the lowest data point.  
 
 ```{r circle sun+dark transform 3}
 reduction <- 6
@@ -305,7 +288,7 @@ sleep_data |>
 
 In this display, the data points are the main focus of the plot, but the daylight length is nicely illustrated. On the other hand, it appears as though the illustration is more of a symbol or icon than displaying something useful. 
 
-To further enhance the difference between the data point, we can further transform the daylight visualization. Due to the way *coord_polar* implement the range of the y-axis, it will reduce the plot to the smallest value on the plot. In the first circle plot implementation, the smallest value was close to 6, and so the plot started at 6 (at the very center). By replacing *geom_area* with *geom_ribbon*, we can limit our daylight visualization to start at some value above 0, since there is no valuable data presented before the 6th hour. With this, we can also retain the contour of the year-round daylight length, in similar ways as we have done previously. 
+To further enhance the difference between the data points, we can further transform the daylight visualization. Due to the way *coord_polar* implements the range of the y-axis, it will reduce the plot to the smallest value on the plot. In the first circle plot implementation, the smallest value was close to 6, and so the plot started at 6 (at the very centre). By replacing *geom_area* with *geom_ribbon*, we can limit our daylight visualization to start at some value above 0, since there is no valuable data presented before the 6th hour. With this, we can also retain the contour of the year-round daylight length, in similar ways as we have done previously. 
 
 ```{r circle sun+dark transform 4}
 reduction <- 4  
@@ -329,13 +312,13 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
-In this plot, it is easier to discern the difference between each data point, while also retaining the relative change in daylight throughout the year. It is important to point out that the daylight visualization illustrate the relative change in daylight and not hour based changes. It will be important to point out in the text how the daylight is transformed in text to not lead to misunderstandings.
+In this plot, it is easier to discern the difference between each data point, while also retaining the relative change in daylight throughout the year. It is important to point out that the daylight visualization illustrates the relative change in daylight and not hour-based changes. It will be important to point out in the text how the daylight is transformed in text to not lead to misunderstandings.
 
 Another change was to increase the number of ticks on the y-axis to be able to better see differences between the data points. 
 
 ### Sleep and wake times
 
-Another way of visualizing the sleep amount is to visualize the sleep time and wake time. This, however, might be more difficult as the span ranges from around 5 hours to above 24 hours (indicating going to sleep later than 24, which should be transformed to 0). Nevertheless, it is worth to investigate how the plot change. 
+Another way of visualizing the sleep amount is to visualize the sleep time and wake time. This, however, might be more difficult as the span ranges from around 5 hours to above 24 hours (indicating going to sleep later than 24, which should be transformed to 0). Nevertheless, it is worth investigating how the plot changes. 
 
 ```{r circle sleep+wake time}
 sleep_data |>
@@ -348,7 +331,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,2))
 ```
 
-In this plot, it is much harder to see differences between each data point. This is because the range of each band of data points (sleep time around 24 and wake time around 8) is quite small, but the difference between each band is large (around 16 hours). We end up with a plot with a lot of dead space, conveying no information, between the high band and the small band. To fix this, we can transform either the sleep time or wake time. I will first try to reduce the sleep time by 24. 
+In this plot, it is much harder to see differences between each data point. This is because the range of each band of data points (sleep time around 24 and wake time around 8) is minimal, but the difference between each band is large (around 16 hours). We end up with a plot with a lot of dead space, conveying no information, between the high band and the small band. To fix this, we can transform either the sleep time or wake time. I will first try to reduce the sleep time by 24. 
 
 ```{r circle 24-sleep+wake time}
 reduction <- 24
@@ -362,7 +345,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,2))
 ```
 
-Although we are better able to see the differences between the data points, the plot is rather similar to the former. It contains a cluster of data points in the center, which is not that neat and rather uninformative. At any rate, one of the ideas of visualizing sleep and wake times is to have a create a band that indicate the sleep. 
+Although we are better able to see the differences between the data points, the plot is rather similar to the former. It contains a cluster of data points in the centre, which is not that neat and rather uninformative. At any rate, one of the ideas of visualizing sleep and wake times is to create a band that indicates the sleep. 
 
 ```{r circle 24-sleep+wake time + ribbon}
 reduction <- 2
@@ -379,7 +362,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,2))
 ```
 
-The plot does indicate the band of sleep from sleep time to wake time. However, it seems rather weird to have the cluster of data points in the center. Moreover, the cluster is rather uninformative as it is difficult to gather the relationship between sleep and wake time. To investigate whether this is a problem with circular plots or visualizing data in this way, I will visualize it using a normal plot (by removing *coord_polar*). 
+The plot does indicate the band of sleep from sleep time to wake time. However, it seems rather weird to have the cluster of data points in the centre. Moreover, the cluster is rather uninformative, as it is difficult to gather the relationship between sleep and wake time. To investigate whether this is a problem with circular plots or visualizing data in this way, I will visualize it using a normal plot (by removing *coord_polar*). 
 
 ```{r normal 24-sleep+wake time+ribbon}
 reduction <- 2
@@ -397,7 +380,7 @@ sleep_data |>
 
 This way of visualizing seems to be fine to me. With a normal plot, we can see changes in *both* sleep times and wake times. This information is essentially lost in the circular plot, but evidence with this plot. Moreover, the band seems to add meaningful relations between each data point - you can see ups and downs of sleep/wake times. 
 
-To visualize with a circle plot, I believe it is best to only use sleep amount. It does not create a cluster of data points that are uninformative or incredibly difficult to interpret. Moreover, the range of sleep can be displayed with a range from the data point to the center of the plot. I will revert back to the last plot with sleep amount to investigate whether it can be useful to include a ribbon from the data point to the "null" value.  
+To visualize with a circle plot, I believe it is best to only use sleep amount. It does not create a cluster of data points that are uninformative or incredibly difficult to interpret. Moreover, the range of sleep can be displayed with a range from the data point to the centre of the plot. I will revert to the last plot with sleep amount to investigate whether it can be useful to include a ribbon from the data point to the "null" value.  
 
 ```{r circle ribbon}
 reduction <- 4  
@@ -423,7 +406,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
-Adding a ribbon from each data point to the center value (in this case 4), we get some more contrast between each data point. This contrast can be helpful in interpreting the data. However, since the ribbon only extends to the center value and not all the way to 0, it can appear as though people start to sleep from the 4th hour of the night. If this plot is used, it should be noted that the data starts from 0, but has been cut out because it does not contain any relevant information. Nevertheless, I wonder how the plot changes by reverting the center value to 0 instead of 4.
+Adding a ribbon from each data point to the centre value (in this case 4), we get some more contrast between each data point. This contrast can be helpful in interpreting the data. However, since the ribbon only extends to the centre value and not all the way to 0, it can appear as though people start to sleep from the 4th hour of the night. If this plot is used, it should be noted that the data starts from 0, but has been cut out because it does not contain any relevant information. Nevertheless, I wonder how the plot changes by reverting the centre value to 0 instead of 4.
 
 ```{r circle daylight start at not zero}
 reduction <- 4  
@@ -449,7 +432,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
-Serendipity. Forgetting to change the minimum value of the daylight length seem to have made it better. In this plot, we can clearly see what period of time contains *no sunlight*. The previous plots failed to inform us what period contained no sunlight. Although I would not say that the ribbon has added anything significant by visualizing all the way to zero, it certainly informed us that some distance from the minimum daylight value and the plots minimum value should be discerned. 
+Serendipity. Forgetting to change the minimum value of the daylight length seems to have improved it. In this plot, we can clearly see what period of time contains *no sunlight*. The previous plots failed to inform us what period contained no sunlight. Although I would not say that the ribbon has added anything significant by visualizing all the way to zero, it certainly informed us that some distance from the minimum daylight value and the plot's minimum value should be discerned. 
 
 ```{r circle daylight start change 1}
 reduction <- 4
@@ -475,7 +458,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
-In this plot, the days with no sunlight are restricted, making it more difficult to interpret which days contain no sunlight. To fix this, we can further increase the difference between the daylight minimum and the plot minimum (by increasing the range of the ribbon between each data point and the center). 
+In this plot, the days with no sunlight are restricted, making it more difficult to interpret which days contain no sunlight. To fix this, we can further increase the difference between the daylight minimum and the plot minimum (by increasing the range of the ribbon between each data point and the centre). 
 
 ```{r circle daylight start change 2}
 reduction <- 4  
@@ -501,7 +484,7 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
-I would say this plot have a nicer balance between the distance of the center and the daylight length. However, it remains a question whether it is necessary with a ribbon as compared to a simple line. 
+I would say this plot has a nicer balance between the distance of the centre and the daylight length. However, it remains a question whether it is necessary with a ribbon as compared to a simple line. 
 
 ### Line connection
 
@@ -529,9 +512,9 @@ sleep_data |>
   scale_y_continuous(breaks=seq(0,24,1))
 ```
 
-Much of the same contrasts are retained in this plot without creating too many colors. Adding too much non-essential ink can be confusing and add to difficulty in interpreting the data. Thus, keeping non-essential ink to a minimum is a great starting option. Moreover, the link between each data point is, perhaps, better illustrated with simple lines than with the ribbon. The main point of the ribbon was to create a link to the center and not between each data point. 
+Much of the same contrasts are retained in this plot without creating too many colours. Adding too much non-essential ink can be confusing and add to difficulty in interpreting the data. Thus, keeping non-essential ink to a minimum is a great starting option. Moreover, the link between each data point is, perhaps, better illustrated with simple lines than with the ribbon. The main point of the ribbon was to create a link to the centre and not between each data point. 
 
-I will end this part with a final plot of both a circle and a normal plot and discuss some of their feature. 
+I will end this part with a final plot of both a circle and a normal plot and discuss some of their features. 
 
 ```{r circle final plot}
 reduction <- 4.8 
@@ -582,7 +565,7 @@ sleep_data |>
   labs(x="Cumulative day", y="Hours of sleep")
 ```
 
-From the two plots, I would say they both have some advantages and disadvantages. I would say that the circle plot better illustrates the change in daylight length, which may be a bit more difficult to interpret from the normal plot. On the other hand, the normal plot seem to visualize each data point in relation to time and each other in a much better way. We can more easily see the trend of the data, by both following the mean and the data points. By contrast, both the data points and the mean line is more cryptic in the circle plot, although not impossible to see. 
+From the two plots, I would say they both have some advantages and disadvantages. I would say that the circle plot better illustrates the change in daylight length, which may be a bit more difficult to interpret from the normal plot. On the other hand, the normal plot seems to visualize each data point in relation to time and each other in a much better way. We can more easily see the trend of the data, by both following the mean and the data points. By contrast, both the data points and the mean line are more cryptic in the circle plot, although not impossible to see. 
 
 ## Circular summary statistic
 
@@ -602,7 +585,7 @@ sleep_data |>
   theme_bw()
 ```
 
-Splitting it by month makes it easier to see all the data points, but it is less meaningful. Each black dot represents one day in each month, but their relationship to the day is removed. This information is useful as it tells us something about the trend of the data. However, with this plot it appears as though there is just random months that deviate from the "norm". Another way of visualizing could be through weeks. This would benefit through summarizing more often, than in each month, and by possibly visualizing the trend of the data. 
+Splitting it by month makes it easier to see all the data points, but it is less meaningful. Each black dot represents one day in each month, but their relationship to the day is removed. This information is useful as it tells us something about the trend of the data. However, with this plot, it appears as though there are just random months that deviate from the "norm". Another way of visualizing could be through weeks. This would benefit through summarizing more often, than in each month, and by possibly visualizing the trend of the data. 
 
 ```{r normal sum weeks}
 sleep_data |>
@@ -615,7 +598,7 @@ sleep_data |>
   theme_bw()
 ```
 
-Visualizing over weeks is more able to show the trend of the data, but also reducing clutter. Nevertheless, we miss the exact relationship between each data point and their day. There might be dependent relationships between sleep, which can be lost with such a plot. However, summarizing over weeks seem a nice compromise between showing a point for every day and reducing it to some summary. 
+Visualizing over weeks is more able to show the trend of the data, but also reduces clutter. Nevertheless, we miss the exact relationship between each data point and their day. There might be dependent relationships between sleep, which can be lost with such a plot. However, summarizing over weeks seems a nice compromise between showing a point for every day and reducing it to some summary. 
 
 One of the problems with the circle plot was the data cluttered together. This made it difficult to understand the exact relationship between each day, and the day. However, by using a summary statistic, a circle plot might be more effective at visualizing trends of the data and reducing clutter. 
 
@@ -632,7 +615,7 @@ sleep_data |>
   geom_point(mapping=aes(x=53,y=5), alpha=0) # to make space between 1 and 52 week
 ```
 
-Plotting in a circular way made week 0 and week 52 overlap. To overcome this problem I added a single, invisible, point in week 53 to create space between 0 and 52. Using summary statistic with a circle plot seems to work better. It is now easier to discern changes in sleep across the seasons. Nevertheless, visualizing each data point seem to still add some clutter to the plot. To investigate further I will do some changes. 
+Plotting circularly made week 0 and week 52 overlap. To overcome this problem, I added a single, invisible, point in week 53 to create space between 0 and 52. Using a summary statistic with a circle plot seems to work better. It is now easier to discern changes in sleep across the seasons. Nevertheless, visualizing each data point seems to still add some clutter to the plot. To investigate further, I will make some changes. 
 
 
 ```{r circle sum week aesthetic change}
@@ -657,7 +640,7 @@ sleep_data |>
   labs(x="Week", y="Hours slept")
 ```
 
-In this plot, I remove each individual data point, remove the line connection, added a smooth function, and added the daylight length. Making these aesthetic changes did improve the ability of the circle plot to convey accurate information. Although some unfortunate concessions had to be made. For one, the empty data point made the daylight length plot look awkward. Moreover, the visualization of the daylight length changes in a step wise manner, instead of smoothly. Nevertheless, with this strategy, the circle plot can be used to convey information in an interesting way. We can more easily see the trend of the line, and we can get a sense of the distribution of the sleep amount within each week. 
+In this plot, I removed each individual data point, removed the line connection, added a smooth function, and added the daylight length. Making these aesthetic changes did improve the ability of the circle plot to convey accurate information. Although some unfortunate concessions had to be made. For one, the empty data point made the daylight length plot look awkward. Moreover, the visualization of the daylight length changes in a step-wise manner, instead of smoothly. Nevertheless, with this strategy, the circle plot can be used to convey information in an interesting way. We can more easily see the trend of the line, and we can get a sense of the distribution of the sleep amount within each week. 
 
 Another way we might be able to use circle plots, is to summarize through each month instead. However, we will be left with similar problems as in the normal plot - you do not see the trend of the data because it is so summarized. 
 
@@ -676,7 +659,7 @@ sleep_data |>
   coord_polar(direction = -1, start = pi)
 ```
 
-Plotting with month lead to its own sets of problem, which seem worse. Since the data is summarized more than in the weeks, we do not see any clear trend over the year. 
+Plotting with month leads to its own sets of problems, which seem worse. Since the data is summarized more than in the weeks, we do not see any clear trend over the year. 
 
 Lastly, I will create a circle plot that I would use, combining what I learned so far. 
 
@@ -716,14 +699,13 @@ sleep_data |>
   labs(x="Weeks", y="Hours of sleep")
 ```
 
-In this plot I have mapped the foundation based on the "cumulative_days" and "sleep_amount". In this way, we get a smooth daylight change throughout the year which looks more pleasing. Moreover, I decided to indicate each month because it is a bit more intuitive and pleasing than weeks. However, according to the summary statistic, I indicate the mean and range withing each *week* and not through each month. This way of visualizing is more confusing, although I do believe that the reader can interpret that the summary is over weeks within each month. 
+In this plot, I have mapped the foundation based on the "cumulative_days" and "sleep_amount". In this way, we get a smooth daylight change throughout the year, which looks more pleasing. Moreover, I decided to indicate each month because it is a bit more intuitive and pleasing than weeks. However, according to the summary statistic, I indicate the mean and range within each *week* and not through each month. This way of visualizing is more confusing, although I do believe that the reader can interpret that the summary is over weeks within each month. 
 
-Instead of relying on a sequence generated interval, I gathered the first day of each month in the cumulative_days column to create breaks at each of these points. It is more more accurate, than the previous plots that I have made - something I did not occur to me before now. Since data points still clutter the figure - in my opinion - I decided to go for an interval based on the confidence interval. Moreover, by increasing the size of the interval, it suggests that it is a week summary, at least I think so. In the background is a regression line indicating mean trend change, and a red line indicating the mean of each week. 
+Instead of relying on a sequence generated interval, I gathered the first day of each month in the cumulative_days column to create breaks at each of these points. It is more accurate, than the previous plots that I have made - something I did not occur to me before now. Since data points still clutter the figure - in my opinion - I decided to go for an interval based on the confidence interval. Moreover, by increasing the size of the interval, it suggests that it is a week summary, at least I think so. In the background is a regression line indicating mean trend change, and a red line indicating the mean of each week. 
 
-I think this plot is the best way to illustrate sleep variation throughout a year with a circular plot. Since data points can easily clutter and be difficult to interpret in a circle plot. Utilizing summary functions over some days reduce the clutter and leaves intact the spread of the data. These summaries are interpretative by most people and leaves intact the trend throughout the year - as compared to the month plot. In other words, using weeks seems to be the best compromise between data clutter and accurate data representation using a circle plot. 
+I think this plot is the best way to illustrate sleep variation throughout a year with a circular plot. Since data points can easily clutter and be difficult to interpret in a circle plot. Utilizing summary functions over some days reduces the clutter and leaves intact the spread of the data. These summaries are interpretative by most people and leaves intact the trend throughout the year - as compared to the month plot. In other words, using weeks seems to be the best compromise between data clutter and accurate data representation using a circle plot. 
 
 
 ## Final notes
-Visualizing using circular plots may be used in intriguing ways to visualize data. Here I attempt to visualize fake sleep data through a year using circular plots. As well as visualizing various aspects to make the presentation of the data better. Through this investigation, I believe that a normal plot conveys the message most accurately and simply. On the other hand, the circular plot has a charms in its visualization of the change in daylight length. Moreover, circular plots seem to favor data that is summarized or contain less data points, because it can quickly become cluttered, making it hard to understand the difference between each data point. 
-
+Visualizing using circular plots may be used in intriguing ways to visualize data. Here I attempt to visualize fake sleep data through a year using circular plots. As well as visualizing various aspects to make the presentation of the data better. Through this investigation, I believe that a normal plot conveys the message most accurately and simply. On the other hand, the circular plot has a charm in its visualization of the change in daylight length. Moreover, circular plots seem to favour data that is summarized or contains fewer data points because it can quickly become cluttered, making it hard to understand the difference between each data point. 
 
