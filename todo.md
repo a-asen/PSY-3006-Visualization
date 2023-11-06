@@ -40,19 +40,20 @@
 
 
 ## Exercise 3
-- [ ] Data: mind wandering
+- [x] Data: mind wandering
 - [ ] Visualization:
   - [x] Data distribution
   - [x] Joint distribution
-    - [ ] Joint distribution with individual distribution
+    - [x] Joint distribution with individual distribution
 - [ ] Why multivariate visualization?
 
 
 ## Exercsise 4
-- [ ] Data: Mind wandering
-- [ ] 
-- [ ] 
-- [ ] 
+- [x] Data: Mind wandering
+- [x] Visualization 
+  - [x] Distribution w/hist/other
+  - [ ] Ridge
+  - [ ] 2D density? 
 
 
 
