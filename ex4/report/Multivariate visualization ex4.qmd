@@ -144,7 +144,7 @@ trans_mw |>
 
 ```{r}
 trans_mw_all |>
-  ggplot(aes(x=zlogbv, y = probe1))+
+  ggplot(aes(x=zlogapen, y = probe1))+
   geom_density_ridges()+
   facet_wrap(~stim, nrow=2)
 ```
