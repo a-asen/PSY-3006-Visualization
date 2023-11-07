@@ -8,11 +8,33 @@ editor:
 ---
 
 ```{r start libs}
+#| include: false
+#| echo: false
+library(tidyverse)
+library(ggridges)
+read_csv("../../ex3/data/raw_mwtms_data.csv") -> all_mw_data 
+source("../../ex3/src/transformation.R") # AE calculation
+all_mw_data |> 
+  dplyr::select(-region.y) |>
+  filter(stimulation == "sham") -> mw_data
+
+da_pro(mw_data, nback=25) -> trans_mw
 
 ```
 
 
+
 ```{r start plot}
+#| echo: false
+trans_mw |> 
+  ggplot(aes(x=zlogbv, y=probe1, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
+  geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T, 
+                               quantile_lines = T,
+                               vline_color = "lightblue")+ 
+  scale_fill_viridis_c(name = "Tail probability", option = "inferno")+
+  theme_minimal()+
+  scale_x_continuous(breaks=seq(-8,8,1))+
+  labs(y = "Mind wandering category", x = "Standardized BV score")
 
 ```
 
@@ -26,8 +48,6 @@ Firstly, I load the libraries and transform the data.
 
 ```{r load libraries and data}
 library(tidyverse)
-library(plotly)
-library(patchwork)
 library(ggridges)
 read_csv("../../ex3/data/raw_mwtms_data.csv") -> all_mw_data 
 source("../../ex3/src/transformation.R") # AE calculation
@@ -35,16 +55,10 @@ source("../../ex3/src/transformation.R") # AE calculation
 
 ```{r transform data}
 all_mw_data |> 
-  dply::select(-region.y) |>
+  dplyr::select(-region.y) |>
   filter(stimulation == "sham") -> mw_data
 
 da_pro(mw_data, nback=25) -> trans_mw
-# trans_mw |>
-#   mutate(
-#     probe1 = ordered(5-as.numeric(probe1)),
-#     probe2 = ordered(5-as.numeric(probe2))) -> trans_mw
-#   # Reverse the scaling such that higher indicate more mind wandering / mind blanking
-
 
 # do not need this
 da_pro(all_mw_data, nback=25) -> trans_mw_all
@@ -54,7 +68,7 @@ da_pro(all_mw_data, nback=25) -> trans_mw_all
 
 Then we can start by visualizing the distribution over the different cognitive states. I will start with a simple point plot
 
-```{r}
+```{r point distribution}
 trans_mw |>
   ggplot(aes(x=probe1, y=zlogapen))+
   geom_point(alpha = .2, position = position_jitter(.2))
@@ -66,7 +80,7 @@ Visualizing data in this way makes it hard to understand the distribution within
 
 To investigate this, we can use histogram and colour them according to the categorical response.
 
-```{r}
+```{r common histogram}
 trans_mw |> 
   ggplot(aes(x=zlogapen, group=probe1, col=probe1,fill=probe1))+
   geom_histogram(alpha=.3)
@@ -74,7 +88,7 @@ trans_mw |>
 
 In this plot the bars are stacked on top of each other, which can make it problematic to see whether the data is distributed normally, especially for the lower probe responses (higher stacked bars). To fix this, we can position the bars beside each other. 
 
-```{r}
+```{r dodge histogram}
 trans_mw |> 
   ggplot(aes(x=zlogapen, group=probe1, fill=probe1))+
   geom_histogram(alpha=.3, position = position_dodge(), col="black", size=.15
@@ -84,14 +98,14 @@ p_hist
 
 With this plot, the distribution within each categorical response is more evident, but regardless, still difficult to read. This can be fixed splitting the distribution, which can be done by using facets.
 
-```{r}
+```{r split histogram}
 p_hist +
   facet_wrap(~probe1)
 ```
 
 In this graph, the distribution within each response is clearly evident and easy to read. Moreover, it appears as though the distribution within the first categorical response is flat, at least compared to the other distributions. To further investigate this, we can easily change the distribution to a density distribution. A kernel density estimation creates a smooth and continuous representation of the distribution. 
 
-```{r}
+```{r density overlap}
 trans_mw |> 
   ggplot(aes(x=zlogapen, group=probe1, fill=probe1, col=probe1))+
   geom_density(alpha=.2)
@@ -99,7 +113,7 @@ trans_mw |>
 
 As we can see from the plot all of the distributions over each category are surprisingly similar, at least compared to the histogram representation. We can further split the difference between the distributions by using *facets*. 
 
-```{r}
+```{r density split}
 trans_mw |> 
   ggplot(aes(x=zlogapen, group=probe1, fill=probe1))+
   geom_density(alpha=.3)+
@@ -129,7 +143,7 @@ trans_mw |>
 
 With this plot, we can more easily understand that we are talking about a distribution over one categorical response. Moreover, it is easier to comprehend the distribution over each categorical response then the (above) 2d distribution. The *ggridges* library is clearly superior in many regards, as it overlays the distributions without disrupting the distribution behind it, but still making comparisons easily. For instance, the first cases used histograms, which makes it hard to compared the distribution, because it uses count summary. While using density made comparison of the distribution easier, it was hard to see the individual distributions when they were overlapped, but difficult to compared when they were split by facets. Thus, *ggridges* makes it a better compromise between these two options, making it easier to both see the individual distribution, but also compare the distribution over each response. 
 
-```{r}
+```{r density ridges}
 trans_mw |> 
   ggplot(aes(x = zlogapen, y = probe1))+
   geom_density_ridges()
@@ -313,7 +327,7 @@ trans_mw |>
 
 Even though AE (randomness) score did not have any clear differences, maybe BV have any clearer differences: 
 
-```{r}
+```{r mind blank and bv}
 trans_mw |> 
   filter(probe1 < 3) |>
   ggplot(aes(x = zlogbv, y = probe2, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
