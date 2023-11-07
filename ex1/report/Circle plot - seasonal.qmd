@@ -7,7 +7,6 @@ editor:
       wrap: 62
 ---
 ```{r l}
-#| echo: false
 #| include: false
 library(tidyverse) # libs
 load("../data/sleep_data.rdata") # load data
@@ -15,6 +14,10 @@ load("../data/sleep_data.rdata") # load data
 
 ```{r start}
 #| echo: false
+#| message: false
+#| warning: false
+#| out-width: 700px
+#| out-height: 700px
 reduction <- 4.8 
 additional_start <- 5
 sleep_data |> group_by(date_m) |> 
