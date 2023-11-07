@@ -11,20 +11,22 @@ editor:
 #| include: false
 library(tidyverse)
 library(ggside)
-
 read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
-source("../src/transformation.R") # AE calculation
-
+source("../src/transformation.R") 
 all_mw_data |> 
   filter(stimulation == "sham") -> mw_data
 
-suppressWarnings(da_pro(mw_data, nback=25)) -> trans_mw
+da_pro(mw_data, nback=25) -> trans_mw
 
 min(trans_mw$zlogapen) -> AE_min
 min(trans_mw$zlogbv) -> BV_min
 ```
 ```{r start plot}
 #| echo: false
+#| message: false
+#| warning: false
+#| out-width: 650px
+#| out-height: 700px
 trans_mw |> 
   ggplot(aes(x=zlogbv, y=zlogapen)) +
   geom_density_2d_filled()+
@@ -67,7 +69,7 @@ approximate entropy (AE) a measure of randomness.
 I start by loading the libraries, functions and data.
 
 ```{r load libraries and data}
-###| message: false
+#| message: false
 library(tidyverse)
 library(patchwork)
 library(ggside)
@@ -84,6 +86,7 @@ which no manipulation was done to participants.
 
 ```{r transformation}
 #| output: false
+#| message: false 
 all_mw_data %>% 
   dplyr::select(-region.y) |>
   rename(region = region.x) |>
