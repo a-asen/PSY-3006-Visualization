@@ -35,11 +35,21 @@ source("../../ex3/src/transformation.R") # AE calculation
 
 ```{r transform data}
 all_mw_data |> 
-  select(-region.y) |>
+  dply::select(-region.y) |>
   filter(stimulation == "sham") -> mw_data
 
 da_pro(mw_data, nback=25) -> trans_mw
+# trans_mw |>
+#   mutate(
+#     probe1 = ordered(5-as.numeric(probe1)),
+#     probe2 = ordered(5-as.numeric(probe2))) -> trans_mw
+#   # Reverse the scaling such that higher indicate more mind wandering / mind blanking
+
+
+# do not need this
 da_pro(all_mw_data, nback=25) -> trans_mw_all
+
+
 ```
 
 Then we can start by visualizing the distribution over the different cognitive states. I will start with a simple point plot
@@ -49,6 +59,8 @@ trans_mw |>
   ggplot(aes(x=probe1, y=zlogapen))+
   geom_point(alpha = .2, position = position_jitter(.2))
 ```
+
+(Lower values indicate more mind wandering.)
 
 Visualizing data in this way makes it hard to understand the distribution within each category. Although we can clearly see that 3 and 4 have more responses than 1 and 2. That is, the difference between the conditions categories are evident, even though it is not entirely clear whether it is normally distributed. 
 
@@ -117,7 +129,188 @@ trans_mw |>
 
 With this plot, we can more easily understand that we are talking about a distribution over one categorical response. Moreover, it is easier to comprehend the distribution over each categorical response then the (above) 2d distribution. The *ggridges* library is clearly superior in many regards, as it overlays the distributions without disrupting the distribution behind it, but still making comparisons easily. For instance, the first cases used histograms, which makes it hard to compared the distribution, because it uses count summary. While using density made comparison of the distribution easier, it was hard to see the individual distributions when they were overlapped, but difficult to compared when they were split by facets. Thus, *ggridges* makes it a better compromise between these two options, making it easier to both see the individual distribution, but also compare the distribution over each response. 
 
-With this, we can make a simple and clear plot. 
+```{r}
+trans_mw |> 
+  ggplot(aes(x = zlogapen, y = probe1))+
+  geom_density_ridges()
+```
+
+This leads to a more neat presentation of the distribution over each of the categorical responses. Moreover, it is now a bit more easier to read the distributions. It seems like the 3 and 4 response has slightly longer distributions, suggesting that higher AE might be associated with more on task reporting. Although, this is by no means obvious, but a mere suggestion based on the distributions. 
+
+With this, there are a couple of aesthetic changes we can do. For instance, we could draw all individual points: 
+
+```{r ridges with points}
+trans_mw |> 
+  ggplot(aes(x = zlogapen, y = probe1))+
+  geom_density_ridges(jittered_points = T, # Add jittering points
+                      point_alpha = .2,
+                      scale = 1.05)+
+  scale_x_continuous(breaks = seq(-8,8,1))
+```
+
+However, the resulting plot can be more difficult to interpret granted a large data set. Indeed, for very large data sets, it is possible that there will be nothing other than a black graph - of points. 
+
+```{r ridges with rug}
+trans_mw |> 
+  ggplot(aes(x = zlogapen, y = probe1))+
+   geom_density_ridges(
+    jittered_points = T, scale = .95,
+    position = position_points_jitter(width = 0.05, height = 0),
+      # Creates a rug position of the "points"
+    alpha = .2, 
+      # This sets the transparency of the Density distribution (the points 
+      # ("|") are drawn behind the distribution).
+    # Point changes: 
+    point_shape = '|',  # Shape of the point
+    point_size = 2.5,
+    point_alpha = .2 )+
+  scale_x_continuous(breaks=seq(-8,8,1))+
+  theme_minimal()
+```
+
+This plot is more intelligible than the former point plot. Here, we can see how certain areas contain more data points. More specifically, how points gather around -1.75 for the 3 and 4 response category, as well as a tendency for the other categories. As noted earlier, it is also suggested that there are, in fact, slightly more points for higher AE for the 3 and 4 category. Although, this might merely be because these categories have more overall responses, as the same pattern can be found for the first and second category. 
+
+Another way of plotting is using a "raincloud":
+
+```{r ridges rainclound points}
+trans_mw |> 
+  ggplot(aes(x = zlogapen, y = probe1))+
+   geom_density_ridges(
+     jittered_points = T, scale = 0.6, alpha = 0.7,
+     position = position_raincloud(),
+     point_size = 0.4, point_alpha = .2)+
+  scale_x_continuous(breaks=seq(-8,8,1))+
+  theme_minimal()
+```
+
+In this plot, each of the individual data points "rain down" from the distribution. With this plot, it is easier to see which distribution contains the most observations (4), and the least (1). Moreover, we can see how many observations cluster around certain values (e.g., -1.6 and 2.2). 
+
+With this package, it is also possible to easily add quantile lines: 
+
+```{r ridges rainclound points}
+trans_mw |> 
+  ggplot(aes(x = zlogapen, y = probe1))+
+   geom_density_ridges(
+     jittered_points = T, scale = 0.6, alpha = 0.7,
+     position = position_raincloud(adjust_vlines = T),
+     point_size = 0.4, point_alpha = .2,
+     quantile_lines = T, 
+     vline_size = 1.2, vline_color = "red")+
+  scale_x_continuous(breaks=seq(-8,8,1))+
+  theme_minimal()
+```
+
+In this plot, the red lines indicate the quantiles, in which an equal number of data observations are found. With the above plot, the quantiles are displayed over the "raincloud" of data points. If we remove the "jittered_points" (FALSE) then we get the quantiles over the distribution itself: 
+
+```{r ridges with quantiles}
+trans_mw |> 
+  ggplot(aes(x = zlogapen, y = probe1))+
+   geom_density_ridges(
+     quantile_lines = T,
+     vline_size = .8, vline_color = "red")+
+  scale_x_continuous(breaks=seq(-8,8,1))+
+  theme_minimal()
+```
+
+In the plot above, it is a bit easier to grasp the width of the quantiles, and the height of the density function. For this reason, this plot may be preferred over the raincloud - at least when it comes to quantile visualization. 
+
+Moreover, it is also possible to colour the ridges according to the probability of obserivng a data point in a certain band range: 
+
+```{r ridges colour visualization}
+trans_mw |> 
+  ggplot(aes(x=zlogapen, y=probe1, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
+  geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T)+ 
+    # https://wilkelab.org/ggridges/articles/introduction.html
+  scale_fill_viridis_c(name = "Tail probability", option = "inferno")+
+  theme_minimal()+
+  scale_x_continuous(breaks = seq(-8,8,1))+
+  labs(y = "Mind wandering category", x = "Standardized AE score")
+```
+
+In the above plot, I visualize the density distribution over each categorical response of mind wandering and colouring the plot according to the probability of observing an observation within a band. We can easily add quantiles lines to also indicate where most of the data is found - although, this might be obvious from the plot in itself. 
+
+```{r ridges colour and quantiles}
+trans_mw |> 
+  ggplot(aes(x=zlogapen, y=probe1, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
+  geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T, 
+                               quantile_lines = T,
+                               vline_color="lightblue")+ 
+  scale_fill_viridis_c(name = "Tail probability", option = "inferno")+
+  theme_minimal()+
+  scale_x_continuous(breaks=seq(-8,8,1))+
+  labs(y="Mind wandering category", x="Standardized AE score")
+```
+
+In the above plot, there is both quantile lines and coloured probability of observing a value within a range. Due to the colouring, it might not be necessary with the quantile lines. Although, I would say that the colour adds an element that is missing in the prior plots. At any rate, there is not much to suggest that there is any difference between the categorical response and the distribution of AE. To check whether the plot works, I will quickly turn to BV. 
+
+```{r ridges BV distribution colour quantile}
+trans_mw |> 
+  ggplot(aes(x=zlogbv, y=probe1, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
+  geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T, 
+                               quantile_lines = T,
+                               vline_color = "lightblue")+ 
+  scale_fill_viridis_c(name = "Tail probability", option = "inferno")+
+  theme_minimal()+
+  scale_x_continuous(breaks=seq(-8,8,1))+
+  labs(y = "Mind wandering category", x = "Standardized BV score")
+```
+
+In the above plot, it is a bit more evident that there is a difference between the categorical responses. The lowest categories (1 and 2) seems to have a bit wider bands and distributions than the higher categories (3 and 4). We can, for instance, see that the quantiles for the fourth category is more normally distributed than the first. Thus, more data is observed closer to 0, which indicate better task performance. Similarly, the distribution seems to be wider for the first category than the fourth, suggesting that there might be some differences (albeit not that big, perhaps). 
+
+The former plots have not been very clear regarding whether there is any difference between the categorical response, and the behavioural performance measures. To illustrate, I will use a completely different data set called "iris", which is found in base R. The data set include measures of flowers of the petal length and width, sepal width and length, and species of the flower. Making it possible to visualize a categorical (species) variable over various continuous variables (width/length). 
+
+```{r sepal length}
+iris |>
+  ggplot(aes(x = Sepal.Length, y = Species))+
+  geom_density_ridges()
+```
+
+With this data set, we can clearly see that these species have different sepal length. Although, the length is not standardized, but to do so, we can use the *scale* function. 
+
+```{r scaled sepal length}
+iris |>
+  mutate(scaled_length = scale(Sepal.Length)) |>
+  ggplot(aes(x = scaled_length, y = Species))+
+  geom_density_ridges()
+```
+
+In the above plot, we can see that a setosa's length is about one standard deviation below vericolor, and 1.7 (or so) below the virginica flower. These datasets can make differences more obvious by visualizing a distribution over a categorical response. In the case for the randomness (AE) score, it is not as clear whether there is a difference between the categorical responses. This might be expected by the fact that the categorical responses are related to a more continuous scale (focused or not), wherein there can be a wide range of different states. Indeed, we could try to visualize AE/BV score over mind blanking, which is a different variable. 
+
+```{r}
+trans_mw |> 
+  filter(probe1>2) |>
+  ggplot(aes(x=zlogapen, y = probe2, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
+  geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T, 
+                               quantile_lines = T,
+                               vline_color = "lightblue")+ 
+  scale_fill_viridis_c(name = "Tail probability", option = "inferno")+
+  theme_minimal()+
+  scale_x_continuous(breaks = seq(-8,8,1))+
+  labs(y = "Mind blanking category", x = "Standardized AE score")
+```
+
+(Lower categlory indicate more blanking)
+In the above plot, we can see a very similar pattern to the previous plots. It is not entirely clear whether there is any difference between the categorical responses (there is a lot of overlap). Nevertheless, we can see that the categorical response 3 and 4 have slighly wider distributions as well as less of a normal distribution - it seems to have two peaks. 
+
+
+
+
+
+Chicken weight example. 
+
+```{r}
+datasets::ChickWeight |> 
+  mutate(s = scale(weight)) |>
+  ggplot(aes(x = s, y = Diet)) +
+  geom_density_ridges()
+```
+
+
+
+
+NO Z SCORE?  idk
+
+
 
 ```{r}
 trans_mw |> 
@@ -129,15 +322,6 @@ trans_mw |>
   scale_x_continuous(breaks=seq(-8,8,1))+
   labs(y="Mind wandering category", x="Standardized AE score")
 ```
-
-
-
-
-
-NO Z SCORE? 
-
-
-
 
 
 
