@@ -63,6 +63,7 @@
 
 ## Exam 
 - [ ] Include Github link
+- [ ] Include word count (~20 pages?)
 - [ ] General introduction
   - [ ] visualization in general
   - [ ] ggplot
@@ -86,59 +87,12 @@ disk drives), astronomical time (daily, monthly, annual), periodic waveforms
   - [ ] ex4 intro
     - [ ] Incorporate feedback in a final plot
 
-- End: 
+- Include full report at the end: 
   - [ ] ex1 report
   - [ ] ex2 report
   - [ ] ex3 report
   - [ ] ex4 report
  
   
-
-
-# Multivariate visualization
-## Ex 3 - 2 continous vars
-- [ ] Ex3 report
- 
-  
-
-## Ex 4 - 1 cat 1 continous
-- [ ] Ex4 report
-
-
-
-
-
-
-
-3rd VIS?
-10. Distributions: Yes, but use different dataset, because 
-10.1: Reaction times
-
-- distributions
-- [ ] Find/make data
-- ex-gaussian
-- wiener distribution (drift diffusion model)
-- Quantile distribution (reaction time, ratcliff)
-
-- Normal &/ bimodal. 
-   - Movie rating
-
-- Histogram/violinplot. 
-   
-   USE: 
-continuous:
-1 - reaction time (bodyheight / death age) 
-2 - bimodal (reaction time over sleep preference)
-   rainplot.
-
-discrete: 
-   -  Kruschke lidell visualization. 
-
-    - Bivariet distributions.
-
-
-Distribution of raw AE data. 
-AE plots? 
-
 
 
