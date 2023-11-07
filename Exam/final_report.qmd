@@ -1,11 +1,13 @@
 ---
-title: "exam"
+title: "Final report: Exam"
 format: pdf
 lang: en-GB
 editor: 
   markdown:
       wrap: 72
 ---
+
+The repository is available at https://github.com/a-asen/PSY-3006-Visualization (as part of the course requirement). Word count is : ` INPUT WORD COUNT HERE, THX ` approximately  ` PAGES ` 
 
 # Visualizing
 
@@ -16,6 +18,8 @@ Visualizing data is key to comprehend what data provides us in a simple, and eff
 A principle of visualizing that is incredibly flexible. 
 
 ## Exercises 
+
+
 bla bla bla bout the exercises
 
 ## Circle visualization

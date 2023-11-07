@@ -10,7 +10,7 @@
 -   [x] Visual display of quantitative data
     -   [ ] Reflection 
 -   [ ] Github markdown (different from normal markdown)
--   [ ] [Quarto (report)](https://quarto.org/)
+-   [x] [Quarto (report)](https://quarto.org/)
 
 
 ## Exercise 1: Circle plot - seasonal sleep
@@ -32,9 +32,9 @@
 - [x] Add Feedback
 
 ## Exercise 2: Circle plot - sleep times
-- [x] Data: mind wandering sleep 
+- [x] Data: sleep data from sleep deprivation experiment
 	- [x] circle barplot. 
-	- [x] split by noon-midnight & 6am-6pm 
+	- [x] reduce non-data ink
 	- [x] Overlay NS & PSD sleep. 
 	- [x] Compare against normal plot
 - [x] Add Feedback
@@ -51,7 +51,9 @@
 ## Exercsise 4; Multivariate visualization - categorical-continous
 - [x] Data: Mind wandering (same as ex3)
 - [x] Visualization 
-  - [x] Distribution w/hist/other
+  - [x] Distribution w/hist
+  - [x] violin
+  - [x] 2d density
   - [x] Ridge
   - [x] Ridges testing
   - [x] Different variable (BV)
@@ -62,8 +64,8 @@
 
 
 ## Exam 
-- [ ] Include Github link
-- [ ] Include word count (~20 pages?)
+- [x] Include Github link
+- [/] Include word count (~20 pages?)
 - [ ] General introduction
   - [ ] visualization in general
   - [ ] ggplot
