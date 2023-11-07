@@ -53,8 +53,10 @@
 - [x] Data: Mind wandering
 - [x] Visualization 
   - [x] Distribution w/hist/other
-  - [ ] Ridge
-  - [ ] 2D density? 
+  - [x] Ridge
+  - [x] Ridges testing
+  - [x] Different variable (BV)
+  - [x] Different dataset (iris)
 - [ ] Add Feedback
 
 
