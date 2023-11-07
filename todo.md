@@ -10,10 +10,10 @@
 -   [x] Visual display of quantitative data
     -   [ ] Reflection 
 -   [ ] Github markdown (different from normal markdown)
--   [ ] [Quarto (report)](https://quarto.org/docs/guide/)
+-   [ ] [Quarto (report)](https://quarto.org/)
 
 
-## Exercise 1: circle plot - seasonal
+## Exercise 1: Circle plot - seasonal sleep
 -   [x] Fake data:
     -   [x] Daylight hour in Tromsø (API call)
     -   [x] Create fake data
@@ -31,8 +31,7 @@
     -   [x] other groupings
 - [ ] Add Feedback
 
-
-## Exercise 2: circle plot - sleep
+## Exercise 2: Circle plot - sleep times
 - [x] Data: mind wandering sleep 
 	- [x] circle barplot. 
 	- [x] split by noon-midnight & 6am-6pm 
@@ -40,24 +39,53 @@
 	- [x] Compare against normal plot
 - [ ] Add Feedback
 
-## Exercise 3
+## Exercise 3 Multivariate visutalization - continuous-continous
 - [x] Data: mind wandering
 - [x] Visualization:
   - [x] Data distribution
   - [x] Joint distribution
     - [x] Joint distribution with individual distribution
-- [ ] Why multivariate visualization?
+  - [x] Fixed cell parameter
 - [ ] Add Feedback
 
-## Exercsise 4
-- [x] Data: Mind wandering
+## Exercsise 4; Multivariate visualization - categorical-continous
+- [x] Data: Mind wandering (same as ex3)
 - [x] Visualization 
   - [x] Distribution w/hist/other
   - [x] Ridge
   - [x] Ridges testing
   - [x] Different variable (BV)
   - [x] Different dataset (iris)
+  - [x] Fixed cell parameter
 - [ ] Add Feedback
+
+
+
+## Exam 
+- [ ] General introduction
+  - [ ] visualization in general
+  - [ ] ggplot
+    - [ ] Benefits with ggplots
+- [ ] Current task/issue
+  Circles:
+  - [ ] ex1 intro
+  - [ ] ex2 intro
+  Multivariate: 
+  - [ ] ex3 intro
+  - [ ] ex4 intro
+  
+
+
+Feedback:
+- [ ] Change exam: short exam report, link to Github (repo) reports. 
+
+- ex2
+
+ex3/4: 
+- [ ] Why multivariate visualization?
+
+
+
 
 
 
@@ -93,23 +121,4 @@ Distribution of raw AE data.
 AE plots? 
 
 
-## Exercise 4
-
-
-## Exam 
-- [ ] Change exam: short exam report, link to Github (repo) reports. 
-- Plot 1 - circle plots
-  - [ ] Change using scale & not transform (data)? 
-  - [ ] dont use CI - rather SE or quantile
-  - [ ] maybe, sleep/wake time instead? 
-  - [ ] instead of "daylight hour", also indicte WHEN the sun rise AND set 
-	- in connection to sleep time/wake time  this could be nice
-  - [ ] Discuss some contrast with Circilize ???? 
-  
-  - [ ] Add segments? (e.g., annotate("rect",xmin=1,xmax=13,ymin=6,ymax=10, alpha=.4, fill="#208aaa"))
-       - Just use lines to indicate start of season, instead. 
-
-- [ ] Visualizing
-  - [ ] Grammer of graphics
-    - [ ] Benefits of this framework 
 
