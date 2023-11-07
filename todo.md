@@ -29,7 +29,7 @@
     -   [x] circle plot
     - [x] aesthetic changes
     -   [x] other groupings
-- [ ] Add Feedback
+- [x] Add Feedback
 
 ## Exercise 2: Circle plot - sleep times
 - [x] Data: mind wandering sleep 
@@ -37,7 +37,7 @@
 	- [x] split by noon-midnight & 6am-6pm 
 	- [x] Overlay NS & PSD sleep. 
 	- [x] Compare against normal plot
-- [ ] Add Feedback
+- [x] Add Feedback
 
 ## Exercise 3 Multivariate visutalization - continuous-continous
 - [x] Data: mind wandering
@@ -62,6 +62,7 @@
 
 
 ## Exam 
+- [ ] Include Github link
 - [ ] General introduction
   - [ ] visualization in general
   - [ ] ggplot
@@ -69,20 +70,39 @@
 - [ ] Current task/issue
   Circles:
   - [ ] ex1 intro
+    - [x] Improved acquire daylight script
+    - [ ] Incorporate feedback in a final plot
   - [ ] ex2 intro
+    - [ ] Data was prepared ???!!!!
+    - [ ] Incorporate feedback in a final plot
+    - QUOTE: The polar transformation is useful whenever data lend themselves to circular arrangements. This includes
+directional data (vector wind, compass bearings), rotational data (defects on
+disk drives), astronomical time (daily, monthly, annual), periodic waveforms
+(radio signals), and proportions (the humble pie chart).  GG book (p.215)
+
   Multivariate: 
   - [ ] ex3 intro
+    - [ ] Incorporate feedback in a final plot
   - [ ] ex4 intro
+    - [ ] Incorporate feedback in a final plot
+
+- End: 
+  - [ ] ex1 report
+  - [ ] ex2 report
+  - [ ] ex3 report
+  - [ ] ex4 report
+ 
   
 
 
-Feedback:
-- [ ] Change exam: short exam report, link to Github (repo) reports. 
+# Multivariate visualization
+## Ex 3 - 2 continous vars
+- [ ] Ex3 report
+ 
+  
 
-- ex2
-
-ex3/4: 
-- [ ] Why multivariate visualization?
+## Ex 4 - 1 cat 1 continous
+- [ ] Ex4 report
 
 
 
