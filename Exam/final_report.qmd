@@ -4,7 +4,7 @@ format: pdf
 lang: en-GB
 editor: 
   markdown:
-      wrap: 82
+      wrap: 72
 ---
 
 # Visualizing
@@ -15,50 +15,44 @@ Visualizing data is key to comprehend what data provides us in a simple, and eff
 
 A principle of visualizing that is incredibly flexible. 
 
-## Introduction and summary: 
-- [ ] Ex1 - circle year 
-- [ ] Ex2 - circle clock 
-- [ ] Ex3 - mutl-vis cont-cont
-- [ ] Ex4 - mult-vis cat-cont
+## Exercises 
+bla bla bla bout the exercises
+
+## Circle visualization
+For the two first exercises (1, 2), I focus on circular visualization. In the first exercise I start by visualizing sleep data throughout a year. The data for this exercise has been generate (see "src" scripts). Then I processed to visualizing sleep data from an experiment. Where I try to indicate the difference between two sleep conditions - one sleep deprived and one with normal sleep. 
+
+### Ex1: Seasonal sleep
+intr
+
+#### Final plot 
+ --!--
 
 
-## Ex 1 - circle: seasonal 
-- [x] Ex1 report
-  - [x] Improved acquire daylight script
-  - Feedback:
-  circle plot:
-    1. Change the scale, not the data itself. 
-    2. For circle, do not use confidence interval (SE or quartiles).
-    3. Maybe use start sleep to  wake time. (If scaled?) 
-    4. Start & stop of sunlight time instead of hour daylight 
-      - I.e., visualize time when the sun rise and set
-    5. sun rise-set // sleep & wake time. 
-      - also on normal plot
-    6. use summary 
+### Ex2: Sleep times
+ intr
 
-  
-## Ex 2 - circle: sleep time 
-- [x] Ex2 report
-  - [ ] Could display the clock time as actual clock (lubridate or POSXI)?
-
-- The polar transformation is
-useful whenever data lend themselves to circular arrangements. This includes
-directional data (vector wind, compass bearings), rotational data (defects on
-disk drives), astronomical time (daily, monthly, annual), periodic waveforms
-(radio signals), and proportions (the humble pie chart).  GG book (p.215)
+#### Final plot
+ --!--
 
 
-# Multivariate visualization
-## Ex 3 - 2 continous vars
-- [ ] Ex3 report
+## Multivariate visualization
+For the two latter exercises (3, 4), I focus on multivariate visualization. Especially in relation to the joint distribution of two continuous variables of a categorical and a continuous variable.
+
+### Ex3: Continuous-continuous
   - In this report I investigate distribution plots. More specifically joint distributions called "multivariate visualization". I utilize patchwork and ggside to explore how to plot individual distributions around a joint distribution space.
-  
-  - 
+
+#### Final plot 
+ --!--
   
 
-## Ex 4 - 1 cat 1 continous
-- [ ] Ex4 report
+### Ex4: Categorical-continuous
   - More meaningful splitting of distributions over certain responses 
+
+#### Final plot 
+ --!--
+
+
+
 
 
 
