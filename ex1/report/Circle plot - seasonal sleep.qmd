@@ -1,5 +1,5 @@
 ---
-title: "Circle Plot"
+title: "Circle Plot: Seasonal sleep"
 format: pdf
 lang: en-GB
 editor: 
@@ -16,8 +16,9 @@ load("../data/sleep_data.rdata") # load data
 #| echo: false
 #| message: false
 #| warning: false
-#| out-width: 700px
-#| out-height: 700px
+#| out-width: 650px
+#| out-height: 650px
+#| fig-dpi: 400
 reduction <- 4.8 
 additional_start <- 5
 sleep_data |> group_by(date_m) |> 
@@ -53,8 +54,6 @@ sleep_data |>
 
 {{< pagebreak >}}
 
-# Circle plot
-
 The motivation for creating a circle plot is to visualize data in relation to
 seasons. Seasons are a recurring natural phenomenon that can significantly impact
 various aspects of our lives, from weather patterns to human behaviour.
@@ -72,7 +71,6 @@ For this purpose, I would like to explore the utility of visualizing a data circ
 With this idea in mind, I have created fake sleep data of X along with the sleep
 rise and set times located at Tromsø. The sleep data follow the pattern of the sun changes throughout the year, along with some additional noise. The  goal is to visualize the sleep time, wake time, and sun rise changes throughout a year (2022) circularly.
 
-## Standard visualizing
 
 We first load the relevant packages and retrieve the data.
 
