@@ -1,5 +1,5 @@
 ---
-title: "Circle Plot: sleep deprivation"
+title: "Circle Plot: Sleep times"
 format: pdf
 lang: en-GB
 editor: 
@@ -8,10 +8,8 @@ editor:
 ---
 
 ```{r t..}
-#| echo: false
 #| include: false
 library(tidyverse)
-# loader script
 list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
 for(x in files){load(x)}
 sleep_diary |>
@@ -27,34 +25,33 @@ sleep |>
   mutate(sd_length = length(sleepdep)) |> ungroup() |>
   group_by(subj, sleepdep) |>
   mutate(
-    # Mean sleep duration
     duration = mean(sleep_duration, na.rm=T),
     duration_sd = sd(sleep_duration, na.rm=T),
     duration_se = sd(sleep_duration, na.rm=T) / sqrt(sd_length),
-    # mean sleep time over participant by condition
     sleep = mean(sleep_time_cum, na.rm=T),
-        # could add clock time here
     sleep_sd = sd(sleep_time_cum, na.rm=T), 
     sleep_se = sd(sleep_time_cum, na.rm=T) / sqrt(sd_length),
-    # mean wake time over participant by condition
     waking = mean(last_awaking_fix, na.rm=T),
     waking_sd = sd(last_awaking_fix, na.rm=T),
     waking_se = sd(last_awaking_fix, na.rm=T) / sqrt(sd_length),
     ) -> s_sleep2
 ```
-
 ```{r p..}
 #| echo: false
+#| warning: false
+#| out-width: 650
+#| out-height: 650
+#| fig-dpi: 300
 s_sleep2 |>
-  mutate(sleepdep=as.character(sleepdep)) |> #unfactor
+  mutate(sleepdep=as.character(sleepdep)) |>
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, group=sleepdep))+
   geom_col(position=position_dodge(), width = 0.05, alpha=.18)+
   geom_point(aes(col=sleepdep), size=.6)+
-  scale_fill_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour 
-  scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
-  coord_polar(start = -pi)+ # Equal distance between each side (center @ 0)
-  geom_blank(aes(x=30,y=3))+ # Latest (empty) point
-  geom_blank(aes(x=18,y=3))+ # Earliest (empty) point
+  scale_fill_manual(values = c("#5cd0d3","#f58d86"))+
+  scale_colour_manual(values = c("#5cd0d3","#f58d86"))+
+  coord_polar(start = -pi)+ 
+  geom_blank(aes(x=30,y=3))+ 
+  geom_blank(aes(x=18,y=3))+ 
   scale_x_continuous(breaks=seq(0,29,1), labels=c(seq(0,23,1), seq(0,5,1)), 
                      minor_breaks = F)+
   scale_y_continuous(breaks=seq(3,10,1))+
@@ -62,10 +59,6 @@ s_sleep2 |>
   labs(x="Sleep time", y="Sleep duration", col="Condition", fill="Condition", 
        title = "Sleep time and duration between conditions",
        caption="NS = normal sleep, PSD = partial sleep deprivation.")
-       # Length of the bars represents sleep duration, 
-       # and x location indicate sleep time. 
-       # Sleep time is displayed according to clock time 
-       # displayed from 18 (evening) to 6 (morning).")
 ```
 
 {{< pagebreak >}}
@@ -230,8 +223,10 @@ Now we can start by making the circle plot more neat. Firstly, the data points a
 
 ```{r pleasing circular}
 sobj1 +
-  geom_blank(aes(x=1,y=3))+ # Add an empty element too add some distances from the center
-  scale_x_continuous(breaks = seq(0,24,1), limits = c(0,NA), minor_breaks = F)+ # Limits add 0
+  geom_blank(aes(x=1,y=3))+ 
+    # Add an empty element too add some distances from the center
+  scale_x_continuous(breaks = seq(0,24,1), limits = c(0,NA), minor_breaks = F)+ 
+    # Limits add 0
   scale_y_continuous(breaks = seq(4,10,1))+
   theme_minimal()+
   labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition"
@@ -374,7 +369,8 @@ In this plot, it is perhaps more obvious that the sleep duration in the PSD cond
 
 ```{r Add dots to bars}
 sobj20 + 
-  geom_point(aes(col=sleepdep))+ # these clarify exact data point (& put to contrast)
+  geom_point(aes(col=sleepdep))+ 
+    # these clarify exact data point (& put to contrast)
   theme_minimal()+
   labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition")
 ```
@@ -383,7 +379,8 @@ Even though we leave a fair amount of the plot to nothing (i.e., 4-21), displayi
 
 ```{r try full clock time}
 sobj20 + 
-  geom_point(aes(col=sleepdep))+ # these clarify exact data point (& put to contrast)
+  geom_point(aes(col=sleepdep))+ 
+    # these clarify exact data point (& put to contrast)
   theme_minimal()+
   labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition")+
   geom_blank(aes(x=6))+
@@ -392,7 +389,8 @@ sobj20 +
 
 ```{r add wake time to plot}
 sobj20 + 
-  geom_point(aes(col=sleepdep))+ # these clarify exact data point (& put to contrast)
+  geom_point(aes(col=sleepdep))+ 
+    # these clarify exact data point (& put to contrast)
   theme_minimal()+
   labs(x="Sleep time", y="Sleep duration", fill="Condition", col="Condition")+
   geom_blank(aes(x=6))+
@@ -416,9 +414,11 @@ s_sleep |>
   geom_point()+ # sleep times
   geom_point(aes(x=waking, col=sleepdep))+ # Waking times
   scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
-  geom_blank(aes(x=1,y=3))+ # Add an empty element too add some distances from the center
+  geom_blank(aes(x=1,y=3))+ 
+    # Add an empty element too add some distances from the center
   coord_polar()+
-  scale_x_continuous(breaks = seq(0,23,1), limits = c(0,NA), minor_breaks = F)+ # Limits add 0
+  scale_x_continuous(breaks = seq(0,23,1), limits = c(0,NA), minor_breaks = F)+ 
+    # Limits add 0
   scale_y_continuous(breaks = seq(4,10,1))+
   theme_minimal() -> sobj30
 sobj30
@@ -431,6 +431,7 @@ s_sleep2 |>
   group_by(sleepdep) |>
   summarize(m_sleep = mean(sleep), 
             m_wake = mean(waking))
+  # Summary check
 
 sobj30 + 
   # NS
@@ -457,9 +458,11 @@ s_sleep |>
   geom_point()+ # sleep times
   geom_point(aes(x=waking, col=sleepdep))+ # Waking times
   scale_colour_manual(values = c("#5cd0d3","#f58d86"))+ # change the colour
-  geom_blank(aes(x=1,y=3))+ # Add an empty element too add some distances from the center
+  geom_blank(aes(x=1,y=3))+ 
+    # Add an empty element too add some distances from the center
   coord_polar()+
-  scale_x_continuous(breaks = seq(0,23,1), limits = c(0,NA), minor_breaks = F)+ # Limits add 0
+  scale_x_continuous(breaks = seq(0,23,1), limits = c(0,NA), minor_breaks = F)+ 
+    # Limits add 0
   scale_y_continuous(breaks = seq(4,10,1))+
   theme_minimal()+
    # NS
