@@ -1,10 +1,10 @@
 # Visualization with ggplot2
 
-This is a repository for a data visualization course at the UiT - The Arctic University of Norway in R. The course is taken as an 'independent study' course ([PSY-3006 - Indepdendent study](https://en.uit.no/education/courses/course?p_document_id=805702&semester=H)) for my Masters in Psychology. The focus of the course is to learn to use [ggplot2](https://ggplot2.tidyverse.org/) to effectively visualize data. Similarly, data transfomrations related to visualizing data, as well as commenting on coding progress will be done. 
+This is a repository for a data visualization course at the UiT - The Arctic University of Norway in R. The course is taken as an 'independent study' course ([PSY-3006 - Independent study](https://en.uit.no/education/courses/course?p_document_id=805702&semester=H)) for my Masters in Psychology. The focus of the course is to learn to use [ggplot2](https://ggplot2.tidyverse.org/) to effectively visualize data. Similarly, data transformations related to visualizing data, as well as commenting on coding progress will be done. 
 
 ## Content of the repository
 
-The repository will have 4 exercise folders (e.g., 'ex1') containing relevant material for each visualization. Under each folder, I will follow convensional folder structuring schema (e.g., ProjectTemplate). Each exercise will contain 'src' folder for all R scripts related to create data and/or relevant data transformations. Data may be created (i.e., fake data) or downloaded from publicly available sources and will be stored in the 'data' folder. Lastly, a 'report' folder will contain a '.qmd' (Quarto) document that contains the relevant data visualization code as well as comments regarding the plots.
+The repository will have 4 exercise folders (e.g., 'ex1') containing relevant material for each visualization. Under each folder, I will follow conventional folder structuring schema (e.g., ProjectTemplate). Each exercise may contain 'src' folder for all R scripts related to creating data and/or relevant data transformations. Data may be created (i.e., fake data) or downloaded from publicly available sources and will be stored in the 'data' folder. Lastly, a 'report' folder will contain a '.qmd' (Quarto) document that contains the relevant data visualization code as well as remarks regarding the plots.
 
 
 ## Content of the course:
