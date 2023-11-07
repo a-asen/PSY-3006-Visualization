@@ -9,7 +9,6 @@ editor:
 
 ```{r start libs}
 #| include: false
-#| echo: false
 library(tidyverse)
 library(ggside)
 
@@ -24,7 +23,6 @@ suppressWarnings(da_pro(mw_data, nback=25)) -> trans_mw
 min(trans_mw$zlogapen) -> AE_min
 min(trans_mw$zlogbv) -> BV_min
 ```
-
 ```{r start plot}
 #| echo: false
 trans_mw |> 
@@ -69,6 +67,7 @@ approximate entropy (AE) a measure of randomness.
 I start by loading the libraries, functions and data.
 
 ```{r load libraries and data}
+###| message: false
 library(tidyverse)
 library(patchwork)
 library(ggside)
@@ -84,7 +83,7 @@ the data from the "sham" condition. That is the condition in
 which no manipulation was done to participants.
 
 ```{r transformation}
-#| include: false
+#| output: false
 all_mw_data %>% 
   dplyr::select(-region.y) |>
   rename(region = region.x) |>
@@ -94,7 +93,6 @@ da_pro(mw_data, nback = 25) -> trans_mw
   #' This function has been retrieved from the OSF repository containing the 
   #' data and is slightly modified
 ```
-
 ```{r trans data}
 trans_mw
 ```
