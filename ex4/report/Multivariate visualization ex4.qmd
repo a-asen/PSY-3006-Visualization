@@ -326,7 +326,7 @@ trans_mw |>
   labs(y = "Mind blanking category", x = "Standardized BV score")
 ```
 
-It might seem as though categorical response 3 and 4 (indicating mind wandering or content) have a more normal distribution. Moreover, they seem to have a slightly reduced second peak at around 1.35. While the lower category (1 and 2) seem to have a bit wider distribution and a higher second peak. It should be noted that only the higher categories (3, 4) seem to have a more varied BV score at higher standardized scores. In this way, it can appear as though most people are more consistent to respond during (contentfull) mind wandering, but might also be more disconnected (higher standardized score). While, mind blanking (1, 2) might have a wider distribution, they do not seem to have very high (albeit some observation) scores. 
+It might seem as though categorical response 3 and 4 (indicating mind wandering or content) have a more normal distribution. Moreover, they seem to have a slightly reduced second peak (at around 1.35). While the lower category (1 and 2) seem to have a bit wider distribution and a higher second peak. It should be noted that only the higher categories (3, 4) seem to sometimes become more task disengaged by some higher scores. In this way, it can appear as though most people are more consistent when reporting to have content (mind blanking - 3/4), but might (sometimes) be more disconnected. While, mind blanking (1, 2) might have a wider distribution, they do not seem to have very high (albeit some observation) scores. Thus, it might be said that when people think about nothing in particular, they are generally less task focused, but might not entertain these ideas as much - hence not observing fewer high value cases.  
 
 
 
@@ -388,7 +388,7 @@ The former plots do not visualize the distribution of the data easily. Compared 
  
 ```{r cumulative evidence}
 trans_mw |> # https://stackoverflow.com/a/39432933/21637065
-  ggplot(aes(x=apen, col=probe1))+
+  ggplot(aes(x=zlogapen, col=probe1))+
   stat_ecdf()
 ```
 
