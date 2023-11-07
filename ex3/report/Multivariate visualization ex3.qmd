@@ -1,5 +1,5 @@
 ---
-title: "Multivariate visualization: continuous and continuous"
+title: "Multivariate visualization: continuous-continuous variable"
 format: pdf
 lang: en-GB
 editor: 
