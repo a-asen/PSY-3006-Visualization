@@ -7,20 +7,21 @@ editor:
       wrap: 72
 ---
 
-The repository is available at https://github.com/a-asen/PSY-3006-Visualization (as part of the course requirement). Word count is : ` INPUT WORD COUNT HERE, THX ` approximately  ` PAGES ` 
+The repository is available at https://github.com/a-asen/PSY-3006-Visualization (as part of the course requirement). Word count is : ` INPUT WORD COUNT HERE, THX ` corresponding to approximately ` PAGES ` 
 
 # Visualizing
 
-Visualizing data is key to comprehend what data provides us in a simple, and effective way. 
+Visualizing data is a key tool in understanding data and data analysis. It is a simple trick, but highly efficient for both researchers and laymen to understand what the data and data analysis is telling us. It can condense highly complicated data structures that could be impossible for any humans to understand. Modern technological advancement has made data visualizing easier and more capable. Moreover, the development of programs and software using open source (or derivates of it), makes it possible for anyone to learn data visualization. R is a prominent program for data analysis and data visualization. It is an open source program with a vast amount of packages. One of the most important packages for R is the "ggplot2" library. This is a package created to make data visualization follow simple rules of "grammer" for "visualizing". 
 
 ## Grammer of graphics
 
-A principle of visualizing that is incredibly flexible. 
-
-## Exercises 
+"The Grammer of Graphics" by Leland Wilkinson describes a framework for what a "grammer" of graphics should look like. The book gives a basic foundation for how to structure grammer to create graphs. Moreover, the book proposes various systems and how these systems relate to each other. The book do not rely on a specific coding language, since it is ment to give a basic understanding of how to structure the *grammer* for visualizing.
 
 
-bla bla bla bout the exercises
+## Course goal
+
+In this course, I utilize the ggplot2 package in R to visualize data. The ggplot2 package builds on the foundation that "The Grammer of Graphics" lay. This is done to learn how to visualize data in R using the "grammer" of visualizing. The benefit of this framework is that most things should be able to be visualized with a solid understanding of the package. Moreover, the course requires the use of version control software, like Git, and reporting tools like Quarto. Git makes it possible to store version of the code. This makes it possible to go back in time (so to speak) to fix bugs that might have arisen during coding. Moreover, it is an important tool in collective coding efforts, as it can be incredibly hard to coordinate code from different people. Quarto is a reporting tool built on Rmarkdown, which is again built from Markdown. Markdown is lightweight markup language that is used to structure the format of a text file with simple symbols. For instance, the title "course goal" is started with two hashtags (##) which create a "title heading level 2" (three hashtags would create a level 3 heading - see "Circle visualization"). RMarkdown incorporate R code with the basic markdown structure, such that the text file can be easily structured and include R code and its output. Quarto builds on RMarkdown by incorporating its own syntax and improving certain features. For instance, by making it possible to do inline codes using the "\`". Inline code makes it possible to implement code within a line of text. This is particularly handy if you are doing data analysis, but change one aspects which may require the rewriting of numbers. 
+
 
 ## Circle visualization
 For the two first exercises (1, 2), I focus on circular visualization. In the first exercise I start by visualizing sleep data throughout a year. The data for this exercise has been generate (see "src" scripts). Then I processed to visualizing sleep data from an experiment. Where I try to indicate the difference between two sleep conditions - one sleep deprived and one with normal sleep. 
