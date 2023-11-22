@@ -1,8 +1,6 @@
 ---
 title: "Exam in PSY-3006 - Indepdendent study: Visualization in R with ggplots2"
-format:
-  html: default
-  pdf: default
+format: pdf
 lang: en-GB
 editor: 
   markdown:
@@ -13,7 +11,7 @@ Candidate number: 22
 
 The repository is available at https://github.com/a-asen/PSY-3006-Visualization (as part of the course requirement). Word count is : ` INPUT WORD COUNT HERE, THX ` corresponding to approximately ` PAGES ` 
 
-{{ < pagebreak > }}
+{{< pagebreak >}}
 
 # Visualizing
 
@@ -38,7 +36,7 @@ The first part relates to visualizing fictive seasonal data in a circular way. T
 
 ### Ex2: Sleep times
 
-For the second exercise, I investigated how sleep times can be visualized in a circular way. 
+For the second exercise, I tried to visualize sleep time between two conditions. In one of the conditions participants were sleep deprived, while in the other they slept normally. For the sleep deprivation condition, participants were asked to go to sleep 3 hours later than when they typically go to bed (i.e., under normal sleep). 
 
 For the two first exercises (ex1, ex2), I focus on circular visualization. In the first exercise I start by visualizing sleep data throughout a year. The data for this exercise has been generate (see "src" scripts). In the second exercise, visualize sleep data from an experiment. There, I try to indicate the difference between two sleep conditions - one sleep deprived and one with normal sleep. 
 
