@@ -1,6 +1,6 @@
 ---
 title: "Circle Plot: Seasonal sleep"
-format: pdf
+format: docx
 lang: en-GB
 editor: 
   markdown:
@@ -718,8 +718,8 @@ Improvement points:
 - Visualize start and end of daylight (e.g., sun rise @8.07, sun set @18.30)
 
 ```{r transformation}
-load("../ex1/data/sleep_data.rdata") # load data
-load("../ex1/data/daylight_df_Tromso_2022_improved.rdata") # load new daylight
+load("../data/sleep_data.rdata") # load data
+load("../data/daylight_df_Tromso_2022_improved.rdata") # load new daylight
 daylight_df
 
 sleep_data |>
