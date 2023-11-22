@@ -785,27 +785,20 @@ Non-circular comparison: [Code hidden as only "geom_polar" is removed]
 #| warning: false
 sleep_data3 |>
   mutate(sunrise_n = sunrise_n / reduction + additional_start,
-       sunset_n = sunset_n / reduction + additional_start) |> 
+         sunset_n = sunset_n / reduction + additional_start) |> 
   ungroup() |>
   ggplot(aes(x=year_day, y=sleep_amount))+
-  # Sun up 
   geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
                           xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
-  # Darkness band
   geom_ribbon(mapping=aes(ymin=0+additional_start, ymax=sunrise_n,
                           ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
   geom_ribbon(mapping=aes(ymin=24/reduction+additional_start, ymax=sunset_n,
                           ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
-  # Mean line 
-  # # Mean line 
   stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
-  # Week wakeup average 
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="#208fff",linewidth=.7, alpha=.9)+
-  # week sleep average
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="darkblue",linewidth=.7, alpha=.9)+
-  # Week CI
   stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,# \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
                geom="linerange", color="red", linewidth=2, alpha=.4)+
   theme_bw()+
@@ -816,31 +809,24 @@ sleep_data3 |>
 ```
 
 - Change the scale, not the data itself. 
+
 ```{r}
-#| echo: false
 #| error: false
 #| warning: false
 sleep_data3 |>
   ungroup() |>
   ggplot(aes(x=year_day, y=sleep_amount))+
-  # Sun up 
   geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
                           xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
-  # Darkness band
   geom_ribbon(mapping=aes(ymin=0, ymax=sunrise_n,
                           ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
   geom_ribbon(mapping=aes(ymin=24, ymax=sunset_n,
                           ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
-  # Mean line 
-  # # Mean line 
   stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
-  # Week wakeup average 
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="#208fff",linewidth=.7, alpha=.9)+
-  # week sleep average
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="darkblue",linewidth=.7, alpha=.9)+
-  # Week CI
   stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,# \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
                geom="linerange", color="red", linewidth=2, alpha=.4)+
   theme_bw()+
@@ -849,8 +835,6 @@ sleep_data3 |>
   scale_x_continuous(breaks = month_breaks,
                      labels = c(unique(sleep_data$date_m_name)))+
   labs(x="Weeks in months", y="Hours of sleep")
-
 ```
 
-
-3. Maybe use start sleep to wake time. (If scaled correctly?)
+In general this is a good idea, as it simplifies the process. In the above plot I used the square root (sqrt) transformation. However, when we do this we lose the details of the sleep amount. This type of transformation may better fit with sleep time and wake time. When it comes to the integrating sleep and wake times, they plot will lose fine details (as has been shown). However, one way to alleviate this is to make a scale that is detailed around the sleep time (~22) and wake time (~7). This require the creation of a scaling function which I am not familiar with. Hence, I will not integrate these changes. However, these changes could drastically improve the circle plot by being detailed around the relavant areas and condensing the area without relevant data (but relevant time). 
