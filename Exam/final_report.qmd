@@ -1,6 +1,8 @@
 ---
 title: "Exam in PSY-3006 - Indepdendent study: Visualization in R with ggplots2"
-format: pdf
+format:
+  html: default
+  pdf: default
 lang: en-GB
 editor: 
   markdown:
@@ -11,7 +13,7 @@ Candidate number: 22
 
 The repository is available at https://github.com/a-asen/PSY-3006-Visualization (as part of the course requirement). Word count is : ` INPUT WORD COUNT HERE, THX ` corresponding to approximately ` PAGES ` 
 
-{{<pagebreak>}}
+{{ < pagebreak > }}
 
 # Visualizing
 
@@ -29,73 +31,9 @@ In this course, I utilize the ggplot2 package in R to visualize data. The ggplot
 
 ## Circle visualization
 A typical plot has an x and y axis, often portrayed in a rectangular way. However, it is also possible to visualize data in a circular way. The circle plot changes the normal portrayal of the rectangular plot by *connecting back to itself*. Plotting in this way is not widespread because of obvious problems by visualizing in this way, as we will see throughout this exploration. However, there are some areas that can benefit by displaying information in a circular way. The best use-cases for circle plots are in data that naturally follow a circular pattern. This can, for instance, data over seasons, days and hours. All these aspects typically follow a recurring aspect. Indeed, Wilkinsons (2006, page 213) note that circle plots can be used for displaying seasonal data. In the first part, consisting of two exercises, of this course, I will visualizing data in circular ways.
-'
+
 ### Ex1: Seasonal sleep
 The first part relates to visualizing fictive seasonal data in a circular way. The data pertains to sleep data of a fictive participant that sleeps longer during the winter period and shorter during the summer period, with a lot of variation throughout the year. The exercise explores how to visualize the sleep data in a simple and effective manner. Through that exploration, I found that visualizing all the data points is a bit difficult throughout a year. It lead to problems in interpreting what data point was related to which day. However, by summarizing the data over each week and adding an error bar, we are able to visualize sleep in a more intelligible way. Although visualizing in a circular way can yield more pleasing figures, the loss of accurate data representation might not be worth it. Indeed, visualizing in a normal (rectangular way) yielded a greater overview of the distribution throughout the year. In this plot, we could easily see the changes in sleep amount over time. However, the relationship between seasons may be less intuitive. Hence, there are advantages and disadvantages by visualizing data through a season using circle plots. To further explore the utility of circle plots, I turn to visualizing the sleep time of participants in a sleep experiment. 
-
-#### Final plot 
-
-```{r}
-#| include
-library(tidyverse) # libs
-load("../ex1/data/sleep_data.rdata") # load data
-load("../ex1/data/daylight_df_Tromso_2022_improved.rdata")
-daylight_df
-
-sleep_data |>
-  select(ends_with("_time"), sleep_amount) |> 
-  cbind(daylight_df) -> sleep_data2
-```
-
-```{r}
-#| echo: false
-#| error: false
-#| warning: false
-reduction <- 4.8 
-additional_start <- 5
-sleep_data |> group_by(date_m) |> 
-  summarize(v = min(cumulative_days)) |> pull(v) -> month_breaks
-
-sleep_data2 |>
-  mutate(week = week(date),
-         week = ifelse(week==53, 52, week)) |>
-  group_by(week) |> 
-  mutate(week_mean = mean(sleep_amount),
-         week_num_mean = mean(year_day), 
-         week_sd = sd(sleep_amount),
-         sunrise_n = round(hour(sunrise)+minute(sunrise)/60+second(sunrise)/60/60, 2),
-         sunset_n = round(hour(sunset)+minute(sunset)/60+second(sunset)/60/60, 2),
-         sunrise_n = ifelse(sunrise_n>23, 0, sunrise_n),
-         sunrise_n = sunrise_n / reduction + additional_start,
-         sunset_n = sunset_n / reduction + additional_start) |> 
-         #sunset_n = ifelse(sunset_n==23, 0, sunset_n)) |> 
-  ungroup() |>
-  ggplot(aes(x=year_day, y=sleep_amount))+
-  # Sun up 
-  geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
-                          xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
-  # Dark up 
-  geom_ribbon(mapping=aes(ymin=0+additional_start, ymax=sunrise_n,
-                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
-  geom_ribbon(mapping=aes(ymin=24/reduction+additional_start, ymax=sunset_n,
-                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
-  # Mean line 
-  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
-  # Week average 
-  stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
-               color="red",linewidth=.7, alpha=.7)+
-  # Week CI
-  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_cl_normal,
-               geom="linerange", color="red", linewidth=2, alpha=.3)+
-  coord_polar(direction = -1, start = pi)+
-  theme_bw()+
-  scale_x_continuous(breaks = month_breaks,
-                     labels = c(unique(sleep_data$date_m_name)))+
-  scale_y_continuous(breaks=seq(0,24,1))+
-  labs(x="Weeks in months", y="Hours of sleep")
-```
-
-One recommended change was to make the "daylight" appear in relation to the time it appears and disappears. The plot may look a bit confusing, but it now reflects the time when the daylight appear and disappear. We can see that during the start and end of winter how daylight appear in the early morning. Moreover, we can see how it gradually increases, both by arising earlier and staying up for longer. However, the y axis does not reflect the hour in which there is daylight, but reflect the amount of sleep. This is unfortunate, but is meant as an aesthetic aspect of the graph.  
 
 
 ### Ex2: Sleep times
@@ -107,30 +45,18 @@ For the two first exercises (ex1, ex2), I focus on circular visualization. In th
 
 
 
-#### Final plot
- --!--
-
 
 ## Multivariate visualization
-For the two latter exercises (3, 4), I focus on multivariate visualization. Especially in relation to the joint distribution of two continuous variables of a categorical and a continuous variable.
+For the two latter exercises (ex3 and ex4), I focus on multivariate visualization.  Especially in relation to the joint distribution of two continuous variables of a categorical and a continuous variable.
 
 ### Ex3: Continuous-continuous
   - In this report I investigate distribution plots. More specifically joint distributions called "multivariate visualization". I utilize patchwork and ggside to explore how to plot individual distributions around a joint distribution space.
 
-#### Final plot 
- --!--
-  
+
 
 ### Ex4: Categorical-continuous
   - More meaningful splitting of distributions over certain responses 
 
-#### Final plot 
- --!--
 
 
-
-
-
-
-
-
+# Exercise reports: 
