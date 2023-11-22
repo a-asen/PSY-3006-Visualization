@@ -710,3 +710,154 @@ I think this plot is the best way to illustrate sleep variation throughout a yea
 ## Final notes
 Visualizing using circular plots may be used in intriguing ways to visualize data. Here I attempt to visualize fake sleep data through a year using circular plots. As well as visualizing various aspects to make the presentation of the data better. Through this investigation, I believe that a normal plot conveys the message most accurately and simply. On the other hand, the circular plot has a charm in its visualization of the change in daylight length. Moreover, circular plots seem to favour data that is summarized or contains fewer data points because it can quickly become cluttered, making it hard to understand the difference between each data point. 
 
+
+# Integrating feedback
+
+Improvement points: 
+- Use SE or quantiles
+- Visualize start and end of daylight (e.g., sun rise @8.07, sun set @18.30)
+
+```{r transformation}
+load("../ex1/data/sleep_data.rdata") # load data
+load("../ex1/data/daylight_df_Tromso_2022_improved.rdata") # load new daylight
+daylight_df
+
+sleep_data |>
+  select(ends_with("_time"), sleep_amount) |> 
+  cbind(daylight_df) -> sleep_data2
+
+sleep_data2 |>
+  mutate(week = week(date),
+         week = ifelse(week==53, 52, week)) |>
+  group_by(week) |> 
+  mutate(week_mean = mean(sleep_amount),
+         week_num_mean = mean(year_day), 
+         week_sd = sd(sleep_amount),
+         sunrise_n = round(hour(sunrise)+minute(sunrise)/60+second(sunrise)/60/60, 2),
+         sunset_n = round(hour(sunset)+minute(sunset)/60+second(sunset)/60/60, 2),
+         sunrise_n = ifelse(sunrise_n>23, 0, sunrise_n)) -> sleep_data3
+```
+
+In the figure below, I have added daylight rise and set for each day. Moreover I have used the standard error of the mean (SE) for the error bars.
+```{r}
+#| error: false
+#| warning: false
+reduction <- 4.8 
+additional_start <- 5
+
+sleep_data3 |>
+  mutate(sunrise_n = sunrise_n / reduction + additional_start,
+         sunset_n = sunset_n / reduction + additional_start) |> 
+         #sunset_n = ifelse(sunset_n==23, 0, sunset_n)) |> 
+  ungroup() |>
+  ggplot(aes(x=year_day, y=sleep_amount))+
+  # Sun up 
+  geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
+                          xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
+  # Darkness band
+  geom_ribbon(mapping=aes(ymin=0+additional_start, ymax=sunrise_n,
+                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+  geom_ribbon(mapping=aes(ymin=24/reduction+additional_start, ymax=sunset_n,
+                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+  # Mean line 
+  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
+  # Week average 
+  stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
+               color="red",linewidth=.7, alpha=.7)+
+  # Week CI
+  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,# \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
+               geom="linerange", color="red", linewidth=2, alpha=.4)+
+  coord_polar(direction = -1, start = pi)+
+  theme_bw()+
+  scale_x_continuous(breaks = month_breaks,
+                     labels = c(unique(sleep_data$date_m_name)))+
+  scale_y_continuous(breaks=seq(0,24,1))+
+  labs(x="Weeks in months", y="Hours of sleep")
+```
+
+One recommended change was to make the "daylight" appear in relation to the time it appears and disappears. The plot may look a bit confusing, but it now reflects the time when the daylight appear and disappear. We can see that during the start and end of winter how daylight appear in the early morning. Moreover, we can see how it gradually increases, both by arising earlier and staying up for longer. However, the y axis does not reflect the hour in which there is daylight, but reflect the amount of sleep. This is unfortunate, but is meant as an aesthetic aspect of the graph.  
+
+Compare to a normal plot: [Code hidden as only "geom_polar" is removed]
+
+```{r}
+#| echo: false
+#| error: false
+#| warning: false
+sleep_data3 |>
+  mutate(sunrise_n = sunrise_n / reduction + additional_start,
+       sunset_n = sunset_n / reduction + additional_start) |> 
+  ungroup() |>
+  ggplot(aes(x=year_day, y=sleep_amount))+
+  # Sun up 
+  geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
+                          xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
+  # Darkness band
+  geom_ribbon(mapping=aes(ymin=0+additional_start, ymax=sunrise_n,
+                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+  geom_ribbon(mapping=aes(ymin=24/reduction+additional_start, ymax=sunset_n,
+                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+  # Mean line 
+  # # Mean line 
+  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
+  # Week wakeup average 
+  stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
+               color="#208fff",linewidth=.7, alpha=.9)+
+  # week sleep average
+  stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
+               color="darkblue",linewidth=.7, alpha=.9)+
+  # Week CI
+  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,# \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
+               geom="linerange", color="red", linewidth=2, alpha=.4)+
+  theme_bw()+
+  scale_y_continuous(breaks=seq(0,24,1))+
+  scale_x_continuous(breaks = month_breaks,
+                     labels = c(unique(sleep_data$date_m_name)))+
+  labs(x="Weeks in months", y="Hours of sleep")
+```
+
+
+In relatioAs for the two points relating to changing the scale and adding sleep time and wake time.
+
+
+
+1. Change the scale, not the data itself. 
+2. For circle, do not use confidence interval (SE or quartiles).
+3. Maybe use start sleep to wake time. (If scaled correctly?)
+
+
+```{r}
+#| echo: false
+#| error: false
+#| warning: false
+sleep_data3 |>
+  mutate(sunrise_n = sunrise_n / reduction + additional_start,
+       sunset_n = sunset_n / reduction + additional_start) |> 
+  ungroup() |>
+  ggplot(aes(x=year_day, y=sleep_amount))+
+  # Sun up 
+  geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
+                          xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
+  # Darkness band
+  geom_ribbon(mapping=aes(ymin=0+additional_start, ymax=sunrise_n,
+                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+  geom_ribbon(mapping=aes(ymin=24/reduction+additional_start, ymax=sunset_n,
+                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+  # Mean line 
+  # # Mean line 
+  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
+  # Week wakeup average 
+  stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
+               color="#208fff",linewidth=.7, alpha=.9)+
+  # week sleep average
+  stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
+               color="darkblue",linewidth=.7, alpha=.9)+
+  # Week CI
+  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,# \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
+               geom="linerange", color="red", linewidth=2, alpha=.4)+
+  theme_bw()+
+  scale_y_continuous(breaks=seq(0,24,1))+
+  scale_x_continuous(breaks = month_breaks,
+                     labels = c(unique(sleep_data$date_m_name)))+
+  labs(x="Weeks in months", y="Hours of sleep")
+
+
