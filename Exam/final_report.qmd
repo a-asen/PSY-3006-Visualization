@@ -44,9 +44,14 @@ For the second exercise, I investigated how to visualize sleep times between two
 
 ## Multivariate visualization
 
-For the two latter exercises (ex3 and ex4), I focus on multivariate visualization. That is visualizing with multiple variables in one plot. The reason to do this is that you can gain a more intuitive understanding of how to variabbles relate.   Especially in relation to the joint distribution of two continuous variables of a categorical and a continuous variable.
+For the two latter exercises (ex3 and ex4), I focus on multivariate visualization. That is visualizing with multiple variables in one plot. The reason to do this is that you can gain a more intuitive understanding of how to variabbles relate. Moreover, it can indicate patterns and how two variables are related to each other. In this case, I have utilized data from a mind wandering (MW) study with the variables MW, approximate entropy (AE) and behavioural variability (BV). Mind wandering is reported on a 4-point Likert scale, lower values indicating more mind wandering. AE is a continuous score of the sequence randomness that participants generate, higher values indicate more randomness - in this case better. Furthermore, BV is also a continuous variable that relates to participants consistency in timing of responses in any sequence length. The first part (ex3) investigated visualization of two continuous variables, while second part (ex4) investigated a continuous and a categorical variable.
+
+
 
 ### Ex3: Continuous-continuous
+
+For this exercise I utilized AE and BV by visualizing their joint distribution. Firstly I investigating different ways of visualizing multiple distributions, and end up with a joint distribution using a 2d density plot. From how the variables are defined, we may expect that when BV is low, that AE is also high - at least that would be the perfect outcome. Then, as BV increase, AE should decrease. This would then related to on-task thoughts and off-task thoughts respectively. Through the investigation, no clear pattern emerged, but higher values of BV were typically found with lower values of AE, and higher values of AE were typically found with lower values of BV. Thus, visualizing these variables in a joint distribution does indicate that AE and BV exhibit the expected pattern, although this is not crystal clear. 
+
   - In this report I investigate distribution plots. More specifically joint distributions called "multivariate visualization". I utilize patchwork and ggside to explore how to plot individual distributions around a joint distribution space.
 
 
