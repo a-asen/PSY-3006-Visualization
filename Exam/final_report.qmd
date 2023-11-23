@@ -17,6 +17,7 @@ The repository is available at https://github.com/a-asen/PSY-3006-Visualization 
 
 Visualizing data is a key tool in understanding data and data analysis. It is a simple trick, but highly efficient for both researchers and laymen to understand what the data and data analysis is telling us. It can condense highly complicated data structures that could be impossible for any humans to understand. Modern technological advancement has made data visualizing easier and more capable. Moreover, the development of programs and software using open source (or derivates of it), makes it possible for anyone to learn data visualization. R is a prominent program for data analysis and data visualization. It is an open source program with a vast amount of packages. One of the most important packages for R is the "ggplot2" library. This is a package created to make data visualization follow simple rules of "grammer" for "visualizing". 
 
+
 ## The Grammer of graphics
 
 "The Grammer of Graphics" by Leland Wilkinson describes a framework for what a "grammer" of graphics should look like. The book gives a basic foundation for how to structure grammer to create graphs. Moreover, the book proposes various systems and how these systems relate to each other. The book do not rely on a specific coding language, since it is meant to give a basic understanding of how to structure the *grammer* for visualizing.
@@ -30,6 +31,7 @@ In this course, I utilize the ggplot2 package in R to visualize data. The ggplot
 ## Circle visualization
 
 A typical plot has an x and y axis, often portrayed in a rectangular way. However, it is also possible to visualize data in a circular way. The circle plot changes the normal portrayal of the rectangular plot by *connecting back to itself*. Plotting in this way is not widespread because of obvious problems by visualizing in this way, as we will see throughout this exploration. However, there are some areas that can benefit by displaying information in a circular way. The best use-cases for circle plots are in data that naturally follow a circular pattern. This can, for instance, data over seasons, days and hours. All these aspects typically follow a recurring aspect. Indeed, Wilkinsons (2006, page 213) note that circle plots can be used for displaying seasonal data. In the first part, consisting of two exercises, of this course, I will visualizing data in circular ways.
+
 
 ### Ex1: Seasonal sleep
 
@@ -47,18 +49,14 @@ For the second exercise, I investigated how to visualize sleep times between two
 For the two latter exercises (ex3 and ex4), I focus on multivariate visualization. That is visualizing with multiple variables in one plot. The reason to do this is that you can gain a more intuitive understanding of how to variabbles relate. Moreover, it can indicate patterns and how two variables are related to each other. In this case, I have utilized data from a mind wandering (MW) study with the variables MW, approximate entropy (AE) and behavioural variability (BV). Mind wandering is reported on a 4-point Likert scale, lower values indicating more mind wandering. AE is a continuous score of the sequence randomness that participants generate, higher values indicate more randomness - in this case better. Furthermore, BV is also a continuous variable that relates to participants consistency in timing of responses in any sequence length. The first part (ex3) investigated visualization of two continuous variables, while second part (ex4) investigated a continuous and a categorical variable.
 
 
-
 ### Ex3: Continuous-continuous
 
 For this exercise I utilized AE and BV by visualizing their joint distribution. Firstly I investigating different ways of visualizing multiple distributions, and end up with a joint distribution using a 2d density plot. From how the variables are defined, we may expect that when BV is low, that AE is also high - at least that would be the perfect outcome. Then, as BV increase, AE should decrease. This would then related to on-task thoughts and off-task thoughts respectively. Through the investigation, no clear pattern emerged, but higher values of BV were typically found with lower values of AE, and higher values of AE were typically found with lower values of BV. Thus, visualizing these variables in a joint distribution does indicate that AE and BV exhibit the expected pattern, although this is not crystal clear. 
 
-  - In this report I investigate distribution plots. More specifically joint distributions called "multivariate visualization". I utilize patchwork and ggside to explore how to plot individual distributions around a joint distribution space.
-
-
 
 ### Ex4: Categorical-continuous
-  - More meaningful splitting of distributions over certain responses 
 
+For the last visualization, I investigated how AE were distributed over different MW responses. This might be a more meaningful split, as we expect higher AE score when participants report to be on-task as compared to when they are off-task. The visualization is slightly different from the joint distribution of the previous exercise. In this exercise, I also started by investigating different ways of visualizing and settled on the an overlapping distribution by using *ggridges*. Ggridges makes it easy to visualize distributions over categorical values and closely overlapping them - which was a problem otherwise. The last AE figure did not obviously indicate that AE was increased during on-task reports (3-4), but seemed to have slightly higher scores. Lastly, I quickly checked the distribution of BV over MW, and BV over mind blanking (MB). Mind blanking is reported on a 4-point Likert scale relating to whether participants mind wandered about content (4) or nothing (blank - 1).
 
 
 # Exercise reports: 
