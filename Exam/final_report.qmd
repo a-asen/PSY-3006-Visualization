@@ -28,24 +28,23 @@ In this course, I utilize the ggplot2 package in R to visualize data. The ggplot
 
 
 ## Circle visualization
+
 A typical plot has an x and y axis, often portrayed in a rectangular way. However, it is also possible to visualize data in a circular way. The circle plot changes the normal portrayal of the rectangular plot by *connecting back to itself*. Plotting in this way is not widespread because of obvious problems by visualizing in this way, as we will see throughout this exploration. However, there are some areas that can benefit by displaying information in a circular way. The best use-cases for circle plots are in data that naturally follow a circular pattern. This can, for instance, data over seasons, days and hours. All these aspects typically follow a recurring aspect. Indeed, Wilkinsons (2006, page 213) note that circle plots can be used for displaying seasonal data. In the first part, consisting of two exercises, of this course, I will visualizing data in circular ways.
 
 ### Ex1: Seasonal sleep
+
 The first part relates to visualizing fictive seasonal data in a circular way. The data pertains to sleep data of a fictive participant that sleeps longer during the winter period and shorter during the summer period, with a lot of variation throughout the year. The exercise explores how to visualize the sleep data in a simple and effective manner. Through that exploration, I found that visualizing all the data points is a bit difficult throughout a year. It lead to problems in interpreting what data point was related to which day. However, by summarizing the data over each week and adding an error bar, we are able to visualize sleep in a more intelligible way. Although visualizing in a circular way can yield more pleasing figures, the loss of accurate data representation might not be worth it. Indeed, visualizing in a normal (rectangular way) yielded a greater overview of the distribution throughout the year. In this plot, we could easily see the changes in sleep amount over time. However, the relationship between seasons may be less intuitive. Hence, there are advantages and disadvantages by visualizing data through a season using circle plots. To further explore the utility of circle plots, I turn to visualizing the sleep time of participants in a sleep experiment. 
 
 
 ### Ex2: Sleep times
 
-For the second exercise, I tried to visualize sleep time between two conditions. In one of the conditions participants were sleep deprived, while in the other they slept normally. For the sleep deprivation condition, participants were asked to go to sleep 3 hours later than when they typically go to bed (i.e., under normal sleep). 
-
-For the two first exercises (ex1, ex2), I focus on circular visualization. In the first exercise I start by visualizing sleep data throughout a year. The data for this exercise has been generate (see "src" scripts). In the second exercise, visualize sleep data from an experiment. There, I try to indicate the difference between two sleep conditions - one sleep deprived and one with normal sleep. 
-
-
+For the second exercise, I investigated how to visualize sleep times between two conditions. In one of the conditions participants were sleep deprived, while in the other they slept normally. For the sleep deprivation condition, participants were asked to go to sleep 3 hours later than when they typically go to bed (i.e., under normal sleep). From this, I expected the sleep times to be obviously different between the conditions. The idea was to visualize sleep time in relation to the hours of a circle, pertaining to a standard 12 hour clock. The height of the points related to the number of hours slept. In this way, we should see those who went to sleep during the normal sleep condition to go to sleep earlier and have higher values - meaning they slept longer. Furthermore, I investigated how it would be to visualize on a 24 hour clock. Both have some advantages and disadvantages, but I ended up using a 24 hour clock split by 12 hours, from 18 to 6. This was because the relevant time window was within that time, and would correspond to a 12 hour clock in a meaningful manner (24 was at the top). Nevertheless, some suggestions was to use a am/pm split, and possibly include wake time. As for the latter, I did investigate a 24 hour clock including wake times, which has some merit, but led to less details in the sleep times. Moreover, both the relevant informative peaces are given by sleep time and sleep length - you can calculate wake times. Nevertheless, seeing that wake time is not significantly different between the conditions is easier than interpreting it from the sleep times. 
 
 
 
 ## Multivariate visualization
-For the two latter exercises (ex3 and ex4), I focus on multivariate visualization.  Especially in relation to the joint distribution of two continuous variables of a categorical and a continuous variable.
+
+For the two latter exercises (ex3 and ex4), I focus on multivariate visualization. That is visualizing with multiple variables in one plot. The reason to do this is that you can gain a more intuitive understanding of how to variabbles relate.   Especially in relation to the joint distribution of two continuous variables of a categorical and a continuous variable.
 
 ### Ex3: Continuous-continuous
   - In this report I investigate distribution plots. More specifically joint distributions called "multivariate visualization". I utilize patchwork and ggside to explore how to plot individual distributions around a joint distribution space.
