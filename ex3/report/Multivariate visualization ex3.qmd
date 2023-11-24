@@ -5,6 +5,7 @@ lang: en-GB
 editor: 
   markdown:
       wrap: 62
+# Approximately 2000 words
 ---
 
 ```{r start libs}
