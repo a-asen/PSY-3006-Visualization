@@ -5,14 +5,17 @@ lang: en-GB
 editor: 
   markdown:
       wrap: 72
+# Approximately 1600 words
 ---
 
 
 Candidate number: 22
 
-The repository is available at https://github.com/a-asen/PSY-3006-Visualization (as part of the course requirement). Word count is : ` INPUT WORD COUNT HERE, THX ` corresponding to approximately ` PAGES ` 
+The repository is available at https://github.com/a-asen/PSY-3006-Visualization (as part of the course requirement). Approximately 11100 words, corresponding to about 25 pages of text.
+
 
 {{< pagebreak >}}
+
 
 # Visualizing
 
