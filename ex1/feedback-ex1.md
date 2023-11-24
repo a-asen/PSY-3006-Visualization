@@ -6,6 +6,8 @@ Supervisor feedback:
   - E.g., sun rise @8.07, sun set @18.30 
 5. Compare to normal plot.
 6. use summary 
+7. Save objects and build on them, instead of full coding everything
+  - Makes it easier to see what is being added 
 
 
 Self:

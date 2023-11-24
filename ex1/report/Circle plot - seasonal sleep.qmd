@@ -1,10 +1,11 @@
 ---
 title: "Circle Plot: Seasonal sleep"
-format: docx
+format: pdf
 lang: en-GB
 editor: 
   markdown:
       wrap: 62
+# Approximately 3500 words
 ---
 ```{r l}
 #| include: false
@@ -708,7 +709,7 @@ I think this plot is the best way to illustrate sleep variation throughout a yea
 
 
 ## Final notes
-Visualizing using circular plots may be used in intriguing ways to visualize data. Here I attempt to visualize fake sleep data through a year using circular plots. As well as visualizing various aspects to make the presentation of the data better. Through this investigation, I believe that a normal plot conveys the message most accurately and simply. On the other hand, the circular plot has a charm in its visualization of the change in daylight length. Moreover, circular plots seem to favour data that is summarized or contains fewer data points because it can quickly become cluttered, making it hard to understand the difference between each data point. 
+Visualizing using circular plots may be used in intriguing ways to visualize data. Here I attempt to visualize fake sleep data through a year using circular plots. As well as visualizing various aspects to make the presentation of the data better. Through this investigation, I believe that a normal plot conveys the message most accurately and simply. On the other hand, the circular plot has a charm in its visualization of the change in daylight length. Moreover, circular plots seem to favour data that is summarized or contains fewer data points because it can quickly become cluttered, making it challenging to understand the difference between each data point. 
 
 
 # Integrating feedback
@@ -718,6 +719,8 @@ Improvement points:
 - Visualize start and end of daylight (e.g., sun rise @8.07, sun set @18.30)
 
 ```{r transformation}
+#| message: false
+#| output: false
 load("../data/sleep_data.rdata") # load data
 load("../data/daylight_df_Tromso_2022_improved.rdata") # load new daylight
 daylight_df
@@ -733,12 +736,14 @@ sleep_data2 |>
   mutate(week_mean = mean(sleep_amount),
          week_num_mean = mean(year_day), 
          week_sd = sd(sleep_amount),
-         sunrise_n = round(hour(sunrise)+minute(sunrise)/60+second(sunrise)/60/60, 2),
-         sunset_n = round(hour(sunset)+minute(sunset)/60+second(sunset)/60/60, 2),
+         sunrise_n = round(hour(sunrise)+minute(sunrise)/60+
+                             second(sunrise)/60/60, 2),
+         sunset_n = round(hour(sunset)+minute(sunset)/60+
+                            second(sunset)/60/60, 2),
          sunrise_n = ifelse(sunrise_n>23, 0, sunrise_n)) -> sleep_data3
 ```
 
-In the figure below, I have added daylight rise and set for each day. Moreover I have used the standard error of the mean (SE) for the error bars.
+In the figure below, I have added daylight rise and set for each day. Moreover, I have used the standard error of the mean (SE) for the error bars.
 ```{r}
 #| error: false
 #| warning: false
@@ -753,19 +758,24 @@ sleep_data3 |>
   ggplot(aes(x=year_day, y=sleep_amount))+
   # Sun up 
   geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
-                          xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
+                          xmin=year_day, xmax=year_day), 
+              fill="yellow", alpha = .5)+
   # Darkness band
   geom_ribbon(mapping=aes(ymin=0+additional_start, ymax=sunrise_n,
-                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+                          ymax=year_day, xmax=year_day), 
+              fill="black", alpha=.3)+
   geom_ribbon(mapping=aes(ymin=24/reduction+additional_start, ymax=sunset_n,
-                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+                          ymax=year_day, xmax=year_day), 
+              fill="black", alpha=.3)+
   # Mean line 
-  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
+  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", 
+              formula=y~x, method="loess")+
   # Week average 
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="red",linewidth=.7, alpha=.7)+
   # Week CI
-  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,# \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
+  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,
+               # \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
                geom="linerange", color="red", linewidth=2, alpha=.4)+
   coord_polar(direction = -1, start = pi)+
   theme_bw()+
@@ -775,7 +785,7 @@ sleep_data3 |>
   labs(x="Weeks in months", y="Hours of sleep")
 ```
 
-One recommended change was to make the "daylight" appear in relation to the time it appears and disappears. The plot may look a bit confusing, but it now reflects the time when the daylight appear and disappear. We can see that during the start and end of winter how daylight appear in the early morning. Moreover, we can see how it gradually increases, both by arising earlier and staying up for longer. However, the y axis does not reflect the hour in which there is daylight, but reflect the amount of sleep. This is unfortunate, but is meant as an aesthetic aspect of the graph.  
+One recommended change was to make the "daylight" appear in relation to the time it appears and disappears. The plot may look a bit confusing, but it now reflects the time when the daylight appears and disappears. We can see that during the start and end of winter how daylight appears in the early morning. Moreover, we can see how it gradually increases, both by arising earlier and staying up for longer. However, the y-axis does not reflect the hour in which there is daylight, but reflects the amount of sleep. This is unfortunate, but is meant as an aesthetic aspect of the graph.  
 
 Non-circular comparison: [Code hidden as only "geom_polar" is removed]
 
@@ -789,17 +799,22 @@ sleep_data3 |>
   ungroup() |>
   ggplot(aes(x=year_day, y=sleep_amount))+
   geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
-                          xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
+                          xmin=year_day, xmax=year_day), 
+              fill="yellow", alpha = .5)+
   geom_ribbon(mapping=aes(ymin=0+additional_start, ymax=sunrise_n,
-                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+                          ymax=year_day, xmax=year_day), 
+              fill="black", alpha=.3)+
   geom_ribbon(mapping=aes(ymin=24/reduction+additional_start, ymax=sunset_n,
-                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
-  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
+                          ymax=year_day, xmax=year_day), 
+              fill="black", alpha=.3)+
+  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", 
+              ormula=y~x, method="loess")+
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="#208fff",linewidth=.7, alpha=.9)+
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="darkblue",linewidth=.7, alpha=.9)+
-  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,# \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
+  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,
+               # \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
                geom="linerange", color="red", linewidth=2, alpha=.4)+
   theme_bw()+
   scale_y_continuous(breaks=seq(0,24,1))+
@@ -817,17 +832,22 @@ sleep_data3 |>
   ungroup() |>
   ggplot(aes(x=year_day, y=sleep_amount))+
   geom_ribbon(mapping=aes(ymin=sunrise_n, ymax=sunset_n,
-                          xmin=year_day, xmax=year_day), fill="yellow", alpha = .5)+
+                          xmin=year_day, xmax=year_day), 
+              fill="yellow", alpha = .5)+
   geom_ribbon(mapping=aes(ymin=0, ymax=sunrise_n,
-                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
+                          ymax=year_day, xmax=year_day), 
+              fill="black", alpha=.3)+
   geom_ribbon(mapping=aes(ymin=24, ymax=sunset_n,
-                          ymax=year_day, xmax=year_day), fill="black", alpha=.3)+
-  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", formula=y~x, method="loess")+
+                          ymax=year_day, xmax=year_day), 
+              fill="black", alpha=.3)+
+  stat_smooth(geom="line", alpha=.5, linewidth=1, color="#208fff", 
+              formula=y~x, method="loess")+
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="#208fff",linewidth=.7, alpha=.9)+
   stat_summary(mapping=aes(x=week_num_mean), fun=mean, geom="line", 
                color="darkblue",linewidth=.7, alpha=.9)+
-  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,# \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
+  stat_summary(mapping=aes(x=week_num_mean), fun.data=mean_se,
+               # \(x) c(ymin=quantile(x)[[2]], ymax=quantile(x)[[3]]),
                geom="linerange", color="red", linewidth=2, alpha=.4)+
   theme_bw()+
     coord_polar(direction = -1, start = pi)+
@@ -837,4 +857,4 @@ sleep_data3 |>
   labs(x="Weeks in months", y="Hours of sleep")
 ```
 
-In general this is a good idea, as it simplifies the process. In the above plot I used the square root (sqrt) transformation. However, when we do this we lose the details of the sleep amount. This type of transformation may better fit with sleep time and wake time. When it comes to the integrating sleep and wake times, they plot will lose fine details (as has been shown). However, one way to alleviate this is to make a scale that is detailed around the sleep time (~22) and wake time (~7). This require the creation of a scaling function which I am not familiar with. Hence, I will not integrate these changes. However, these changes could drastically improve the circle plot by being detailed around the relavant areas and condensing the area without relevant data (but relevant time). 
+In general, this is a good idea, as it simplifies the process. In the above plot, I used the square root (sqrt) transformation. However, when we do this, we lose the details of the sleep amount. This type of transformation may better fit with sleep time and wake time. When it comes to integrating sleep and wake times, the plot will lose fine details (as has been shown). However, one way to alleviate this is to make a scale that is detailed around the sleep time (~22) and wake time (~7). This requires the creation of a scaling function, which I am not familiar with. Hence, I will not integrate these changes. However, these changes could drastically improve the circle plot by being detailed around the relevant areas and condensing the area without relevant data (but relevant time). 
