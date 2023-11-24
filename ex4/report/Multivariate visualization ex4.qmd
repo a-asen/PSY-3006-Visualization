@@ -5,6 +5,7 @@ lang: en-GB
 editor: 
   markdown:
       wrap: 62
+# approximately 2000 words 
 ---
 
 ```{r start libs}
@@ -26,14 +27,14 @@ da_pro(mw_data, nback=25) -> trans_mw
 #| out-width: 650px
 #| out-height: 650px
 trans_mw |> 
-  ggplot(aes(x=zlogbv, y=probe1, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
-  suppressMessages( geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T, 
+  ggplot(aes(x = zlogapen, y = probe2, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
+  geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T, 
                                quantile_lines = T,
-                               vline_color = "lightblue") )+ 
+                               vline_color = "lightblue")+ 
   scale_fill_viridis_c(name = "Tail probability", option = "inferno")+
   theme_minimal()+
-  scale_x_continuous(breaks=seq(-8,8,1))+
-  labs(y = "Mind wandering category", x = "Standardized BV score")
+  scale_x_continuous(breaks = seq(-8,8,1))+
+  labs(y = "Mind blanking category", x = "Standardized AE score")
 ```
 
 
