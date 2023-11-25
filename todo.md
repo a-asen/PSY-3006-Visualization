@@ -81,13 +81,13 @@
 - [x] polish exam introduction 
 - [x] Use GFM (github markdown) 
   - [x] ex1 markdown gen. 
-    - [ ] github link
+    - [x] github link
   - [x] ex2 markdown gen.
-    - [ ] github link
+    - [x] github link
   - [x] ex3 markdown gen.
-    - [ ] github link
+    - [x] github link
   - [x] ex4 markdown gen.
-    - [ ] github link
+    - [x] github link
 - [ ] Publish *release* as a *"tag"* before exam 
   - (ensures that changes AFTER that point does not count as the exam)
 
