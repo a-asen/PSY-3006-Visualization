@@ -1,8 +1,6 @@
 # Circle Plot: Seasonal sleep
 
-<img
-src="Circle-plot---seasonal-sleep_files/figure-commonmark/start-1.png"
-width="650" height="500" />
+![](Circle-plot---seasonal-sleep_files/figure-commonmark/start-1.png)
 
 
 

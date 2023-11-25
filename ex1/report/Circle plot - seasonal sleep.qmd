@@ -17,8 +17,6 @@ load("../data/sleep_data.rdata") # load data
 #| echo: false
 #| message: false
 #| warning: false
-#| out-width: 650px
-#| out-height: 500px
 #| fig-dpi: 400
 reduction <- 4.8 
 additional_start <- 5
