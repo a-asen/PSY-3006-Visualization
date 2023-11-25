@@ -141,8 +141,6 @@ sleep |>
 ```{r p..}
 #| echo: false
 #| warning: false
-#| out-width: 650
-#| out-height: 650
 #| fig-dpi: 300
 s_sleep2 |>
   mutate(sleepdep=as.character(sleepdep)) |>
@@ -199,8 +197,6 @@ min(trans_mw$zlogbv) -> BV_min
 #| echo: false
 #| message: false
 #| warning: false
-#| out-width: 650px
-#| out-height: 700px
 trans_mw |> 
   ggplot(aes(x=zlogbv, y=zlogapen)) +
   geom_density_2d_filled()+
@@ -256,8 +252,6 @@ da_pro(mw_data, nback=25) -> trans_mw
 #| echo: false
 #| message: false
 #| warning: false
-#| out-width: 650px
-#| out-height: 650px
 trans_mw |> 
   ggplot(aes(x=zlogapen, y=probe1, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
   geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T, 
