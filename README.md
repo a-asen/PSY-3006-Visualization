@@ -1,3 +1,5 @@
+Exam can be found [here]()
+
 # Visualization with ggplot2
 
 This is a repository for a data visualization course at the UiT - The Arctic University of Norway in R. The course is taken as an 'independent study' course ([PSY-3006 - Independent study](https://en.uit.no/education/courses/course?p_document_id=805702&semester=H)) for my Masters in Psychology. The focus of the course is to learn to use [ggplot2](https://ggplot2.tidyverse.org/) to effectively visualize data. Similarly, data transformations related to visualizing data, as well as commenting on coding progress will be done. 
