@@ -4,9 +4,10 @@ Candidate number: 21
 
 The repository is available at
 https://github.com/a-asen/PSY-3006-Visualization (as part of the course
-requirement). The code related to the exam will be published as a
-“release” using the tag “exam”. The exam is around 11100 words, which
-corresponds to about 25 pages of text.
+requirement). The repository will be published as a “release” with the
+tag “exam”, such that no changes to the exam delivery can take place.
+The exam deadline is 1st of December 2023. The exam is around 11100
+words, which corresponds to about 25 pages of text.
 
 
 
