@@ -1,13 +1,12 @@
 ---
 title: "Circle Plot: Sleep times"
-format: pdf
+format: gfm
 lang: en-GB
 editor: 
   markdown:
       wrap: 62
 # Approximately 2300 words
 ---
-
 ```{r t..}
 #| include: false
 library(tidyverse)
@@ -40,8 +39,8 @@ sleep |>
 ```{r p..}
 #| echo: false
 #| warning: false
-#| out-width: 650
-#| out-height: 650
+#| out-width: 650px
+#| out-height: 500px
 #| fig-dpi: 300
 s_sleep2 |>
   mutate(sleepdep=as.character(sleepdep)) |>
@@ -77,7 +76,6 @@ library(tidyverse)
 # loader script
 list.files("../data", pattern=".rdata", full.names = T,ignore.case = T) -> files
 for(x in files){load(x)}
-
 ```
 
 Before we start, some minor changes to the data frame will be done to make the plots look better and make them easier to work with. 
