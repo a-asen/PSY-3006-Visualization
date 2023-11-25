@@ -60,7 +60,8 @@ For this exercise, I utilized AE and BV by visualizing their joint distribution.
 
 ### Ex4: Categorical-continuous
 
-For the last visualization, I investigated how AE were distributed over different MW responses. This might be a more meaningful split, as we expect higher AE scores when participants report to be on-task as compared to when they are off-task. The visualization is slightly different from the joint distribution of the previous exercise. In this exercise, I also started by investigating different ways of visualizing and settled on the overlapping distribution by using *ggridges*. Ggridges makes it easy to visualize distributions over categorical values and closely overlapping them - which was a problem otherwise. The last AE figure did not obviously indicate that AE was increased during on-task reports (3-4), but seemed to have slightly higher scores. Lastly, I quickly checked the distribution of BV over MW, and BV over mind blanking (MB). Mind blanking is reported on a 4-point Likert scale relating to whether participants' mind wandered about content (4) or nothing (blank - 1).
+For the last visualization, I investigated how AE were distributed over differenmt MW responses. This might be a more meaningful split, as we expect higher AE scores when participants report to be on-task as compared to when they are off-task. The visualization is slightly different from the joint distribution of the previous exercise. In this exercise, I also started by investigating different ways of visualizing and settled on the overlapping distribution by using *ggridges*. Ggridges makes it easy to visualize distributions over categorical values and closely overlapping them - which was a problem otherwise. The last AE figure did not obviously indicate that AE was increased during on-task reports (3-4), but seemed to have slightly higher scores. Lastly, I quickly checked the distribution of BV over MW, and BV over mind blanking (MB). Mind blanking is reported on a 4-point Likert scale relating to whether participants' mind wandered about content (4) or nothing (blank - 1).
 
 
-# Exercise reports: 
+
+

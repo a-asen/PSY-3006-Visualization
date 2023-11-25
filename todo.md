@@ -103,6 +103,6 @@ disk drives), astronomical time (daily, monthly, annual), periodic waveforms
 - Publish before exam. 
 - polish exam. 
 - Exam release 
-
+- [ ] Look into ex3 file
 
 
