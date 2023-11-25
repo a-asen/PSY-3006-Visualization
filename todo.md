@@ -59,7 +59,6 @@
   - [x] Fixed cell parameter
 
 
-
 ## Exam 
 - [x] Include Github link
 - [x] Include word count (~20 pages?)
@@ -74,33 +73,22 @@
     - [x] Improved acquire daylight script
     - [x] Incorporate feedback in a final plot
   - [x] ex2 intro
-    - QUOTE: The polar transformation is useful whenever data lend themselves to circular arrangements. This includes
-directional data (vector wind, compass bearings), rotational data (defects on
-disk drives), astronomical time (daily, monthly, annual), periodic waveforms
-(radio signals), and proportions (the humble pie chart).  GG book (p.215)
-
   Multivariate: 
   - [x] ex3 intro
   - [x] ex4 intro
 
-- Include full report at the end: 
+- Polish and finish
 - [x] polish exam introduction 
-
-- [ ] Use GFM (github markdown) 
-  - [ ] ex1 link
+- [x] Use GFM (github markdown) 
+  - [x] ex1 markdown gen. 
     - [ ] github link
-  - [ ] ex2 report
+  - [x] ex2 markdown gen.
     - [ ] github link
-  - [ ] ex3 report
+  - [x] ex3 markdown gen.
     - [ ] github link
-  - [ ] ex4 report
+  - [x] ex4 markdown gen.
     - [ ] github link
- 
-LAST AND IMPORTANT!   
-- [ ] Publish as a "tag" before exam (ensures that changes AFTER that point does not count as the exam)
-- Exam release 
-
-
-- [ ] Look into ex3 file
+- [ ] Publish *release* as a *"tag"* before exam 
+  - (ensures that changes AFTER that point does not count as the exam)
 
 
