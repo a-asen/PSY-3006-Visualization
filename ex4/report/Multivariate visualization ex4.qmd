@@ -1,6 +1,6 @@
 ---
 title: "Multivariate visualization: categorical-continuous variable"
-format: pdf
+format: gfm
 lang: en-GB
 editor: 
   markdown:
@@ -28,7 +28,7 @@ da_pro(mw_data, nback=25) -> trans_mw
 #| message: false
 #| warning: false
 #| out-width: 650px
-#| out-height: 650px
+#| out-height: 500px
 trans_mw |> 
   ggplot(aes(x=zlogapen, y=probe1, fill = 0.5 - abs(0.5 - after_stat(ecdf))))+
   geom_density_ridges_gradient(scale = 1.3, calc_ecdf = T, 
