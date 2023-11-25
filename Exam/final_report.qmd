@@ -1,6 +1,6 @@
 ---
 title: "PSY-3006 - Indepdendent study: Visualization in R with ggplots2"
-format: pdf
+format: gfm
 lang: en-GB
 editor: 
   markdown:
