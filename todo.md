@@ -1,15 +1,14 @@
 ## General
--   [/] README
+-   [x] README
     -   [x] Add information
 -   [x] Add to-do file
 
 ## Reading
 -   [x] Grammer of Graphics:
     -   [x] Applied statistics using R: a Guide for the Social Sciences - Chapter 5
-    -   [/] The Grammer of Graphics  [50%]
+    -   [x] The Grammer of Graphics 
 -   [x] Visual display of quantitative data
-    -   [ ] Reflection 
--   [ ] Github markdown (different from normal markdown)
+-   [x] Github markdown (different from normal markdown)
 -   [x] [Quarto (report)](https://quarto.org/)
 
 
@@ -46,7 +45,6 @@
   - [x] Joint distribution
     - [x] Joint distribution with individual distribution
   - [x] Fixed cell parameter
-- [ ] Add Feedback
 
 ## Exercsise 4; Multivariate visualization - categorical-continous
 - [x] Data: Mind wandering (same as ex3)
@@ -59,50 +57,50 @@
   - [x] Different variable (BV)
   - [x] Different dataset (iris)
   - [x] Fixed cell parameter
-- [ ] Add Feedback
 
 
 
 ## Exam 
 - [x] Include Github link
-- [/] Include word count (~20 pages?)
-- [ ] General introduction
-  - [ ] visualization in general
-  - [ ] ggplot
-    - [ ] Benefits with ggplots
-- [ ] Current task/issue
+- [x] Include word count (~20 pages?)
+- [x] General introduction
+  - [x] visualization in general
+  - [x] ggplot
+    - x Benefits with ggplots
+  - [x] Git / github
+  - [x] Quarto
   Circles:
-  - [ ] ex1 intro
+  - [x] ex1 intro
     - [x] Improved acquire daylight script
-    - [ ] Incorporate feedback in a final plot
-  - [ ] ex2 intro
-    - [ ] Data was prepared ???!!!!
-    - [ ] Incorporate feedback in a final plot
+    - [x] Incorporate feedback in a final plot
+  - [x] ex2 intro
     - QUOTE: The polar transformation is useful whenever data lend themselves to circular arrangements. This includes
 directional data (vector wind, compass bearings), rotational data (defects on
 disk drives), astronomical time (daily, monthly, annual), periodic waveforms
 (radio signals), and proportions (the humble pie chart).  GG book (p.215)
 
   Multivariate: 
-  - [ ] ex3 intro
-    - [ ] Incorporate feedback in a final plot
-  - [ ] ex4 intro
-    - [ ] Incorporate feedback in a final plot
+  - [x] ex3 intro
+  - [x] ex4 intro
 
 - Include full report at the end: 
-  - [ ] ex1 report
-  - [ ] ex2 report
-  - [ ] ex3 report
-  - [ ] ex4 report
- 
-  
+- [x] polish exam introduction 
 
-- Add links on Github page. 
-- Use GFM (github markdown) 
-  - Use github links to easy look 
-- Publish before exam. 
-- polish exam. 
+- [ ] Use GFM (github markdown) 
+  - [ ] ex1 link
+    - [ ] github link
+  - [ ] ex2 report
+    - [ ] github link
+  - [ ] ex3 report
+    - [ ] github link
+  - [ ] ex4 report
+    - [ ] github link
+ 
+LAST AND IMPORTANT!   
+- [ ] Publish as a "tag" before exam (ensures that changes AFTER that point does not count as the exam)
 - Exam release 
+
+
 - [ ] Look into ex3 file
 
 
