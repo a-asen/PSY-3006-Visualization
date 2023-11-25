@@ -88,6 +88,7 @@
     - [x] github link
   - [x] ex4 markdown gen.
     - [x] github link
+- [x] Add license
 - [ ] Publish *release* as a *"tag"* before exam 
   - (ensures that changes AFTER that point does not count as the exam)
 
