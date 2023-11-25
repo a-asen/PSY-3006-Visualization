@@ -1,6 +1,6 @@
 # PSY-3006 - Indepdendent study: Visualization in R with ggplots2
 
-Candidate number: 22
+Candidate number: 21
 
 The repository is available at
 https://github.com/a-asen/PSY-3006-Visualization (as part of the course
@@ -93,7 +93,9 @@ in adopting circle plots for season-based data visualization. To delve
 deeper into the efficacy of circle plots, the focus shifts to
 visualizing the sleep times of participants in a sleep experiment.
 
-The report for exercise 1 can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex1/report/Circle%20plot%20-%20seasonal%20sleep.md). Final figure can be seen below:
+The report for exercise 1 can be found
+[here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex1/report/Circle%20plot%20-%20seasonal%20sleep.md).
+Final figure is displayed below:
 
 ![](final_report_files/figure-commonmark/unnamed-chunk-2-1.png)
 
@@ -123,7 +125,9 @@ significant differences between conditions. This simplification enhances
 the interpretability of results and underscores the rationale for
 focusing on sleep times rather than wake times.
 
-The report for exercise 2 can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex2/report/Circle%20plot%20-%20sleep%20times.md). Final figure can be seen below:
+The report for exercise 2 can be found
+[here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex2/report/Circle%20plot%20-%20sleep%20times.md).
+Final figure is displayed below:
 
 ![](final_report_files/figure-commonmark/unnamed-chunk-4-1.png)
 
@@ -172,7 +176,9 @@ crystal clear, the joint distribution visualization indicates a
 suggestive pattern in the expected direction, reinforcing the connection
 between AE and BV.
 
-The report for exercise 3 can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex3/report/Multivariate%20visualization%20ex3.md). Final figure can be seen below:
+The report for exercise 3 can be found
+[here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex3/report/Multivariate%20visualization%20ex3.md).
+Final figure is displayed below:
 
 ![](final_report_files/figure-commonmark/unnamed-chunk-6-1.png)
 
@@ -212,6 +218,8 @@ aligning with what we might have expected. Subsequently, I delved into
 the relationship of other variables, such as BV and MB. However, none of
 these yielded particular different distributions.
 
-The report for exercise 4 can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex4/report/Multivariate%20visualization%20ex4.md). Final figure can be seen below:
+The report for exercise 4 can be found
+[here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex4/report/Multivariate%20visualization%20ex4.md).
+Final figure is displayed below:
 
 ![](final_report_files/figure-commonmark/start%20plot-1.png)

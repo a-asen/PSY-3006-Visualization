@@ -8,7 +8,7 @@ editor:
 # Approximately 1600 words
 ---
 
-Candidate number: 22
+Candidate number: 21
 
 The repository is available at https://github.com/a-asen/PSY-3006-Visualization (as part of the course requirement). The code related to the exam will be published as a "release" using the tag "exam". The exam is around 11100 words, which corresponds to about 25 pages of text.
 
@@ -42,7 +42,8 @@ Circular visualization deviates from the conventional rectangular depiction of d
 
 The initial part centres on circular visualization of simulated seasonal sleep data. This dataset represents the sleep patterns of an imaginary participant, showcasing longer sleep durations during winter and shorter durations in summer, with considerable variability throughout the year. The exercise aims to uncover effective methods for visualizing this intricate sleep data. Upon exploration, visualizing every data point throughout the year proves challenging, introducing difficulties in associating each data point with a specific day. To enhance interpretability, the data is aggregated weekly, and an error bar is introduced, resulting in a more coherent visualization. While circular visualization offers aesthetically pleasing figures, the compromise on accurate data representation raises considerations. Comparatively, a conventional rectangular plot provides a comprehensive overview of sleep distribution throughout the year, making it easier to discern changes in sleep patterns over time. Although this format may be less intuitive for capturing seasonal relationships, it highlights the trade-offs inherent in adopting circle plots for season-based data visualization. To delve deeper into the efficacy of circle plots, the focus shifts to visualizing the sleep times of participants in a sleep experiment.
 
-[Exercise 1 report]().
+The report for exercise 1 can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex1/report/Circle%20plot%20-%20seasonal%20sleep.md). Final figure is displayed below:
+
 ```{r}
 #| include: false
 library(tidyverse)
@@ -117,7 +118,8 @@ In the second exercise, the focus shifts to visualizing sleep times under two di
 
 The exploration extended to considering a 24-hour clock for visualization, ultimately opting for a split by 12 hours, from 18 to 6. This choice aligned with the relevant time window and provided meaningful correspondence to a 12-hour clock (with 24 positioned at the top). Although alternative suggestions, such as an am/pm split and the inclusion of wake time, were considered, they presented trade-offs. An investigation into a 24-hour clock, including wake times, offered fewer details in sleep times. Importantly, the key informative factors remained sleep time and sleep length, as wake times did not exhibit significant differences between conditions. This simplification enhances the interpretability of results and underscores the rationale for focusing on sleep times rather than wake times.
 
-[Exercise 2 report]().
+The report for exercise 2 can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex2/report/Circle%20plot%20-%20sleep%20times.md). Final figure is displayed below:
+
 ```{r}
 #| include: false
 
@@ -186,7 +188,8 @@ In this exercise, I explored the joint distribution of AE and BV, aiming to unco
 
 Despite the expectation, any clear pattern was difficult to dicern. However, a slight trend emerged: higher values of BV tended to align with lower values of AE, and vice versa. While the relationship is not crystal clear, the joint distribution visualization indicates a suggestive pattern in the expected direction, reinforcing the connection between AE and BV.
 
-[Exercise 3 report]().
+The report for exercise 3 can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex3/report/Multivariate%20visualization%20ex3.md). Final figure is displayed below:
+
 ```{r}
 #| include: false
 
@@ -239,8 +242,8 @@ For the final visualization (ex4), I delved into exploring the distribution of A
 
 Despite initial expectations, the AE figures did not distinctly indicate an increase during on-task reports (3-4). For this reason, I quickly visualized measures of flowers from the "iris" dataset found in base R. This comparison clearly indicates differences in the distributions, aligning with what we might have expected. Subsequently, I delved into the relationship of other variables, such as BV and MB. However, none of these yielded particular different distributions.
 
+The report for exercise 4 can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/ex4/report/Multivariate%20visualization%20ex4.md). Final figure is displayed below:
 
-[Exercise 4 report]().
 ```{r}
 #| include: false
 #| fig-dpi: 400
