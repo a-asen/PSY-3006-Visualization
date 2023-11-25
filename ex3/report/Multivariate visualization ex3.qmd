@@ -12,8 +12,11 @@ editor:
 #| include: false
 library(tidyverse)
 library(ggside)
+library(Rcpp)
+sourceCpp("../src/apen.cpp") # load apen conversion
+source("../src/transformation.R") # function
 read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
-source("../src/transformation.R") 
+
 all_mw_data |> 
   filter(stimulation == "sham") -> mw_data
 
@@ -76,9 +79,12 @@ library(patchwork)
 library(ggside)
 library(plotly)
 library(MASS)
+library(Rcpp) 
 
 read_csv("../data/raw_mwtms_data.csv") -> all_mw_data 
-source("../src/transformation.R") # AE calculation
+
+sourceCpp("../src/apen.cpp") # load apen conversion
+source("../src/transformation.R") # function
 ```
 
 I then select the relevant data, in this case, I will only use

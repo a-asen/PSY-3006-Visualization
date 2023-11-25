@@ -13,7 +13,10 @@ editor:
 library(tidyverse)
 library(ggridges)
 read_csv("../../ex3/data/raw_mwtms_data.csv") -> all_mw_data 
-source("../../ex3/src/transformation.R")
+library(Rcpp)
+sourceCpp("../../ex3/src/apen.cpp") # load apen conversion
+source("../../ex3/src/transformation.R") # function
+
 all_mw_data |> 
   dplyr::select(-region.y) |>
   filter(stimulation == "sham") -> mw_data

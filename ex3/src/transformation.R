@@ -1,7 +1,4 @@
 # Script from
-library(Rcpp)
-sourceCpp("../../ex3/src/apen.cpp") # load apen conversion
-
 da_pro <- function(data, nback){
   data |> group_by(subj,session,block,proberound) |> do({
     d <- .
