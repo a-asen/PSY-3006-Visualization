@@ -1,8 +1,6 @@
 # Multivariate visualization: categorical-continuous variable
 
-<img
-src="Multivariate-visualization-ex4_files/figure-commonmark/start%20plot-1.png"
-width="650" height="500" />
+![](Multivariate-visualization-ex4_files/figure-commonmark/start%20plot-1.png)
 
 
 
