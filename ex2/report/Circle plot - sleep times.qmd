@@ -39,9 +39,7 @@ sleep |>
 ```{r p..}
 #| echo: false
 #| warning: false
-#| out-width: 650px
-#| out-height: 500px
-#| fig-dpi: 300
+#| fig-dpi: 400
 s_sleep2 |>
   mutate(sleepdep=as.character(sleepdep)) |>
   ggplot(aes(x=sleep, y=duration, fill=sleepdep, group=sleepdep))+
