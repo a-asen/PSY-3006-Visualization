@@ -1,8 +1,6 @@
 # Multivariate visualization: continuous-continuous variable
 
-<img
-src="Multivariate-visualization-ex3_files/figure-commonmark/start%20plot-1.png"
-width="650" height="500" />
+![](Multivariate-visualization-ex3_files/figure-commonmark/start%20plot-1.png)
 
 
 
@@ -540,7 +538,7 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
   #' I saved the picture and link it in the below (as ![pic](path)) 
 ```
 
-![]((Multivariate-visualization-ex3_files/figure-commonmarkplotly_plot1.png)
+![plotly 1 plot](../figs/plotly_plot1.png)
 
 Moreover, we can add a contour to the top of the plotly to both see a 2D
 and 3D representation.
@@ -567,7 +565,7 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
     ) -> plotly_plot2
 ```
 
-![]((Multivariate-visualization-ex3_files/figure-commonmark/plotly_plot2.png)
+![Plotly 2 plot](../figs/plotly_plot2.png)
 
 There can arise various problems when visualizing things in 3D. However,
 it can also be uniquely informative - especially since these plots are

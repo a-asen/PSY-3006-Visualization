@@ -29,8 +29,7 @@ min(trans_mw$zlogbv) -> BV_min
 #| echo: false
 #| message: false
 #| warning: false
-#| out-width: 650px
-#| out-height: 500px
+#| fig-dpi: 400
 trans_mw |> 
   ggplot(aes(x=zlogbv, y=zlogapen)) +
   geom_density_2d_filled()+
@@ -525,7 +524,7 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
   #' plotly creates a html element that cannot be converted by quarto. Therefore, 
   #' I saved the picture and link it in the below (as ![pic](path)) 
 ```
-![test](../figs/plotly_plot1.png)
+![plotly 1 plot](../figs/plotly_plot1.png)
 
 Moreover, we can add a contour to the top of the plotly to both see a 2D and 3D representation. 
 
@@ -550,8 +549,7 @@ plot_ly(x=~density_data$x, y=~density_data$y, z=~density_data$z,
       )
     ) -> plotly_plot2
 ```
-![Plotly plot 2](../figs/plotly_plot2.png)
-![Plotly plot 2 backup]()
+![Plotly 2 plot](../figs/plotly_plot2.png)
 
 There can arise various problems when visualizing things in 3D. However, it can also be uniquely informative - especially since these plots are interactive. That's, the plot can be rotated and zoomed within R (it is a HTML element). However, if the reader is reading through a text format (e.g., PDF) file (or otherwise), such an interactive exploration of the data distribution is not possible. Nevertheless, this plot does not use *ggplot*, since ggplots do not have a way to visualize things in 3D. For this plot, I have used *plotly*, which is a library that can visualize data in 3D. However, I will not explore plotly in depth as it is beyond the scope of ggplot, but is nevertheless interesting to point out.
 
