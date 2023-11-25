@@ -97,4 +97,12 @@ disk drives), astronomical time (daily, monthly, annual), periodic waveforms
  
   
 
+- Add links on Github page. 
+- Use GFM (github markdown) 
+  - Use github links to easy look 
+- Publish before exam. 
+- polish exam. 
+- Exam release 
+
+
 
