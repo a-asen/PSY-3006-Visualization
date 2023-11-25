@@ -1,6 +1,6 @@
 ---
 title: "Circle Plot: Seasonal sleep"
-format: pdf
+format: gfm
 lang: en-GB
 editor: 
   markdown:
