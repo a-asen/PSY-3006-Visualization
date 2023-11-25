@@ -1,4 +1,4 @@
-Exam can be found [here]()
+Exam can be found [here](https://github.com/a-asen/PSY-3006-Visualization/blob/main/Exam/final_report.md)
 
 # Visualization with ggplot2
 
