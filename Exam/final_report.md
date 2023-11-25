@@ -1,4 +1,4 @@
-# Exam in PSY-3006 - Indepdendent study: Visualization in R with ggplots2
+# PSY-3006 - Indepdendent study: Visualization in R with ggplots2
 
 Candidate number: 22
 
@@ -94,40 +94,6 @@ deeper into the efficacy of circle plots, the focus shifts to
 visualizing the sleep times of participants in a sleep experiment.
 
 [Exercise 1 report]().
-
-``` r
-reduction <- 4.8 
-additional_start <- 5
-sleep_data |> group_by(date_m) |> 
-  summarize(v = min(cumulative_days)) |> pull(v) -> month_breaks
-
-sleep_data |>
-  mutate(week = c(rep(1:52, each=7), 52)) |>
-  group_by(week) |> 
-  mutate(week_mean = mean(sleep_amount),
-         week_sd = sd(sleep_amount),
-         week_num_day = median(cumulative_days)) |>
-  ungroup() |>
-  ggplot(aes(x=cumulative_days, y=sleep_amount))+
-  geom_ribbon(mapping=aes(ymin=additional_start, 
-                          ymax=(daylight_length_h/reduction)+additional_start,
-                          xmin=cumulative_days, xmax=cumulative_days), fill="yellow", alpha = .3)+
-  geom_ribbon(mapping=aes(ymin=(daylight_length_h/reduction)+additional_start,
-                          ymax=24/reduction+additional_start, 
-                          xmin=cumulative_days, xmax=cumulative_days), fill="black", alpha=.3)+
-  stat_smooth(geom="line", alpha=.5, linewidth=.7, color="#208fff", formula=y~x, method="loess")+
-  stat_summary(mapping=aes(x=week_num_day), fun=mean,
-               geom="line", color="red",linewidth=.7, alpha=.7)+
-  stat_summary(mapping=aes(x=week_num_day), fun.data=mean_cl_normal,
-               geom="linerange", color="red", linewidth=2, alpha=.3)+
-  geom_point(mapping=aes(x=1,y=4), alpha =0)+ # off center
-  coord_polar(direction = -1, start = pi)+
-  theme_bw()+
-  scale_x_continuous(breaks = month_breaks,
-                     labels = c(unique(sleep_data$date_m_name)))+
-  scale_y_continuous(breaks=seq(0,24,1))+
-  labs(x="Weeks in months", y="Hours of sleep")
-```
 
 ![](final_report_files/figure-commonmark/unnamed-chunk-2-1.png)
 
